@@ -51,7 +51,7 @@
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
+  --primary: oklch(0.2712 0.187888 264.052);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
@@ -128,4 +128,40 @@
   .poppins-text {
     font-family: var(--font-poppins), sans-serif;
   }
+  .source-serif-text {
+    font-family: var(--font-source-serif), serif;
+  }
+}
+
+@layer utilities {
+  @keyframes flip {
+    0% {
+      transform: rotateX(0deg);
+    }
+    50% {
+      transform: rotateX(90deg);
+      opacity: 0.5;
+    }
+    100% {
+      transform: rotateX(0deg);
+      opacity: 1;
+    }
+  }
+
+  .animate-flip {
+    animation: flip 0.6s ease-in-out;
+  }
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.color-gray {
+  background-color: #f8f9fa;
 }

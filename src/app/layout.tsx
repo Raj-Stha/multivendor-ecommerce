@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Nunito, Poppins } from "next/font/google";
+import { Nunito, Poppins, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ClientWrapper from "@/components/ClientWrapper";
 import { Providers } from "@/components/Providers";
+import { StoreProvider } from "./(home)/_context/store";
 
 // Load fonts
 const nunito = Nunito({
@@ -17,6 +18,12 @@ const poppins = Poppins({
   weight: ["400", "600", "700"],
   subsets: ["latin"],
   variable: "--font-poppins",
+});
+
+const sourceSerifPro = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-source-serif",
 });
 
 export const metadata: Metadata = {
@@ -34,10 +41,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${nunito.variable} ${poppins.variable} antialiased h-full`}
+        className={`${nunito.variable} ${poppins.variable} ${sourceSerifPro.variable} antialiased h-full`}
       >
         <Providers>
-          <ClientWrapper>{children}</ClientWrapper>
+          <StoreProvider>
+            <ClientWrapper>{children}</ClientWrapper>
+          </StoreProvider>
         </Providers>
       </body>
     </html>

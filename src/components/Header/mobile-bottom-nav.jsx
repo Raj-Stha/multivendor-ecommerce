@@ -1,0 +1,123 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Home, Search, User } from "lucide-react";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useMyContext } from "@/app/(home)/_context/store";
+import NotificationIcon from "./_components/NotificationIcon";
+
+const mobileNavItems = [
+  {
+    name: "Home",
+    href: "/",
+    icon: Home,
+  },
+  {
+    name: "Search",
+    href: "/search",
+    icon: Search,
+  },
+  {
+    name: "Wishlist",
+    href: "/wishlist",
+    icon: null, // We'll handle this manually
+  },
+  {
+    name: "Account",
+    icon: User,
+    dropdown: [
+      { name: "Login", href: "/login" },
+      { name: "Register", href: "/register" },
+    ],
+  },
+];
+
+export default function MobileBottomNav() {
+  const { store } = useMyContext();
+  const wishlistCount = store.wishlist.length;
+  const pathname = usePathname();
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg sm:hidden">
+      <nav className="flex h-16 items-center justify-around px-2 relative">
+        {mobileNavItems.map((item) => {
+          const isActive = pathname === item.href;
+          const isAccount = item.name === "Account";
+          const isWishlist = item.name === "Wishlist";
+
+          return (
+            <div
+              key={item.name}
+              className="relative source-serif-text"
+              onMouseEnter={() => isAccount && setShowAccountDropdown(true)}
+              onMouseLeave={() => isAccount && setShowAccountDropdown(false)}
+            >
+              {isAccount ? (
+                <DropdownMenu
+                  open={showAccountDropdown}
+                  onOpenChange={setShowAccountDropdown}
+                >
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="flex flex-col items-center cursor-pointer justify-center gap-1 px-2 py-1 text-gray-800 hover:text-primary transition-colors"
+                    >
+                      <User className="h-5 w-5" />
+                      <span className="text-xs font-semibold">{item.name}</span>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="top"
+                    align="center"
+                    className="mb-2 rounded-none"
+                  >
+                    {item.dropdown?.map((subItem) => (
+                      <DropdownMenuItem
+                        key={subItem.name}
+                        asChild
+                        className="rounded-none"
+                      >
+                        <Link
+                          href={subItem.href}
+                          className="cursor-pointer source-serif-text"
+                        >
+                          {subItem.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-colors",
+                    isActive
+                      ? "text-primary"
+                      : "text-gray-800 hover:text-primary"
+                  )}
+                >
+                  {isWishlist ? (
+                    <NotificationIcon count={wishlistCount} />
+                  ) : (
+                    item.icon && <item.icon className="h-5 w-5" />
+                  )}
+                  <span className="text-xs font-semibold">{item.name}</span>
+                </Link>
+              )}
+            </div>
+          );
+        })}
+      </nav>
+    </div>
+  );
+}
