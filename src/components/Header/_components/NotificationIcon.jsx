@@ -1,21 +1,27 @@
-// Placeholder for NotificationIcon.tsx
 "use client";
 
-import { Bell, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import Link from "next/link";
+import { useWishlist } from "@/app/(home)/_context/WishlistContext";
 
-export default function NotificationIcon({ count = 0 }) {
+export default function NotificationIcon() {
+  const { wishlistCount } = useWishlist();
+
   return (
     <Link
-      href="/notifications"
-      className="relative hover:text-primary transition-colors items-baseline"
+      href="/wishlist"
+      className="flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-colors text-gray-800 hover:text-primary"
     >
-      <Heart className="h-5 w-5 text-gray-700 hover:text-primary transition-colors" />
-      {count > 0 && (
-        <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center nunito-text font-medium">
-          {count}
-        </span>
-      )}
+      <div className="relative">
+        <Heart className="h-5 w-5" />
+        {wishlistCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center nunito-text font-medium">
+            {wishlistCount}
+          </span>
+        )}
+      </div>
+      <span className="text-xs font-semibold md:hidden">Wishlist</span>
     </Link>
   );
 }
+

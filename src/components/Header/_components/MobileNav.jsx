@@ -7,15 +7,8 @@ import AccountMenu from "./AccountMenu";
 import MobileNavSheet from "./MobileNavSheet";
 import CartIcon from "./CartIcon";
 import NotificationIcon from "./NotificationIcon";
-import { useMyContext } from "@/app/(home)/_context/store";
 
 export default function MobileNav() {
-  const { store } = useMyContext();
-  const cartCount = store.cart.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-  const wishlistCount = store.wishlist.length;
   return (
     <div className="px-4 py-2 flex flex-col gap-2 nunito-text">
       <div className="flex justify-between items-center">
@@ -36,9 +29,9 @@ export default function MobileNav() {
         </div>
 
         <div className="flex gap-4">
-          <CartIcon count={cartCount} />
+          <CartIcon />
           <div className="hidden sm:block">
-            <NotificationIcon count={wishlistCount} />
+            <NotificationIcon />
           </div>
         </div>
       </div>

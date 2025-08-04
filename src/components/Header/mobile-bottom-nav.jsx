@@ -11,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useMyContext } from "@/app/(home)/_context/store";
 import NotificationIcon from "./_components/NotificationIcon";
 
 const mobileNavItems = [
@@ -28,7 +27,7 @@ const mobileNavItems = [
   {
     name: "Wishlist",
     href: "/wishlist",
-    icon: null, // We'll handle this manually
+    icon: null, // handled separately
   },
   {
     name: "Account",
@@ -41,8 +40,6 @@ const mobileNavItems = [
 ];
 
 export default function MobileBottomNav() {
-  const { store } = useMyContext();
-  const wishlistCount = store.wishlist.length;
   const pathname = usePathname();
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
 
@@ -96,6 +93,8 @@ export default function MobileBottomNav() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
+              ) : isWishlist ? (
+                <NotificationIcon />
               ) : (
                 <Link
                   href={item.href}
@@ -106,11 +105,7 @@ export default function MobileBottomNav() {
                       : "text-gray-800 hover:text-primary"
                   )}
                 >
-                  {isWishlist ? (
-                    <NotificationIcon count={wishlistCount} />
-                  ) : (
-                    item.icon && <item.icon className="h-5 w-5" />
-                  )}
+                  {item.icon && <item.icon className="h-5 w-5" />}
                   <span className="text-xs font-semibold">{item.name}</span>
                 </Link>
               )}

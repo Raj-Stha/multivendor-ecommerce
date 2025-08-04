@@ -5,7 +5,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ClientWrapper from "@/components/ClientWrapper";
 import { Providers } from "@/components/Providers";
-import { StoreProvider } from "./(home)/_context/store";
+import { CartProvider } from "@/app/(home)/_context/CartContext";
+import { WishlistProvider } from "@/app/(home)/_context/WishlistContext";
 
 // Load fonts
 const nunito = Nunito({
@@ -28,7 +29,7 @@ const sourceSerifPro = Source_Serif_4({
 
 export const metadata: Metadata = {
   metadataBase: new URL("http://localhost:3000"),
-  title: "Eommerce - Online Shopping for Electronics, Home & Appliances",
+  title: "Ecommerce - Online Shopping for Electronics, Home & Appliances",
   description:
     "Online Shopping for Electronics, Home & Appliances. Buy and sell the latest technology and gadgets.",
 };
@@ -44,9 +45,11 @@ export default function RootLayout({
         className={`${nunito.variable} ${poppins.variable} ${sourceSerifPro.variable} antialiased h-full`}
       >
         <Providers>
-          <StoreProvider>
-            <ClientWrapper>{children}</ClientWrapper>
-          </StoreProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <ClientWrapper>{children}</ClientWrapper>
+            </WishlistProvider>
+          </CartProvider>
         </Providers>
       </body>
     </html>

@@ -5,15 +5,8 @@ import SearchBar from "./SearchBar";
 import AccountMenu from "./AccountMenu";
 import CartIcon from "./CartIcon";
 import NotificationIcon from "./NotificationIcon";
-import { useMyContext } from "@/app/(home)/_context/store";
 
 export default function DesktopNav() {
-  const { store } = useMyContext();
-  const cartCount = store.cart.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-  const wishlistCount = store.wishlist.length;
 
   return (
     <div className="container max-w-7xl mx-auto py-4 px-4 md:px-6 nunito-text z-8">
@@ -36,8 +29,8 @@ export default function DesktopNav() {
 
         {/* Right: Account, Cart, Notifications */}
         <div className="flex items-center space-x-5 flex-shrink-0">
-          <CartIcon count={cartCount} />
-          <NotificationIcon count={wishlistCount} />
+          <CartIcon />
+          <NotificationIcon />
         </div>
       </div>
     </div>

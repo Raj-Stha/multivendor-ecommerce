@@ -22,10 +22,10 @@ const banners = [
 function NextArrow({ onClick }) {
   return (
     <div
-      className="absolute top-1/2 right-4 z-10 transform -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-md cursor-pointer transition"
+      className="absolute top-1/2 right-2 sm:right-4 z-10 transform -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-md cursor-pointer transition"
       onClick={onClick}
     >
-      <ChevronRight size={24} />
+      <ChevronRight size={20} />
     </div>
   );
 }
@@ -33,10 +33,10 @@ function NextArrow({ onClick }) {
 function PrevArrow({ onClick }) {
   return (
     <div
-      className="absolute top-1/2 left-4 z-10 transform -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-md cursor-pointer transition"
+      className="absolute top-1/2 left-2 sm:left-4 z-10 transform -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-md cursor-pointer transition"
       onClick={onClick}
     >
-      <ChevronLeft size={24} />
+      <ChevronLeft size={20} />
     </div>
   );
 }
@@ -52,7 +52,6 @@ export default function Hero() {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
-    fade: true,
     cssEase: "ease-in-out",
     arrows: true,
     nextArrow: <NextArrow />,
@@ -60,15 +59,21 @@ export default function Hero() {
     responsive: [
       {
         breakpoint: 1024,
-        settings: { arrows: true },
+        settings: {
+          arrows: true,
+        },
       },
       {
         breakpoint: 768,
-        settings: { arrows: true },
+        settings: {
+          arrows: true,
+        },
       },
       {
-        breakpoint: 640,
-        settings: { arrows: false }, // Hide arrows on small screens
+        breakpoint: 480,
+        settings: {
+          arrows: true,
+        },
       },
     ],
   };
@@ -77,7 +82,10 @@ export default function Hero() {
     <section className="relative overflow-hidden">
       <Slider ref={sliderRef} {...settings} className="w-full h-full">
         {banners.map((slide, index) => (
-          <div key={index} className="relative w-full h-[40vh] sm:h-[50vh] md:h-[60vh]">
+          <div
+            key={index}
+            className="relative w-full h-[40vh] sm:h-[50vh] md:h-[60vh]"
+          >
             <div
               className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
               style={{ backgroundImage: `url(${slide.image})` }}
