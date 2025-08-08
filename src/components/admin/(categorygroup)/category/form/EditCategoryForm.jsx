@@ -41,7 +41,6 @@ export default function EditCategoryForm({ data }) {
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
   const router = useRouter();
 
-  console.log(data);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
