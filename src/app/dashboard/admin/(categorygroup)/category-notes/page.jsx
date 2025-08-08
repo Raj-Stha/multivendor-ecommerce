@@ -13,9 +13,10 @@ import { PlusIcon } from "lucide-react";
 import CategoryNoteList from "../../../../../components/admin/(categorygroup)/category-notes/CategoryNoteList";
 
 import AddCatgeoryNotesForm from "../../../../../components/admin/(categorygroup)/category-notes/form/AddCategoryNotesForm";
+import CategoryListSkeleton from "../../../../../components/admin/Skeleton/CategooryListSkeleton";
 // import SkeletonLoader from "../../../admin/_components/SkeletonLoader";
 export default function CategoryAdmin() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
@@ -80,18 +81,19 @@ export default function CategoryAdmin() {
           </Dialog>
         </div>
       </div>
-      {isLoading
-        ? ""
-        : // <SkeletonLoader count={8} />
-          data && (
-            <CategoryNoteList
-              data={data}
-              setData={setData}
-              page={page}
-              setPage={setPage}
-              hasNextPage={hasNextPage}
-            />
-          )}
+      {isLoading ? (
+        <CategoryListSkeleton count={6} />
+      ) : (
+        data && (
+          <CategoryNoteList
+            data={data}
+            setData={setData}
+            page={page}
+            setPage={setPage}
+            hasNextPage={hasNextPage}
+          />
+        )
+      )}
     </div>
   );
 }

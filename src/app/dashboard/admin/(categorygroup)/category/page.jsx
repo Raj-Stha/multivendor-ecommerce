@@ -13,6 +13,7 @@ import { PlusIcon } from "lucide-react";
 import CategoryList from "../../../../../components/admin/(categorygroup)/category/CategoryList";
 import AddCatgeoryForm from "../../../../../components/admin/(categorygroup)/category/form/AddCategoryForm";
 import AddCategoryDetailsForm from "../../../../../components/admin/(categorygroup)/category/form/AddCategoryDetailsForm";
+import CategoryListSkeleton from "../../../../../components/admin/Skeleton/CategooryListSkeleton";
 // import SkeletonLoader from "../../../admin/_components/SkeletonLoader";
 
 async function getData(url, formData) {
@@ -36,7 +37,7 @@ async function getData(url, formData) {
   }
 }
 export default function CategoryAdmin() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [isCatOpen, setIsCatOpen] = useState(false);
   const [category, setCategory] = useState();
@@ -149,19 +150,20 @@ export default function CategoryAdmin() {
           </Dialog>
         </div>
       </div>
-      {isLoading
-        ? ""
-        : // <SkeletonLoader count={8} />
-          data && (
-            <CategoryList
-              data={data}
-              setData={setData}
-              categoryNotes={categoryNotes}
-              page={page}
-              setPage={setPage}
-              hasNextPage={hasNextPage}
-            />
-          )}
+      {isLoading ? (
+        <CategoryListSkeleton count={6} />
+      ) : (
+        data && (
+          <CategoryList
+            data={data}
+            setData={setData}
+            categoryNotes={categoryNotes}
+            page={page}
+            setPage={setPage}
+            hasNextPage={hasNextPage}
+          />
+        )
+      )}
     </div>
   );
 }

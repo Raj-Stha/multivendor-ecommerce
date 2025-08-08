@@ -27,7 +27,7 @@ export default function CategoryList({
                 value={`item-${d.category_id}`}
                 className="mb-4 border rounded-lg shadow-sm bg-white hover:shadow-md transition-all"
               >
-                <div className="flex items-center justify-between w-full p-4">
+                <div className="flex items-center justify-between w-full px-4 py-2 ">
                   <AccordionTrigger className="flex items-center gap-4 flex-grow text-left hover:no-underline ">
                     <Image
                       className="w-12 h-12 object-cover rounded border"
