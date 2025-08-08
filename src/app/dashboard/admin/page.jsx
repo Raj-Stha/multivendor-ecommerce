@@ -42,7 +42,25 @@ const RECENT_ORDERS = Array.from({ length: 5 }).map((_, i) => ({
   amount: `$${(Math.random() * 100).toFixed(2)}`,
 }));
 
-export default function AdminDashboard() {
+async function getDetails(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Failed to fetch");
+    return await res.json();
+  } catch (err) {
+    console.error(`Error fetching: ${url}`, err);
+    return null;
+  }
+}
+export default async function AdminDashboard() {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
+
+  const [venderDetail] = await Promise.all([
+    getDetails(`${baseUrl}/getvendordash`),
+  ]);
+
+  console.log(venderDetail);
   return (
     <div className="flex flex-col">
       <header className="border-b">
