@@ -59,32 +59,23 @@ const SIDEBAR_ITEMS = [
   },
   {
     type: "collapsible",
-    label: "Product Management",
+    label: "Category Management",
     items: [
       {
-        label: "Products",
-        href: "/dashboard/admin/products",
+        label: "Category",
+        href: "/dashboard/admin/category",
         icon: Package,
       },
       {
-        label: "Categories",
-        href: "/dashboard/admin/products/category",
+        label: "Category Notes",
+        href: "/dashboard/admin/category-notes",
         icon: Box,
       },
+
       {
-        label: "Tags",
-        href: "/dashboard/admin/products/tags",
-        icon: Tag,
-      },
-      {
-        label: "Brands",
-        href: "/dashboard/admin/products/brands",
-        icon: ShoppingBag,
-      },
-      {
-        label: "Attributes",
-        href: "/dashboard/admin/products/attribute",
-        icon: ShoppingBag,
+        label: "Category Details",
+        href: "/dashboard/admin/category-details",
+        icon: Box,
       },
     ],
   },

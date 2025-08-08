@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import CategoryList from "../../../../../components/admin/category/CategoryList";
-import AddCatgeoryForm from "../../../../../components/admin/category/AddCategoryForm";
+import CategoryList from "../../../../../components/admin/(categorygroup)/category/CategoryList";
+import AddCatgeoryForm from "../../../../../components/admin/(categorygroup)/category/form/AddCategoryForm";
 // import SkeletonLoader from "../../../admin/_components/SkeletonLoader";
 
 export default function CategoryAdmin() {

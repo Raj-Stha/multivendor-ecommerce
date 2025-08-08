@@ -1,4 +1,4 @@
-import EditCategoryForm from "./EditCategoryForm";
+import EditCategoryForm from "./form/EditCategoryForm";
 import { Button } from "@/components/ui/button";
 
 export default function CategoryList({ data, page, setPage, hasNextPage }) {
