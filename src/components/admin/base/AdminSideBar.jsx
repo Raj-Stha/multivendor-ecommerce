@@ -41,22 +41,22 @@ const SIDEBAR_ITEMS = [
     items: [
       {
         label: "Dashboard",
-        href: "/admin",
+        href: "/dashboard/admin",
         icon: LayoutDashboard,
       },
     ],
   },
-  {
-    type: "group",
-    label: "Banner Management",
-    items: [
-      {
-        label: "Banners",
-        href: "/dashboard/admin/banners",
-        icon: ImageIcon,
-      },
-    ],
-  },
+  // {
+  //   type: "group",
+  //   label: "Banner Management",
+  //   items: [
+  //     {
+  //       label: "Banners",
+  //       href: "/dashboard/admin/banners",
+  //       icon: ImageIcon,
+  //     },
+  //   ],
+  // },
   {
     type: "collapsible",
     label: "Category Management",
@@ -71,68 +71,62 @@ const SIDEBAR_ITEMS = [
         href: "/dashboard/admin/category-notes",
         icon: Box,
       },
-
-      {
-        label: "Category Details",
-        href: "/dashboard/admin/category-details",
-        icon: Box,
-      },
     ],
   },
-  {
-    type: "collapsible",
-    label: "Order Management",
-    items: [
-      {
-        label: "All Orders",
-        href: "/dashboard/admin/orders",
-        icon: ShoppingBag,
-      },
-      {
-        label: "Pending Orders",
-        href: "/dashboard/admin/orders/pending",
-        icon: ShoppingBag,
-      },
-      {
-        label: "Completed Orders",
-        href: "/dashboard/admin/orders/completed",
-        icon: ShoppingBag,
-      },
-    ],
-  },
-  {
-    type: "group",
-    label: "User Management",
-    items: [
-      {
-        label: "Users",
-        href: "/dashboard/admin/users",
-        icon: Users,
-      },
-    ],
-  },
-  {
-    type: "group",
-    label: "Analytics",
-    items: [
-      {
-        label: "Reports",
-        href: "/dashboard/admin/analytics",
-        icon: BarChart3,
-      },
-    ],
-  },
-  {
-    type: "group",
-    label: "Settings",
-    items: [
-      {
-        label: "Settings",
-        href: "/dashboard/admin/settings",
-        icon: Settings,
-      },
-    ],
-  },
+  // {
+  //   type: "collapsible",
+  //   label: "Order Management",
+  //   items: [
+  //     {
+  //       label: "All Orders",
+  //       href: "/dashboard/admin/orders",
+  //       icon: ShoppingBag,
+  //     },
+  //     {
+  //       label: "Pending Orders",
+  //       href: "/dashboard/admin/orders/pending",
+  //       icon: ShoppingBag,
+  //     },
+  //     {
+  //       label: "Completed Orders",
+  //       href: "/dashboard/admin/orders/completed",
+  //       icon: ShoppingBag,
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: "group",
+  //   label: "User Management",
+  //   items: [
+  //     {
+  //       label: "Users",
+  //       href: "/dashboard/admin/users",
+  //       icon: Users,
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: "group",
+  //   label: "Analytics",
+  //   items: [
+  //     {
+  //       label: "Reports",
+  //       href: "/dashboard/admin/analytics",
+  //       icon: BarChart3,
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: "group",
+  //   label: "Settings",
+  //   items: [
+  //     {
+  //       label: "Settings",
+  //       href: "/dashboard/admin/settings",
+  //       icon: Settings,
+  //     },
+  //   ],
+  // },
 ];
 
 export function AdminSidebar() {
