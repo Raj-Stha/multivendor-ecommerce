@@ -11,10 +11,10 @@ import EditCategoryDetailsForm from "./form/EditCategoryDetailsForm";
 
 export default function CategoryList({
   data,
+  categoryNotes,
+  meta,
   page,
   setPage,
-  categoryNotes,
-  hasNextPage,
 }) {
   return (
     <div>
@@ -52,42 +52,38 @@ export default function CategoryList({
                     <h4 className="font-semibold text-md mb-3 text-gray-700">
                       Category Specifics:
                     </h4>
-                    {d.details && d.details.length > 0 ? (
+
+                    {d.category_details &&
+                    Object.keys(d.category_details).length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {d.details.map((detailItem, detailIndex) => (
-                          <div
-                            key={detailIndex}
-                            className="bg-white p-3 rounded-md shadow-sm border"
-                          >
-                            {Object.entries(detailItem).map(
-                              ([key, value]) =>
-                                value !== null &&
-                                key !== "category_image" &&
-                                key !== "category_id" && (
-                                  <>
-                                    <div
-                                      key={key}
-                                      className="flex justify-between items-center py-1 border-b last:border-b-0"
-                                    >
-                                      <span className="font-medium text-gray-600 capitalize">
-                                        {key.replace(/_/g, " ")}:
-                                      </span>
-                                      <span className="text-gray-800 font-semibold">
-                                        {String(value)}
-                                      </span>
-                                    </div>
-                                  </>
-                                )
-                            )}
-                            <div className="mt-4 flex justify-end">
-                              <EditCategoryDetailsForm
-                                data={d}
-                                category={data}
-                                categoryNotes={categoryNotes}
-                              />
-                            </div>
+                        <div className="bg-white p-3 rounded-md shadow-sm border">
+                          {Object.entries(d.category_details).map(
+                            ([key, value]) =>
+                              value !== null &&
+                              key !== "category_image" &&
+                              key !== "category_id" ? (
+                                <div
+                                  key={key}
+                                  className="flex justify-between items-center py-1 border-b last:border-b-0"
+                                >
+                                  <span className="font-medium text-gray-600 capitalize">
+                                    {key.replace(/_/g, " ")}:
+                                  </span>
+                                  <span className="text-gray-800 font-semibold">
+                                    {String(value)}
+                                  </span>
+                                </div>
+                              ) : null
+                          )}
+
+                          <div className="mt-4 flex justify-end">
+                            <EditCategoryDetailsForm
+                              data={d}
+                              category={data}
+                              categoryNotes={categoryNotes}
+                            />
                           </div>
-                        ))}
+                        </div>
                       </div>
                     ) : (
                       <p className="text-sm text-gray-500">
@@ -99,22 +95,23 @@ export default function CategoryList({
               </AccordionItem>
             ))}
           </Accordion>
-
-          {/* Pagination using hasNextPage */}
-          <div className="flex justify-center mt-6 gap-4">
+          <div className="flex justify-center gap-[2%] mt-6">
             <Button
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1}
+              variant="default"
+              className="cursor-pointer"
+              onClick={() => setPage((p) => p - 1)}
+              disabled={meta.page_number <= 1}
             >
               Previous
             </Button>
-            <span className="text-sm text-gray-600 self-center">
-              {" "}
-              Page {page}{" "}
+            <span className="self-center text-sm text-gray-600">
+              Page {meta.page_number} of {meta.total_pages}
             </span>
             <Button
-              onClick={() => setPage((prev) => prev + 1)}
-              disabled={!hasNextPage}
+              variant="default"
+              className="cursor-pointer"
+              onClick={() => setPage((p) => p + 1)}
+              disabled={meta.page_number >= meta.total_pages}
             >
               Next
             </Button>

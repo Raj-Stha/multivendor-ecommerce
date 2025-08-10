@@ -51,12 +51,12 @@ export default function EditCategoryDetailsForm({
   );
 
   const [noteKeyValues, setNoteKeyValues] = useState(() => {
-    const detail = data?.details?.[0] || {};
+    const detail = data?.category_details || {};
     return Object.entries(detail)
-      .filter(([key, value]) => typeof value === "string" && value !== null)
+      .filter(([key, value]) => value !== null && value !== undefined)
       .map(([key, value]) => ({
         key,
-        value,
+        value: String(value),
       }));
   });
 
