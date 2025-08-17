@@ -1,7 +1,7 @@
 import EditCategoryNotesForm from "./form/EditCategoryNotesForm";
 import { Button } from "@/components/ui/button";
 
-export default function CategoryNoteList({ data, page, setPage, hasNextPage }) {
+export default function CategoryNoteList({ data, page, setPage, meta }) {
   return (
     <div>
       {data && data.length > 0 ? (
@@ -24,20 +24,19 @@ export default function CategoryNoteList({ data, page, setPage, hasNextPage }) {
             </div>
           ))}
 
-          {/* ✅ Pagination using hasNextPage */}
           <div className="flex justify-center mt-6 gap-4">
             <Button
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+              disabled={meta.page_number <= 1}
             >
               Previous
             </Button>
             <span className="text-sm text-gray-600 self-center">
-              Page {page}
+              Page {meta.page_number} of {meta.total_pages}
             </span>
             <Button
-              onClick={() => setPage((prev) => prev + 1)}
-              disabled={!hasNextPage}
+              onClick={() => setPage(page + 1)}
+              disabled={meta.page_number >= meta.total_pages}
             >
               Next
             </Button>

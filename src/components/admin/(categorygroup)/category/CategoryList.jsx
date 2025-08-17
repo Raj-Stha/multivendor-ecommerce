@@ -99,18 +99,20 @@ export default function CategoryList({
             <Button
               variant="default"
               className="cursor-pointer"
-              onClick={() => setPage((p) => p - 1)}
+              onClick={() => setPage(page - 1)}
               disabled={meta.page_number <= 1}
             >
               Previous
             </Button>
+
             <span className="self-center text-sm text-gray-600">
               Page {meta.page_number} of {meta.total_pages}
             </span>
+
             <Button
               variant="default"
               className="cursor-pointer"
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               disabled={meta.page_number >= meta.total_pages}
             >
               Next

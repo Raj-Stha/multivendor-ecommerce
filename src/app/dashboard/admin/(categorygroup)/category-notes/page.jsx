@@ -20,12 +20,8 @@ export default function CategoryAdmin() {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [meta, setMeta] = useState({ page_number: 1, total_pages: 1 });
   const limit = 10;
-  const formData = {
-    page_number: page,
-    limit: limit,
-  };
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
@@ -38,13 +34,13 @@ export default function CategoryAdmin() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ page_number: page, limit }),
       });
       if (res.ok) {
         const result = await res.json();
+        console.log(result);
         setData(result?.details || []);
-
-        setHasNextPage(result.details.length === limit);
+        setMeta(result?.hint || { page_number: page, total_pages: 1 });
       } else {
         console.error("Failed to fetch categories");
       }
@@ -90,7 +86,7 @@ export default function CategoryAdmin() {
             setData={setData}
             page={page}
             setPage={setPage}
-            hasNextPage={hasNextPage}
+            meta={meta}
           />
         )
       )}

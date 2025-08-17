@@ -55,6 +55,7 @@ export default function CategoryAdmin() {
       setIsLoading(true);
       let url = `${baseUrl}/getcategory`;
       const categoryRes = await getData(url, { page_number: page, limit });
+
       if (categoryRes) {
         setData(categoryRes.details || []);
         setMeta(categoryRes.hint || { page_number: page, total_pages: 1 });
@@ -80,8 +81,6 @@ export default function CategoryAdmin() {
     getAllCategories();
     getCategoryNotes();
   }, [page]);
-
-  console.log(categoryNotes);
 
   return (
     <div className="container max-w-7xl mx-auto px-[2%] py-[2%]">
@@ -136,6 +135,7 @@ export default function CategoryAdmin() {
             data={data}
             categoryNotes={categoryNotes}
             meta={meta}
+            page={page}
             setPage={setPage}
           />
         </>
