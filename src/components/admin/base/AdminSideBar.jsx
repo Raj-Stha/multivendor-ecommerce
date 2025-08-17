@@ -90,6 +90,23 @@ const SIDEBAR_ITEMS = [
       },
     ],
   },
+
+  {
+    type: "collapsible",
+    label: "Vendor Management",
+    items: [
+      {
+        label: "Vendor",
+        href: "/dashboard/admin/vendor",
+        icon: Package,
+      },
+      {
+        label: "Vendor Notes",
+        href: "/dashboard/admin/vendor-notes",
+        icon: Box,
+      },
+    ],
+  },
   // {
   //   type: "collapsible",
   //   label: "Order Management",
