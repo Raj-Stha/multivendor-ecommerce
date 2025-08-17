@@ -73,6 +73,23 @@ const SIDEBAR_ITEMS = [
       },
     ],
   },
+
+  {
+    type: "collapsible",
+    label: "Manufacturer Management",
+    items: [
+      {
+        label: "Manufacturer",
+        href: "/dashboard/admin/manufacturer",
+        icon: Package,
+      },
+      {
+        label: "Manufacturer Notes",
+        href: "/dashboard/admin/manufacturer-notes",
+        icon: Box,
+      },
+    ],
+  },
   // {
   //   type: "collapsible",
   //   label: "Order Management",

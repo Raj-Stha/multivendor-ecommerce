@@ -32,7 +32,7 @@ const formSchema = z.object({
   returned: z.boolean(),
 });
 
-export default function EditCategoryForm({ data }) {
+export default function EditManufacturerNotesForm({ data }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
 
@@ -51,7 +51,7 @@ export default function EditCategoryForm({ data }) {
 
   const updateData = async (values) => {
     try {
-      const response = await fetch(`${baseUrl}/updatecategorynotes`, {
+      const response = await fetch(`${baseUrl}/updatemanufacturernotes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export default function EditCategoryForm({ data }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
         <DialogHeader>
-          <DialogTitle>Edit Category Notes</DialogTitle>
+          <DialogTitle>Edit Manufacturer Notes</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
