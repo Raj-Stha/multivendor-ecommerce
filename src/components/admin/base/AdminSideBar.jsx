@@ -107,6 +107,18 @@ const SIDEBAR_ITEMS = [
       },
     ],
   },
+
+  {
+    type: "group",
+    label: "System Paramters",
+    items: [
+      {
+        label: "System",
+        href: "/dashboard/admin/system-parameter",
+        icon: Settings,
+      },
+    ],
+  },
   // {
   //   type: "collapsible",
   //   label: "Order Management",
