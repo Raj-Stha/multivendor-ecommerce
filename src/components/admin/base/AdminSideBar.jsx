@@ -109,6 +109,23 @@ const SIDEBAR_ITEMS = [
   },
 
   {
+    type: "collapsible",
+    label: "Product Management",
+    items: [
+      {
+        label: "Product",
+        href: "/dashboard/admin/product",
+        icon: Package,
+      },
+      {
+        label: "Product Notes",
+        href: "/dashboard/admin/product-notes",
+        icon: Box,
+      },
+    ],
+  },
+
+  {
     type: "group",
     label: "System Paramters",
     items: [
@@ -243,7 +260,7 @@ export function AdminSidebar() {
                   <SidebarGroupLabel asChild>
                     <CollapsibleTrigger className="flex w-full items-center justify-between">
                       <span>{section.label}</span>
-                      <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                      <ChevronDown className="h-4 w-4 transition-transform  group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
                   </SidebarGroupLabel>
                   <CollapsibleContent>
