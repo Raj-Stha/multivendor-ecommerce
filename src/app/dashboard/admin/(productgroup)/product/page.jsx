@@ -54,7 +54,7 @@ export default function ProductAdmin() {
   const getAllProducts = async () => {
     try {
       setIsLoading(true);
-      let url = `${baseUrl}/getproducts`;
+      let url = `${baseUrl}/getadminproducts`;
       const productRes = await getData(url, { page_number: page, limit });
       const allProductRes = await getData(url, { page_number: page, limit: 0 });
 
