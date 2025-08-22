@@ -158,7 +158,7 @@ export default function EditCategoryDetailsForm({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Category Details</DialogTitle>
+          <DialogTitle>Edit Category</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

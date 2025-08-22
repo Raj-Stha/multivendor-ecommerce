@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import AddManufacturerDetailsForm from "../../../../../components/admin/(manufacturergroup)/manufacturer/form/AddManufacturerDetailsForm";
 import CategoryListSkeleton from "../../../../../components/admin/Skeleton/CategooryListSkeleton";
 import ManufacturerList from "../../../../../components/admin/(manufacturergroup)/manufacturer/ManufacturerList";
 import AddManufacturerForm from "../../../../../components/admin/(manufacturergroup)/manufacturer/form/AddManufacturerForm";
@@ -40,7 +39,6 @@ async function getData(url, formData) {
 export default function Manufacturer() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [isCatOpen, setIsCatOpen] = useState(false);
   const [categoryNotes, setCategoryNotes] = useState([]);
   const [data, setData] = useState([]);
   const [meta, setMeta] = useState({ page_number: 1, total_pages: 1 });
@@ -103,28 +101,6 @@ export default function Manufacturer() {
                 <DialogTitle>Add New Manufacturer</DialogTitle>
               </DialogHeader>
               <AddManufacturerForm setIsOpen={setIsOpen} />
-            </DialogContent>
-          </Dialog>
-
-          {/* Add Category Details */}
-          <Dialog open={isCatOpen} onOpenChange={setIsCatOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
-                <PlusIcon className="w-5 h-5" />
-                <span className="hidden md:inline">
-                  Add Manufacturer Details
-                </span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto rounded-lg shadow-lg">
-              <DialogHeader>
-                <DialogTitle>Add New Manufacturer Details</DialogTitle>
-              </DialogHeader>
-              <AddManufacturerDetailsForm
-                setIsOpen={setIsCatOpen}
-                categoryNotes={categoryNotes}
-                manufacturer={data}
-              />
             </DialogContent>
           </Dialog>
         </div>

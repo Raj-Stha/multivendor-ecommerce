@@ -127,6 +127,14 @@ export default function EditManufacturerDetailsForm({
       if (value) payload[key] = value;
     });
 
+    const previousKeys = Object.keys(data?.manufacturer_details || {});
+    previousKeys.forEach((prevKey) => {
+      const stillSelected = noteKeyValues.find((n) => n.key === prevKey);
+      if (!stillSelected) {
+        payload[prevKey] = null;
+      }
+    });
+
     try {
       await uploadData(payload);
     } catch (error) {
@@ -154,45 +162,10 @@ export default function EditManufacturerDetailsForm({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* manufacturer select */}
-            <FormField
-              control={form.control}
-              name="manufacturer_id"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="pb-2">Manufacturer</FormLabel>
-                  <Select
-                    className="w-full"
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      setSelectedManuId(val);
-                    }}
-                    defaultValue={field.value}
-                  >
-                    <FormControl className="w-full">
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a manufacturer" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="w-full">
-                      {manufacturer?.map((cat) => (
-                        <SelectItem
-                          key={cat.manufacturer_id}
-                          value={String(cat.manufacturer_id)}
-                          className="w-full"
-                        >
-                          {cat.manufacturer_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             {/* Notes Section */}
             {selectedManuId && (
-              <div className="space-y-4">
+              <div className="space-y-4 py-4">
                 <Label>Select manufacturer Notes</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {categoryNotes.map((note, index) => {
