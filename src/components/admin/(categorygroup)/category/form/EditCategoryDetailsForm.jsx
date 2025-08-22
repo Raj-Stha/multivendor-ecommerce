@@ -148,24 +148,28 @@ export default function EditCategoryDetailsForm({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Category</DialogTitle>
+          <DialogTitle>Edit Category Details</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 py-4"
+          >
             {/* Category select */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="category_id"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className="pb-2">Category</FormLabel>
                   <Select
-                    className="w-full"
+                    className="w-full "
                     onValueChange={(val) => {
                       field.onChange(val);
                       setSelectedCategoryId(val);
                     }}
+                    disabled
                     defaultValue={field.value}
                   >
                     <FormControl className="w-full">
@@ -188,7 +192,7 @@ export default function EditCategoryDetailsForm({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             {/* Notes Section */}
             {selectedCategoryId && (

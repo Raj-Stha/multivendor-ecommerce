@@ -70,7 +70,7 @@ export default function CategoryAdmin() {
   const getCategoryNotes = async () => {
     try {
       let url = `${baseUrl}/getcategorynotes`;
-      const res = await getData(url, { page_number: page, limit });
+      const res = await getData(url, { page_number: page, limit: 0 });
       setCategoryNotes(res?.details || []);
     } catch (error) {
       console.error("Error fetching category notes:", error);
@@ -106,7 +106,7 @@ export default function CategoryAdmin() {
           </Dialog>
 
           {/* Add Category Details */}
-          <Dialog open={isCatOpen} onOpenChange={setIsCatOpen}>
+          {/* <Dialog open={isCatOpen} onOpenChange={setIsCatOpen}>
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
                 <PlusIcon className="w-5 h-5" />
@@ -123,7 +123,7 @@ export default function CategoryAdmin() {
                 category={data}
               />
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
         </div>
       </div>
 
