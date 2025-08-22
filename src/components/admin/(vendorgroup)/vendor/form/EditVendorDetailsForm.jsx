@@ -127,6 +127,14 @@ export default function EditVendorDetailsForm({
       if (value) payload[key] = value;
     });
 
+    const previousKeys = Object.keys(data?.vendor_details || {});
+    previousKeys.forEach((prevKey) => {
+      const stillSelected = noteKeyValues.find((n) => n.key === prevKey);
+      if (!stillSelected) {
+        payload[prevKey] = null;
+      }
+    });
+
     try {
       await uploadData(payload);
     } catch (error) {
@@ -153,46 +161,9 @@ export default function EditVendorDetailsForm({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* vendor select */}
-            <FormField
-              control={form.control}
-              name="vendor_id"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="pb-2">Vendor</FormLabel>
-                  <Select
-                    className="w-full"
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      setSelectedVendorId(val);
-                    }}
-                    defaultValue={field.value}
-                  >
-                    <FormControl className="w-full">
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a vendor" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="w-full">
-                      {vendor?.map((cat) => (
-                        <SelectItem
-                          key={cat.vendor_id}
-                          value={String(cat.vendor_id)}
-                          className="w-full"
-                        >
-                          {cat.vendor_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* Notes Section */}
             {selectedVendorId && (
-              <div className="space-y-4">
+              <div className="space-y-4 py-4">
                 <Label>Select vendor Notes</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {categoryNotes.map((note, index) => {

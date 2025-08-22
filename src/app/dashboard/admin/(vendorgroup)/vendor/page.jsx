@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import AddVendorDetailsForm from "../../../../../components/admin/(vendorgroup)/vendor/form/AddVendorDetailsForm";
+
 import CategoryListSkeleton from "../../../../../components/admin/Skeleton/CategooryListSkeleton";
 import AddVendorForm from "../../../../../components/admin/(vendorgroup)/vendor/form/AddVendorForm";
 import VendorList from "../../../../../components/admin/(vendorgroup)/vendor/VendorList";
@@ -40,7 +40,6 @@ async function getData(url, formData) {
 export default function Vendor() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [isCatOpen, setIsCatOpen] = useState(false);
   const [categoryNotes, setCategoryNotes] = useState([]);
   const [data, setData] = useState([]);
   const [meta, setMeta] = useState({ page_number: 1, total_pages: 1 });
@@ -100,26 +99,6 @@ export default function Vendor() {
                 <DialogTitle>Add New Vendor</DialogTitle>
               </DialogHeader>
               <AddVendorForm setIsOpen={setIsOpen} />
-            </DialogContent>
-          </Dialog>
-
-          {/* Add Category Details */}
-          <Dialog open={isCatOpen} onOpenChange={setIsCatOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
-                <PlusIcon className="w-5 h-5" />
-                <span className="hidden md:inline">Add Vendor Details</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto rounded-lg shadow-lg">
-              <DialogHeader>
-                <DialogTitle>Add New Vendor Details</DialogTitle>
-              </DialogHeader>
-              <AddVendorDetailsForm
-                setIsOpen={setIsCatOpen}
-                categoryNotes={categoryNotes}
-                vendor={data}
-              />
             </DialogContent>
           </Dialog>
         </div>
