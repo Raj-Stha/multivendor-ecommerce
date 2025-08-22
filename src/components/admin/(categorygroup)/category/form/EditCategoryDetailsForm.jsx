@@ -124,7 +124,17 @@ export default function EditCategoryDetailsForm({
     };
 
     noteKeyValues.forEach(({ key, value }) => {
-      if (value) payload[key] = value;
+      if (value) {
+        payload[key] = value;
+      }
+    });
+
+    const previousKeys = Object.keys(data?.category_details || {});
+    previousKeys.forEach((prevKey) => {
+      const stillSelected = noteKeyValues.find((n) => n.key === prevKey);
+      if (!stillSelected) {
+        payload[prevKey] = null;
+      }
     });
 
     try {
