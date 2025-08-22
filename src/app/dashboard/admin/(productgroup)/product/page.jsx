@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import ProductList from "../../../../../components/admin/(productgroup)/product/ProductList";
 import AddProductForm from "../../../../../components/admin/(productgroup)/product/form/AddProductForm";
-import AddProductDetailsForm from "../../../../../components/admin/(productgroup)/product/form/AddProductDetailsForm";
 import CategoryListSkeleton from "../../../../../components/admin/Skeleton/CategooryListSkeleton";
 
 async function getData(url, formData) {
@@ -40,7 +39,6 @@ async function getData(url, formData) {
 export default function ProductAdmin() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [isCatOpen, setIsCatOpen] = useState(false);
   const [productNotes, setProductNotes] = useState([]);
   const [manu, setManu] = useState([]);
   const [cat, setCat] = useState([]);
@@ -134,28 +132,6 @@ export default function ProductAdmin() {
                   setIsOpen={setIsOpen}
                   category={cat}
                   manu={manu}
-                />
-              )}
-            </DialogContent>
-          </Dialog>
-
-          {/* Add Product Details */}
-          <Dialog open={isCatOpen} onOpenChange={setIsCatOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
-                <PlusIcon className="w-5 h-5" />
-                <span className="hidden md:inline">Add Product Details</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto rounded-lg shadow-lg">
-              <DialogHeader>
-                <DialogTitle>Add New Product Details</DialogTitle>
-              </DialogHeader>
-              {productNotes && allProduct && (
-                <AddProductDetailsForm
-                  setIsOpen={setIsCatOpen}
-                  productNotes={productNotes}
-                  product={allProduct}
                 />
               )}
             </DialogContent>

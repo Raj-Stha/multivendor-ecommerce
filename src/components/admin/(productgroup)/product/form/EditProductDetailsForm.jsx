@@ -123,6 +123,14 @@ export default function EditProductDetailsForm({
       product_id: parseInt(values.product_id),
     };
 
+    const previousKeys = Object.keys(data?.product_details || {});
+    previousKeys.forEach((prevKey) => {
+      const stillSelected = noteKeyValues.find((n) => n.key === prevKey);
+      if (!stillSelected) {
+        payload[prevKey] = null;
+      }
+    });
+
     noteKeyValues.forEach(({ key, value }) => {
       if (value) payload[key] = value;
     });
