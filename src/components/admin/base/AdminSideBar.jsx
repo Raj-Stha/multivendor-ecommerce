@@ -126,6 +126,23 @@ const SIDEBAR_ITEMS = [
   },
 
   {
+    type: "collapsible",
+    label: "Promo Management",
+    items: [
+      {
+        label: "Promo",
+        href: "/dashboard/admin/promo",
+        icon: Package,
+      },
+      {
+        label: "Promo Notes",
+        href: "/dashboard/admin/promo-notes",
+        icon: Box,
+      },
+    ],
+  },
+
+  {
     type: "group",
     label: "System Paramters",
     items: [
