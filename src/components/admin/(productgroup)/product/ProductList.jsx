@@ -9,6 +9,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import EditProductDetailsForm from "./form/EditProductDetailsForm";
+import EditVariantsForm from "./form/EditVariantsForm";
+import AddVariantsForm from "./form/AddVariantsForm";
 
 export default function ProductList({
   data,
@@ -118,9 +120,14 @@ export default function ProductList({
                       {/* Variants Information */}
                       {d.variants && d.variants.length > 0 ? (
                         <div className="bg-white p-4 rounded-md shadow-sm border">
-                          <h4 className="font-semibold text-md mb-3 text-gray-700">
-                            Product Variants ({d.variants.length})
-                          </h4>
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-md mb-3 text-gray-700">
+                              Product Variants ({d.variants.length})
+                            </h4>
+                            {d.product_id && (
+                              <AddVariantsForm productID={d.product_id} />
+                            )}
+                          </div>
                           <div className="space-y-4">
                             {d.variants.map((variant, index) => (
                               <div
@@ -146,13 +153,21 @@ export default function ProductList({
                                   </div>
 
                                   {variant.variant_description && (
-                                    <div className="mt-3 pt-2 border-t border-gray-200">
-                                      <h5 className="font-medium text-gray-700 mb-1">
-                                        Variant Description:
-                                      </h5>
-                                      <p className="text-sm text-gray-600 leading-relaxed">
-                                        {variant.variant_description}
-                                      </p>
+                                    <div className="flex justify-between items-end">
+                                      <div className="mt-3 pt-2 border-t border-gray-200">
+                                        <h5 className="font-medium text-gray-700 mb-1">
+                                          Variant Description:
+                                        </h5>
+                                        <p className="text-sm text-gray-600 leading-relaxed">
+                                          {variant.variant_description}
+                                        </p>
+                                      </div>
+                                      <div className="">
+                                        <EditVariantsForm
+                                          data={variant}
+                                          productID={d.product_id}
+                                        />
+                                      </div>
                                     </div>
                                   )}
                                 </div>
