@@ -122,6 +122,11 @@ const SIDEBAR_ITEMS = [
         href: "/dashboard/admin/product-notes",
         icon: Box,
       },
+      {
+        label: "Product Map",
+        href: "/dashboard/admin/product-map",
+        icon: Box,
+      },
     ],
   },
 
