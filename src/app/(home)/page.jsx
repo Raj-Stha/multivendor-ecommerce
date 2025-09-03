@@ -1,5 +1,6 @@
 import Hero from "./_components/slider";
 import ProductSliderSection from "./_components/product-slider-section";
+import CategoriesSection from "./_components/categories-section";
 import Index from "@/components/product-card-main";
 
 const baseurl = process.env.NEXT_PUBLIC_API_URL;
@@ -30,7 +31,7 @@ async function safeFetch(url, options = {}) {
 }
 
 export default async function Home() {
-  const [productData] = await Promise.all([
+  const [productData, categoryData] = await Promise.all([
     safeFetch(`${baseurl}/getproducts`, {
       method: "POST",
       body: {
@@ -42,12 +43,20 @@ export default async function Home() {
         order_by: "price_desc",
       },
     }),
+    safeFetch(`${baseurl}/getcategory`, {
+      method: "POST",
+      body: {
+        page_number: 1,
+        limit: 16,
+      },
+    }),
   ]);
-  // console.log(productData?.details);
+
   return (
     <div className="bg-[#f5f5f5]">
       <Hero />
       <ProductSliderSection products={productData?.details} />
+      <CategoriesSection categories={categoryData?.details} />
       <Index />
     </div>
   );
