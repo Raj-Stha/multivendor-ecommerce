@@ -1,11 +1,10 @@
 import Hero from "./_components/slider";
 import ProductSliderSection from "./_components/product-slider-section";
 import CategoriesSection from "./_components/categories-section";
-import Index from "@/components/product-card-main";
+import ProductGrid from "./_components/product-grid-section";
 
 const baseurl = process.env.NEXT_PUBLIC_API_URL;
 
-// Safe fetch function that supports GET and POST
 async function safeFetch(url, options = {}) {
   try {
     const res = await fetch(url, {
@@ -31,11 +30,11 @@ async function safeFetch(url, options = {}) {
 }
 
 export default async function Home() {
-  const [productData, categoryData] = await Promise.all([
+  const [productData, categoryData, productData2] = await Promise.all([
     safeFetch(`${baseurl}/getproducts`, {
       method: "POST",
       body: {
-        limit: 1000,
+        limit: 8,
         page_number: 1,
         price_from: 0,
         price_to: 100000,
@@ -50,6 +49,17 @@ export default async function Home() {
         limit: 16,
       },
     }),
+    safeFetch(`${baseurl}/getproducts`, {
+      method: "POST",
+      body: {
+        limit: 2,
+        page_number: 1,
+        price_from: 0,
+        price_to: 100000,
+        product_name: "",
+        order_by: "price_desc",
+      },
+    }),
   ]);
 
   return (
@@ -57,7 +67,7 @@ export default async function Home() {
       <Hero />
       <ProductSliderSection products={productData?.details} />
       <CategoriesSection categories={categoryData?.details} />
-      <Index />
+      <ProductGrid initialProducts={productData2?.details} baseurl={baseurl} />
     </div>
   );
 }

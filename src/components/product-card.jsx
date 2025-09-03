@@ -61,7 +61,7 @@ export function ProductCard({ product, border = false }) {
       {/* Product Card */}
       <div
         className={`w-full jost-text cursor-pointer flex flex-col h-full transition-all duration-300 hover:shadow-xl bg-white group overflow-hidden relative ${
-          border ? "border border-gray-200 rounded-lg" : ""
+          border ? "border border-gray-300 rounded-none" : ""
         }`}
       >
         {/* Image */}
@@ -87,7 +87,7 @@ export function ProductCard({ product, border = false }) {
         </div>
 
         {/* Content */}
-        <div className="p-4 flex-1 flex flex-col">
+        <div className="p-4 flex-1 flex flex-col bg-white">
           <Link href={`/product/${product.product_id}`}>
             <h4 className="text-sm text-gray-800 font-normal line-clamp-2 hover:text-primary transition-colors">
               {product.product_name}
