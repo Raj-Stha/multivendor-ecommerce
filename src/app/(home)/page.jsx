@@ -3,7 +3,7 @@ import ProductSliderSection from "./_components/product-slider-section";
 import CategoriesSection from "./_components/categories-section";
 import ProductGrid from "./_components/product-grid-section";
 
-const baseurl = process.env.NEXT_PUBLIC_API_URL;
+const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function safeFetch(url, options = {}) {
   try {
