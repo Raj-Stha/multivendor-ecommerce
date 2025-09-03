@@ -45,22 +45,17 @@ export function ProductCard({ product }) {
             className="object-contain transition-transform duration-500"
           />
 
-          {/* Quick View Button */}
-          <div className="absolute top-2 right-2 z-10 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 md:block hidden">
-            <DialogTrigger asChild>
-              <button className="bg-gray-800 p-2 rounded-full shadow-md flex items-center justify-center text-white hover:bg-gray-700 transition-all duration-300">
-                <Eye size={18} />
-              </button>
-            </DialogTrigger>
-          </div>
-          {/* Always visible on Mobile */}
-          <div className="absolute top-2 right-2 z-10 md:hidden">
-            <DialogTrigger asChild>
-              <button className="bg-gray-700 p-2 rounded-full shadow-md flex items-center justify-center text-white hover:text-gray-500 transition-all duration-300">
-                <Eye size={18} />
-              </button>
-            </DialogTrigger>
-          </div>
+          {/* Single Eye Button - responsive visibility */}
+          <DialogTrigger asChild>
+            <button
+              className="absolute top-2 right-2 z-10 p-2 rounded-full shadow-md flex items-center justify-center
+               bg-gray-800 text-white hover:bg-gray-700 transition-all duration-300
+               opacity-100 scale-100 
+               md:opacity-0 md:scale-75 md:group-hover:opacity-100 md:group-hover:scale-100"
+            >
+              <Eye size={18} />
+            </button>
+          </DialogTrigger>
         </div>
 
         {/* Content */}
