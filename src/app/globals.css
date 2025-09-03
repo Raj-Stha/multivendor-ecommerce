@@ -168,3 +168,9 @@
 .color-gray {
   background-color: #f8f9fa;
 }
+
+.sticky-nav {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+}

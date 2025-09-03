@@ -4,11 +4,11 @@ import MobileBottomNav from "@/components/Header/mobile-bottom-nav";
 
 export default function HomeLayout({ children }) {
   return (
-    <div>
+    <>
       <TopBar />
       <Header />
-      {children}
+      <main className="min-h-screen">{children}</main>
       <MobileBottomNav />
-    </div>
+    </>
   );
 }

@@ -1,17 +1,15 @@
+// DesktopNav.jsx - WORKING VERSION
 "use client";
-
 import Link from "next/link";
 import SearchBar from "./SearchBar";
-import AccountMenu from "./AccountMenu";
 import CartIcon from "./CartIcon";
 import NotificationIcon from "./NotificationIcon";
 
 export default function DesktopNav() {
-
   return (
-    <div className="container max-w-7xl mx-auto py-4 px-4 md:px-6 nunito-text z-8">
-      <div className="flex items-center justify-between gap-4">
-        {/* Left: Logo */}
+    <nav className="sticky top-0 z-50 bg-primary shadow-md w-full sticky-nav">
+      <div className="container max-w-7xl mx-auto py-3 px-4 md:px-6 flex items-center justify-between gap-4">
+        {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/" className="transition-opacity hover:opacity-80">
             <img
@@ -22,17 +20,17 @@ export default function DesktopNav() {
           </Link>
         </div>
 
-        {/* Center: Search Bar */}
+        {/* Search Bar */}
         <div className="hidden sm:flex flex-1 max-w-xl justify-center">
           <SearchBar />
         </div>
 
-        {/* Right: Account, Cart, Notifications */}
+        {/* Right icons */}
         <div className="flex items-center space-x-5 flex-shrink-0">
           <CartIcon />
           <NotificationIcon />
         </div>
       </div>
-    </div>
+    </nav>
   );
 }

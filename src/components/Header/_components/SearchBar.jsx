@@ -6,7 +6,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import Link from "next/link";
 
 export default function ImprovedSearchBar({
-  placeholder = "Search for Products, Medicine...",
+  placeholder = "Search here...",
   className = "",
   onProductSelect,
   apiBaseUrl = "http://localhost:4000/api/v1",
@@ -129,7 +129,7 @@ export default function ImprovedSearchBar({
 
   return (
     <div ref={searchRef} className={`relative w-full ${className}`}>
-      <div className="relative flex w-full sm:min-w-[350px] sm:max-w-[650px] sm:mx-auto border border-gray-300 rounded-none overflow-hidden">
+      <div className="relative flex w-full sm:min-w-[350px] sm:max-w-[650px] sm:mx-auto border border-white rounded-none overflow-hidden bg-gray-100 noto-sans-text">
         <input
           ref={inputRef}
           type="text"
@@ -137,12 +137,12 @@ export default function ImprovedSearchBar({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="flex-1 px-4 py-2 text-sm focus:outline-none nunito-text transition-all duration-200"
+          className="flex-1 px-4 py-2 text-sm focus:outline-none  transition-all duration-200"
           autoComplete="off"
         />
         <button
           onClick={handleSearchButtonClick}
-          className="bg-primary text-white w-12 h-auto flex items-center justify-center hover:bg-primary/90 transition-colors"
+          className="bg-primary/80 text-white w-12 h-auto flex items-center justify-center hover:bg-primary/90 transition-colors"
           aria-label="Search"
         >
           <Search className="h-5 w-5" />
