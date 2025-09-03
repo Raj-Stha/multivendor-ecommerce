@@ -1,5 +1,6 @@
 import Hero from "./_components/slider";
 import ProductSliderSection from "./_components/product-slider-section";
+import Index from "@/components/product-card-main";
 
 const baseurl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -44,9 +45,10 @@ export default async function Home() {
   ]);
   // console.log(productData?.details);
   return (
-    <div className="bg-gray-100">
+    <div className="bg-[#f5f5f5]">
       <Hero />
       <ProductSliderSection products={productData?.details} />
+      <Index />
     </div>
   );
 }

@@ -1,89 +1,62 @@
 "use client";
 
-import { useRef } from "react";
-import Slider from "react-slick";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 export default function ProductSliderSection({ products }) {
-  const sliderRef = useRef(null);
-
   if (!products || products.length === 0) {
     return null;
   }
 
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    arrows: false,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
-  const handlePrev = () => sliderRef.current?.slickPrev();
-  const handleNext = () => sliderRef.current?.slickNext();
-
   return (
-    <section className=" my-4  ">
-      <div className="container max-w-7xl mx-auto bg-white  px-4 py-6  rounded-none shadow-md ">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold poppins-text text-primary text-center mb-4">
-            Featured Products
-          </h2>
-          <div className="flex space-x-2">
-            <button
-              onClick={handlePrev}
-              className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition"
-              aria-label="Previous Slide"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              onClick={handleNext}
-              className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition"
-              aria-label="Next Slide"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+    <section className="my-6 noto-sans-text">
+      <div className="container max-w-7xl mx-auto px-4 py-4 relative">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-3">
+          <div className="text-2xl text-black">Flash Sale</div>
         </div>
 
-        <Slider ref={sliderRef} {...settings}>
-          {products.map((product) => (
-            <div key={product.product_id} className="px-2">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </Slider>
+        <div className="bg-white  ">
+          <div className="flex justify-between p-3 items-baseline">
+            <div className="text-md text-primary font-normal ">On Sale Now</div>
+            <Link
+              href="/products"
+              className=" w-fit
+              relative flex items-center justify-center
+              text-xs uppercase font-normal
+              text-primary border border-primary
+              px-4 py-2
+              bg-transparent
+              overflow-hidden
+              transition-colors duration-300 ease-in-out
+              before:absolute before:inset-0 before:w-0 before:bg-primary before:z-0 before:transition-all before:duration-300 before:ease-in-out
+              hover:before:w-full
+              hover:text-white 
+            "
+            >
+              <span className="relative z-10">Shop All Products</span>
+            </Link>
+          </div>
+          <hr className="border-gray-200 " />
+          {/* Product Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6  gap-2 p-3 ">
+            {products.slice(0, 6).map((product) => (
+              <motion.div
+                key={`${product.product_id}-${product.vendor_id}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <ProductCard
+                  product={product}
+                  key={`${product.product_id}-${product.vendor_id}`}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

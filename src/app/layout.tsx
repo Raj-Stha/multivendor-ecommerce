@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, Poppins, Source_Serif_4 } from "next/font/google";
+import { Nunito, Rubik, Jost, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -15,16 +15,22 @@ const nunito = Nunito({
   variable: "--font-nunito",
 });
 
-const poppins = Poppins({
-  weight: ["400", "600", "700"],
+const rubik = Rubik({
   subsets: ["latin"],
-  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-rubik",
 });
 
-const sourceSerifPro = Source_Serif_4({
+const jost = Jost({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-source-serif",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-jost",
+});
+
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-noto-sans",
 });
 
 export const metadata: Metadata = {
@@ -42,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${nunito.variable} ${poppins.variable} ${sourceSerifPro.variable} antialiased h-full`}
+        className={`${nunito.variable} ${rubik.variable} ${jost.variable} ${notoSans.variable} antialiased h-full`}
       >
         <Providers>
           <CartProvider>

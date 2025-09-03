@@ -51,7 +51,7 @@
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.2712 0.187888 264.052);
+  --primary: oklch(0.6983 0.1811 46.25);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
@@ -125,11 +125,14 @@
   .nunito-text {
     font-family: var(--font-nunito), sans-serif;
   }
-  .poppins-text {
-    font-family: var(--font-poppins), sans-serif;
+  .rubik-text {
+    font-family: var(--font-rubik), sans-serif;
   }
-  .source-serif-text {
-    font-family: var(--font-source-serif), serif;
+  .jost-text {
+    font-family: var(--font-jost), sans-serif;
+  }
+  .noto-sans-text {
+    font-family: var(--font-noto-sans), sans-serif;
   }
 }
 
