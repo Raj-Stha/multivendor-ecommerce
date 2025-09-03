@@ -10,7 +10,7 @@ export default function NotificationIcon() {
   return (
     <Link
       href="/wishlist"
-      className="flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-colors text-gray-800 hover:text-primary"
+      className="flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-colors text-gray-800 hover:text-primary md:hover:text-white"
     >
       <div className="relative">
         <Heart className="h-5 w-5" />
