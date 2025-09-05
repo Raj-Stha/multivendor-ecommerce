@@ -13,7 +13,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "../list/product-card";
 import { motion } from "framer-motion";
@@ -22,25 +21,26 @@ function useDebounce(value, delay) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
   }, [value, delay]);
 
   return debouncedValue;
 }
 
-// Skeleton placeholder for products while loading
-function ProductSkeleton() {
+function ProductSkeletonGrid({ count = 8 }) {
   return (
-    <div className="animate-pulse bg-white rounded-lg shadow-sm p-3">
-      <div className="w-full h-40 bg-gray-200 rounded-lg mb-3"></div>
-      <div className="h-4 bg-gray-200 rounded mb-2"></div>
-      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-3 animate-pulse">
+      {Array.from({ length: count }, (_, i) => (
+        <div
+          key={i}
+          className="bg-white rounded-lg shadow-sm p-3 border flex flex-col gap-2"
+        >
+          <div className="w-full h-32 sm:h-40 bg-gray-200 rounded-lg"></div>
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -69,19 +69,17 @@ export function ProductFilterClient({
 
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [sortBy, setSortBy] = useState(initialSortBy);
-  const [hasActiveFilters, setHasActiveFilters] = useState(
-    initialHasActiveFilters
-  );
-
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
   const sortRef = useRef(null);
-
+  const abortControllerRef = useRef(null);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const fetchUpdatedProducts = async (url, requestBody) => {
+    if (abortControllerRef.current) abortControllerRef.current.abort();
+    abortControllerRef.current = new AbortController();
     setLoading(true);
 
     try {
@@ -89,31 +87,33 @@ export function ProductFilterClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
+        signal: abortControllerRef.current.signal,
       });
 
-      if (!res.ok) throw new Error(`API responded with status: ${res.status}`);
+      if (!res.ok) throw new Error(`API responded with ${res.status}`);
 
       const data = await res.json();
-      const fetchedProducts = data.details || [];
-
-      setProducts(fetchedProducts);
-      setTotalItems(data.hint?.total_count || 0);
-      setTotalPages(data.hint?.total_pages || 0);
-      setCurrentPage(data.hint?.page_number || 1);
+      if (!abortControllerRef.current.signal.aborted) {
+        setProducts(data.details || []);
+        setTotalItems(data.hint?.total_count || 0);
+        setTotalPages(data.hint?.total_pages || 0);
+        setCurrentPage(data.hint?.page_number || 1);
+      }
     } catch (e) {
-      setProducts([]);
-      setTotalItems(0);
-      setTotalPages(0);
-      setCurrentPage(1);
+      if (e.name !== "AbortError") {
+        setProducts([]);
+        setTotalItems(0);
+        setTotalPages(0);
+        setCurrentPage(1);
+      }
     } finally {
-      setLoading(false);
+      if (!abortControllerRef.current.signal.aborted) setLoading(false);
     }
   };
 
   const updateURL = useCallback(
     (newFilters, newSearchTerm, newSortBy, newPage = 1) => {
       const params = new URLSearchParams();
-
       if (newSearchTerm) params.set("search", newSearchTerm);
       if (newSortBy && newSortBy !== "latest") params.set("sort", newSortBy);
       if (newPage > 1) params.set("page", newPage.toString());
@@ -122,64 +122,47 @@ export function ProductFilterClient({
       if (newFilters.manufacturer)
         params.set("manufacturer", newFilters.manufacturer);
       if (newFilters.vendor) params.set("vendor", newFilters.vendor);
-      if (newFilters.createdBy) params.set("createdBy", newFilters.createdBy);
-      if (newFilters.hasVariant)
-        params.set("hasVariant", newFilters.hasVariant);
-      if (newFilters.priceRange.min !== (filterData?.priceRange?.min || 0)) {
+      if (newFilters.priceRange) {
         params.set("minPrice", newFilters.priceRange.min.toString());
-      }
-      if (newFilters.priceRange.max !== (filterData?.priceRange?.max || 1000)) {
         params.set("maxPrice", newFilters.priceRange.max.toString());
       }
 
-      const newURL = params.toString()
-        ? `/products?${params.toString()}`
-        : "/products";
-
-      router.push(newURL);
-
-      const requestBody = {
-        limit: 10,
-        page_number: newPage,
-        price_from: newFilters.priceRange.min.toString(),
-        price_to: newFilters.priceRange.max.toString(),
-        order_by:
-          newSortBy === "asc"
-            ? "price_asc"
-            : newSortBy === "desc"
-            ? "price_desc"
-            : "latest",
-      };
-
-      if (newSearchTerm) requestBody.search_word = newSearchTerm;
-      if (newFilters.category)
-        requestBody.category_id = Number.parseInt(newFilters.category);
-      if (newFilters.manufacturer)
-        requestBody.manufacturer_id = Number.parseInt(newFilters.manufacturer);
-      if (newFilters.vendor)
-        requestBody.vendor_id = Number.parseInt(newFilters.vendor);
+      router.replace(params.toString() ? `/products?${params}` : "/products");
 
       fetchUpdatedProducts(
         `${
           process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api"
         }/getproducts`,
-        requestBody
+        {
+          limit: 10,
+          page_number: newPage,
+          price_from: newFilters.priceRange.min,
+          price_to: newFilters.priceRange.max,
+          order_by:
+            newSortBy === "asc"
+              ? "price_asc"
+              : newSortBy === "desc"
+              ? "price_desc"
+              : "latest",
+          ...(newSearchTerm && { search_word: newSearchTerm }),
+          ...(newFilters.category && {
+            category_id: Number(newFilters.category),
+          }),
+          ...(newFilters.manufacturer && {
+            manufacturer_id: Number(newFilters.manufacturer),
+          }),
+          ...(newFilters.vendor && { vendor_id: Number(newFilters.vendor) }),
+        }
       );
     },
-    [filterData, router]
+    [router]
   );
 
   useEffect(() => {
     if (debouncedSearchTerm !== initialSearchTerm) {
       updateURL(selectedFilters, debouncedSearchTerm, sortBy, 1);
     }
-  }, [
-    debouncedSearchTerm,
-    selectedFilters,
-    sortBy,
-    updateURL,
-    initialSearchTerm,
-  ]);
+  }, [debouncedSearchTerm]);
 
   const handleFilterChange = (filterType, value) => {
     const newFilters = { ...selectedFilters, [filterType]: value };
@@ -187,38 +170,24 @@ export function ProductFilterClient({
     updateURL(newFilters, debouncedSearchTerm, sortBy, 1);
   };
 
-  const handleSearchChange = (newSearchTerm) => {
-    setSearchTerm(newSearchTerm);
-  };
-
-  const handleSortChange = (newSortBy) => {
-    setSortBy(newSortBy);
-    updateURL(selectedFilters, debouncedSearchTerm, newSortBy, currentPage);
-  };
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    updateURL(selectedFilters, debouncedSearchTerm, sortBy, newPage);
-  };
-
   const handleClearFilters = () => {
-    const clearedFilters = {
+    const cleared = {
       category: "",
       manufacturer: "",
       vendor: "",
-      createdBy: "",
-      hasVariant: "",
       priceRange: {
         min: filterData?.priceRange?.min || 0,
         max: filterData?.priceRange?.max || 1000,
       },
     };
-    setSelectedFilters(clearedFilters);
+    setSelectedFilters(cleared);
     setSearchTerm("");
     setSortBy("latest");
     setCurrentPage(1);
     setProducts(initialProducts);
-    router.push("/products");
+    setTotalItems(initialTotalItems);
+    setTotalPages(initialTotalPages);
+    router.replace("/products");
   };
 
   const sortOptions = [
@@ -227,18 +196,6 @@ export function ProductFilterClient({
     { name: "Price: Low to High", value: "asc" },
     { name: "Price: High to Low", value: "desc" },
   ];
-
-  // Close sort dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (!sortRef.current) return;
-      if (!sortRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   return (
     <>
@@ -251,7 +208,9 @@ export function ProductFilterClient({
               <h1 className="text-lg font-semibold text-gray-900">
                 Category Products
               </h1>
-              <p className="text-xs text-gray-600">{totalItems} Items found</p>
+              <p className="text-xs text-gray-600">
+                {loading ? "Loading..." : `${totalItems} Items found`}
+              </p>
             </div>
             <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
               <SheetTrigger asChild>
@@ -268,6 +227,7 @@ export function ProductFilterClient({
                   onClearFilters={handleClearFilters}
                   showCreatedBy={false}
                   showVariants={false}
+                  isLoading={loading}
                 />
               </SheetContent>
             </Sheet>
@@ -298,7 +258,9 @@ export function ProductFilterClient({
               <h1 className="text-xl font-semibold text-gray-900">
                 Category Products
               </h1>
-              <p className="text-sm text-gray-600">{totalItems} Items found</p>
+              <p className="text-sm text-gray-600">
+                {loading ? "Loading..." : `${totalItems} Items found`}
+              </p>
             </div>
 
             {/* Desktop Search */}
@@ -334,6 +296,7 @@ export function ProductFilterClient({
                 <button
                   onClick={() => setIsOpen(!isOpen)}
                   className="bg-white text-gray-900 px-3 py-2 rounded-lg flex items-center gap-2 min-w-40 border hover:border-primary/90 transition-colors"
+                  disabled={loading}
                 >
                   <p className="text-sm">
                     {sortOptions.find((opt) => opt.value === sortBy)?.name ||
@@ -376,127 +339,45 @@ export function ProductFilterClient({
       </div>
 
       <div className="flex gap-6">
-        {/* Sidebar */}
         <div className="hidden md:block w-80 flex-shrink-0">
           <FilterSidebar
             filters={filterData}
             selectedFilters={selectedFilters}
             onFilterChange={handleFilterChange}
             onClearFilters={handleClearFilters}
-            showCreatedBy={false}
-            showVariants={false}
+            isLoading={loading}
           />
         </div>
 
-        <div className="flex-1 min-w-0">
-          {loading ? (
-            <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
-              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary"></div>
-            </div>
-          ) : products?.length > 0 ? (
+        <div className="flex-1 min-w-0 relative">
+          {products?.length > 0 ? (
             <>
-              {/* <ProductCardList products={products} /> */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4   gap-2 p-3 ">
-                {products.slice(0, 6).map((product) => (
+              <div
+                className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-3`}
+              >
+                {products.map((product, i) => (
                   <motion.div
                     key={`${product.product_id}-${product.vendor_id}`}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
                   >
-                    <ProductCard
-                      product={product}
-                      key={`${product.product_id}-${product.vendor_id}`}
-                    />
+                    <ProductCard product={product} />
                   </motion.div>
                 ))}
               </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex justify-center mt-8">
-                  <Pagination>
-                    <PaginationContent className="flex-wrap gap-1">
-                      <PaginationItem>
-                        <PaginationPrevious
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (currentPage > 1)
-                              handlePageChange(currentPage - 1);
-                          }}
-                          className={`${
-                            currentPage <= 1
-                              ? "pointer-events-none opacity-50"
-                              : ""
-                          } text-xs sm:text-sm px-2 sm:px-3 hover:bg-primary/20`}
-                        />
-                      </PaginationItem>
-
-                      {Array.from(
-                        { length: Math.min(totalPages, 5) },
-                        (_, i) => {
-                          let pageNum;
-                          if (totalPages <= 5) {
-                            pageNum = i + 1;
-                          } else if (currentPage <= 3) {
-                            pageNum = i + 1;
-                          } else if (currentPage >= totalPages - 2) {
-                            pageNum = totalPages - 4 + i;
-                          } else {
-                            pageNum = currentPage - 2 + i;
-                          }
-
-                          return (
-                            <PaginationItem key={pageNum}>
-                              <PaginationLink
-                                href="#"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  handlePageChange(pageNum);
-                                }}
-                                isActive={currentPage === pageNum}
-                                className={
-                                  currentPage === pageNum
-                                    ? "bg-primary text-white"
-                                    : "hover:bg-primary/20"
-                                }
-                              >
-                                {pageNum}
-                              </PaginationLink>
-                            </PaginationItem>
-                          );
-                        }
-                      )}
-
-                      <PaginationItem>
-                        <PaginationNext
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (currentPage < totalPages)
-                              handlePageChange(currentPage + 1);
-                          }}
-                          className={`${
-                            currentPage >= totalPages
-                              ? "pointer-events-none opacity-50"
-                              : ""
-                          } text-xs sm:text-sm px-2 sm:px-3 hover:bg-primary/20`}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
+              {loading && (
+                <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                  <ProductSkeletonGrid count={8} />
                 </div>
               )}
             </>
           ) : (
             <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-              <p className="text-gray-500 text-base sm:text-lg mb-4">
-                No products found matching your criteria.
-              </p>
+              <p className="text-gray-500">No products found.</p>
               <button
                 onClick={handleClearFilters}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors text-sm sm:text-base"
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 mt-4"
               >
                 Clear All Filters
               </button>
