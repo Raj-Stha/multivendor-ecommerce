@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/home/products/list/product-card";
 
 export default function ProductGrid({ initialProducts, baseurl }) {
   const [products, setProducts] = useState(initialProducts || []);

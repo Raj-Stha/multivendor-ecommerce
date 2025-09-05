@@ -15,7 +15,9 @@ import {
 } from "@/components/ui/pagination";
 
 import { Button } from "@/components/ui/button";
-import { ProductGrid } from "./product-grid";
+// import { ProductCardList } from "../list/product-card-list";
+import { ProductCard } from "../list/product-card";
+import { motion } from "framer-motion";
 
 function useDebounce(value, delay) {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -239,9 +241,6 @@ export function ProductFilterClient({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  console.log(loading);
-  console.log(products);
-
   return (
     <>
       {/* Header (Search + Filter + Sort) */}
@@ -397,8 +396,24 @@ export function ProductFilterClient({
             </div>
           ) : products?.length > 0 ? (
             <>
-              <ProductGrid products={products} />
+              {/* <ProductCardList products={products} /> */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4   gap-2 p-3 ">
+                {products.slice(0, 6).map((product) => (
+                  <motion.div
+                    key={`${product.product_id}-${product.vendor_id}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <ProductCard
+                      product={product}
+                      key={`${product.product_id}-${product.vendor_id}`}
+                    />
+                  </motion.div>
+                ))}
+              </div>
 
+              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex justify-center mt-8">
                   <Pagination>

@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/home/products/list/product-card";
 
 export default function ProductSliderSection({ products }) {
   if (!products || products.length === 0) {
