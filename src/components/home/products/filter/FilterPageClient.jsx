@@ -180,14 +180,14 @@ export function ProductFilterClient({
         max: filterData?.priceRange?.max || 1000,
       },
     };
+
     setSelectedFilters(cleared);
     setSearchTerm("");
     setSortBy("latest");
     setCurrentPage(1);
-    setProducts(initialProducts);
-    setTotalItems(initialTotalItems);
-    setTotalPages(initialTotalPages);
-    router.replace("/products");
+
+    // 🔥 fetch products again with cleared filters
+    updateURL(cleared, "", "latest", 1);
   };
 
   const sortOptions = [
