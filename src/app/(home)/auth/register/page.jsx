@@ -1,5 +1,5 @@
 // import { generatePageMetadata } from "@/components/Seo";
-import SignUp from "@/components/home/(auth)/register/form/SignUp";
+import SignUp from "@/components/home/auth/register/form/signup";
 
 // export const metadata = {
 //   ...generatePageMetadata({
