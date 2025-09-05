@@ -362,7 +362,7 @@ export function ProductFilterClient({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.05 }}
                   >
-                    <ProductCard product={product} />
+                    <ProductCard product={product} border="true" />
                   </motion.div>
                 ))}
               </div>

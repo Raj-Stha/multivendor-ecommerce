@@ -67,12 +67,14 @@ export function ProductCard({ product, border = false }) {
       >
         {/* Image */}
         <div className="relative aspect-square bg-gray-50 overflow-hidden">
-          <Image
-            src={selectedVariant.featured_image || "/placeholder.svg"}
-            alt={product.product_name}
-            fill
-            className="object-contain transition-transform duration-500"
-          />
+          <Link href={`/products/${product.vendor_id}/${product.product_id}`}>
+            <Image
+              src={selectedVariant.featured_image || "/placeholder.svg"}
+              alt={product.product_name}
+              fill
+              className="object-contain transition-transform duration-500"
+            />
+          </Link>
 
           {/* Single Eye Button - responsive visibility */}
           <DialogTrigger asChild>
@@ -88,12 +90,13 @@ export function ProductCard({ product, border = false }) {
         </div>
 
         {/* Content */}
-        <div className="p-4 flex-1 flex flex-col bg-white">
-          <Link href={`/product/${product.product_id}`}>
-            <h4 className="text-sm text-gray-800 font-normal line-clamp-2 hover:text-primary transition-colors">
-              {product.product_name}
-            </h4>
-          </Link>
+        <Link
+          href={`/products/${product.vendor_id}/${product.product_id}`}
+          className="p-4 flex-1 flex flex-col bg-white"
+        >
+          <h4 className="text-sm text-gray-800 font-normal line-clamp-2 hover:text-primary transition-colors">
+            {product.product_name}
+          </h4>
 
           {/* Price */}
           <div className="mt-auto">
@@ -109,7 +112,7 @@ export function ProductCard({ product, border = false }) {
               </div>
             )}
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Quick View Modal */}
