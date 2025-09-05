@@ -65,7 +65,7 @@ function SignUp() {
   };
 
   const handleLoginRedirect = () => {
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   const isLoading = isFormLoading;
