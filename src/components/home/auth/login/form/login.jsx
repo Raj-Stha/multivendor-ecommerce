@@ -53,9 +53,16 @@ function Login() {
       const result = await res.json();
       console.log(result);
 
+      const redirectPath =
+        redirect && redirect.startsWith("/")
+          ? redirect
+          : redirect
+          ? `/${redirect}`
+          : "";
+
       if (result?.message?.status === "success") {
-        if (redirect) {
-          router.replace(redirect.startsWith("/") ? redirect : `/${redirect}`);
+        if (redirectPath) {
+          router.replace(redirectPath);
         } else if (result?.role === "invent_vendor") {
           router.push("/dashboard/vendor");
         } else if (result?.role === "invent_admin") {
