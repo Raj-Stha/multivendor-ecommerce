@@ -104,7 +104,7 @@ export function FilterSidebar({
             <Button
               size="sm"
               onClick={handlePriceInputBlur}
-              className="bg-blue-600 hover:bg-blue-700 text-white mt-5"
+              className="bg-primary hover:bg-primary text-white mt-5"
             >
               →
             </Button>
@@ -163,7 +163,7 @@ export function FilterSidebar({
                     onChange={() =>
                       onFilterChange("category", cat.category_id.toString())
                     }
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    className="h-4 w-4 text-primary focus:ring-primary/90 border-gray-300"
                   />
                   <span className="text-sm text-slate-700">
                     {cat.category_name}
@@ -204,7 +204,7 @@ export function FilterSidebar({
                   onChange={() =>
                     onFilterChange("vendor", vendor.vendor_id.toString())
                   }
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                  className="h-4 w-4 text-primary focus:ring-primary/90 border-gray-300"
                 />
                 <Label
                   htmlFor={`vendor-${vendor.vendor_id}`}
@@ -251,7 +251,7 @@ export function FilterSidebar({
                       manufacturer.manufacturer_id.toString()
                     )
                   }
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                  className="h-4 w-4 text-primary focus:ring-primary/90 border-gray-300"
                 />
                 <Label
                   htmlFor={`manufacturer-${manufacturer.manufacturer_id}`}
@@ -263,77 +263,6 @@ export function FilterSidebar({
             ))}
           </div>
         </div>
-
-        {/* Created By (conditionally shown) */}
-        {/* {showCreatedBy && (
-          <div className="border p-4 rounded-lg bg-white shadow-sm">
-            <Label className="text-sm font-medium text-slate-700 mb-3 block">
-              Created By
-            </Label>
-            <div className="space-y-2 max-h-32 overflow-y-auto">
-              {filters.users?.map((user) => (
-                <div
-                  key={user.id}
-                  className="flex items-center space-x-3 p-2 rounded-md hover:bg-slate-50 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    id={`user-${user.id}`}
-                    checked={selectedFilters.createdBy?.includes(user.id)}
-                    onChange={(e) =>
-                      onFilterChange(
-                        "createdBy",
-                        e.target.checked
-                          ? [...(selectedFilters.createdBy || []), user.id]
-                          : selectedFilters.createdBy.filter(
-                              (u) => u !== user.id
-                            )
-                      )
-                    }
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <Label
-                    htmlFor={`user-${user.id}`}
-                    className="text-sm text-slate-700 cursor-pointer"
-                  >
-                    {user.name}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-        )} */}
-
-        {/* Has Variant */}
-        {/* {showVariants && (
-          <div className="border p-4 rounded-lg bg-white shadow-sm">
-            <Label className="text-sm font-medium text-slate-700 mb-3 block">
-              Has Variants
-            </Label>
-            <div className="flex items-center space-x-4">
-              <Button
-                size="sm"
-                variant={
-                  selectedFilters.hasVariant === "true" ? "default" : "outline"
-                }
-                onClick={() => onFilterChange("hasVariant", "true")}
-                className="transition-all"
-              >
-                Yes
-              </Button>
-              <Button
-                size="sm"
-                variant={
-                  selectedFilters.hasVariant === "false" ? "default" : "outline"
-                }
-                onClick={() => onFilterChange("hasVariant", "false")}
-                className="transition-all"
-              >
-                No
-              </Button>
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );

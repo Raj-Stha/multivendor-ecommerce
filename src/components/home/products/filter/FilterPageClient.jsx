@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/pagination";
 
 import { Button } from "@/components/ui/button";
-// import { ProductCardList } from "../list/product-card-list";
 import { ProductCard } from "../list/product-card";
 import { motion } from "framer-motion";
 
@@ -281,11 +280,11 @@ export function ProductFilterClient({
               placeholder="Search for items..."
               value={searchTerm}
               onChange={(e) => handleSearchChange(e.target.value)}
-              className="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 pr-12 placeholder-gray-500 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 pr-12 placeholder-gray-500 text-sm focus:ring-2 focus:ring-primary/90 focus:border-primary/90"
             />
             <button
               type="button"
-              className="absolute right-0 top-0 h-full px-4 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-colors"
+              className="absolute right-0 top-0 h-full px-4 bg-primary text-white rounded-r-lg hover:bg-primary transition-colors"
             >
               <Search className="h-4 w-4" />
             </button>
@@ -310,11 +309,11 @@ export function ProductFilterClient({
                   placeholder="Search for items..."
                   value={searchTerm}
                   onChange={(e) => handleSearchChange(e.target.value)}
-                  className="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 pr-12 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full bg-white border border-gray-300 rounded-lg py-2.5 px-4 pr-12 placeholder-gray-500 focus:ring-2 focus:ring-primary/90 focus:border-primary/90"
                 />
                 <button
                   type="button"
-                  className="absolute right-0 top-0 h-full px-4 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-colors"
+                  className="absolute right-0 top-0 h-full px-4 bg-primary text-white rounded-r-lg hover:bg-primary transition-colors"
                 >
                   <Search className="h-4 w-4" />
                 </button>
@@ -334,7 +333,7 @@ export function ProductFilterClient({
               <div className="relative">
                 <button
                   onClick={() => setIsOpen(!isOpen)}
-                  className="bg-white text-gray-900 px-3 py-2 rounded-lg flex items-center gap-2 min-w-40 border hover:border-blue-500 transition-colors"
+                  className="bg-white text-gray-900 px-3 py-2 rounded-lg flex items-center gap-2 min-w-40 border hover:border-primary/90 transition-colors"
                 >
                   <p className="text-sm">
                     {sortOptions.find((opt) => opt.value === sortBy)?.name ||
@@ -392,7 +391,7 @@ export function ProductFilterClient({
         <div className="flex-1 min-w-0">
           {loading ? (
             <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
-              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary"></div>
             </div>
           ) : products?.length > 0 ? (
             <>
@@ -430,7 +429,7 @@ export function ProductFilterClient({
                             currentPage <= 1
                               ? "pointer-events-none opacity-50"
                               : ""
-                          } text-xs sm:text-sm px-2 sm:px-3 hover:bg-blue-50`}
+                          } text-xs sm:text-sm px-2 sm:px-3 hover:bg-primary/20`}
                         />
                       </PaginationItem>
 
@@ -459,8 +458,8 @@ export function ProductFilterClient({
                                 isActive={currentPage === pageNum}
                                 className={
                                   currentPage === pageNum
-                                    ? "bg-blue-600 text-white"
-                                    : "hover:bg-blue-50"
+                                    ? "bg-primary text-white"
+                                    : "hover:bg-primary/20"
                                 }
                               >
                                 {pageNum}
@@ -482,7 +481,7 @@ export function ProductFilterClient({
                             currentPage >= totalPages
                               ? "pointer-events-none opacity-50"
                               : ""
-                          } text-xs sm:text-sm px-2 sm:px-3 hover:bg-blue-50`}
+                          } text-xs sm:text-sm px-2 sm:px-3 hover:bg-primary/20`}
                         />
                       </PaginationItem>
                     </PaginationContent>
@@ -497,7 +496,7 @@ export function ProductFilterClient({
               </p>
               <button
                 onClick={handleClearFilters}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors text-sm sm:text-base"
               >
                 Clear All Filters
               </button>
