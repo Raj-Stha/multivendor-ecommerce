@@ -20,7 +20,6 @@ export function ProductCard({ product, border = false }) {
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  console.log(product);
   if (!product?.variants?.length) return null;
 
   const selectedVariant = product.variants[selectedVariantIndex];

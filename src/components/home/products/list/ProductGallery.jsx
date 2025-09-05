@@ -1,163 +1,3 @@
-// "use client";
-// import { useState, useEffect } from "react";
-// import Image from "next/image";
-
-// export default function ProductGallery({
-//   variants = [],
-//   selectedVariantIndex = 0,
-// }) {
-//   console.log(variants);
-//   console.log(selectedVariantIndex);
-
-//   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-//   const safeVariants = variants || [];
-//   const safeSelectedIndex = Math.max(
-//     0,
-//     Math.min(selectedVariantIndex || 0, safeVariants.length - 1)
-//   );
-
-//   // Organize all images by variant with metadata
-//   const allImages = [];
-//   safeVariants.forEach((variant, variantIndex) => {
-//     // Add featured image first
-//     if (variant.featured_image) {
-//       allImages.push({
-//         url: variant.featured_image,
-//         variantIndex: variantIndex,
-//         variantId: variant.variant_id,
-//         variantDescription: variant.variant_description,
-//         type: "featured",
-//       });
-//     }
-
-//     // Add product images
-//     if (Array.isArray(variant.product_image)) {
-//       variant.product_image.forEach((img) => {
-//         if (img?.image) {
-//           allImages.push({
-//             url: img.image,
-//             variantIndex: variantIndex,
-//             variantId: variant.variant_id,
-//             variantDescription: variant.variant_description,
-//             type: "product",
-//           });
-//         }
-//       });
-//     }
-//   });
-
-//   // Find the first image index for the selected variant
-//   const getFirstImageIndexForVariant = (variantIndex) => {
-//     return allImages.findIndex((img) => img.variantIndex === variantIndex);
-//   };
-
-//   // Reset to first image of selected variant when variant changes
-//   useEffect(() => {
-//     const firstImageIndex = getFirstImageIndexForVariant(safeSelectedIndex);
-//     if (firstImageIndex !== -1) {
-//       setSelectedImageIndex(firstImageIndex);
-//     }
-//   }, [safeSelectedIndex]);
-
-//   const handleThumbnailClick = (index) => {
-//     setSelectedImageIndex(index);
-//   };
-
-//   if (!safeVariants.length || !allImages.length) {
-//     return (
-//       <div className="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-//         <p className="text-gray-500">No images available</p>
-//       </div>
-//     );
-//   }
-
-//   const currentImage = allImages[selectedImageIndex];
-
-//   return (
-//     <div className="w-full space-y-3">
-//       {/* Main Image Display */}
-//       <div className="relative w-full aspect-square bg-white overflow-hidden rounded-lg">
-//         <Image
-//           src={currentImage?.url || "/placeholder.svg"}
-//           alt={`${currentImage?.variantDescription || "Product"} Image`}
-//           fill
-//           className="object-cover"
-//           priority
-//         />
-
-//         {/* Variant indicator on main image */}
-//         <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-//           {currentImage?.variantDescription}
-//         </div>
-//       </div>
-
-//       {/* Thumbnails organized by variant */}
-//       {allImages.length > 1 && (
-//         <div className="space-y-3">
-//           {safeVariants.map((variant, variantIndex) => {
-//             const variantImages = allImages.filter(
-//               (img) => img.variantIndex === variantIndex
-//             );
-
-//             if (variantImages.length === 0) return null;
-
-//             return (
-//               <div key={variant.variant_id} className="space-y-2">
-//                 {/* Variant Label */}
-//                 <h4 className="text-sm font-medium text-gray-700">
-//                   {variant.variant_description}
-//                 </h4>
-
-//                 {/* Variant Images */}
-//                 <div className="flex gap-2 overflow-x-auto pb-2">
-//                   {variantImages.map((img, imgIndex) => {
-//                     const globalIndex = allImages.findIndex(
-//                       (globalImg) =>
-//                         globalImg.url === img.url &&
-//                         globalImg.variantIndex === img.variantIndex
-//                     );
-
-//                     return (
-//                       <button
-//                         key={`thumb-${variant.variant_id}-${imgIndex}`}
-//                         onClick={() => handleThumbnailClick(globalIndex)}
-//                         className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 focus:outline-none transition-all relative ${
-//                           selectedImageIndex === globalIndex
-//                             ? "border-blue-500 shadow-md ring-2 ring-blue-200"
-//                             : variantIndex === safeSelectedIndex
-//                             ? "border-blue-300 hover:border-blue-400"
-//                             : "border-gray-200 hover:border-gray-300"
-//                         }`}
-//                       >
-//                         <Image
-//                           src={img.url || "/placeholder.svg"}
-//                           alt={`${img.variantDescription} ${img.type} image`}
-//                           width={80}
-//                           height={80}
-//                           className="object-cover w-full h-full"
-//                         />
-
-//                         {/* Featured image indicator */}
-//                         {img.type === "featured" && (
-//                           <div className="absolute top-1 right-1 bg-yellow-500 text-white text-[10px] px-1 rounded">
-//                             ★
-//                           </div>
-//                         )}
-//                       </button>
-//                     );
-//                   })}
-//                 </div>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-
-
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
@@ -168,9 +8,6 @@ export default function ProductGallery({
   variants = [],
   selectedVariantIndex = 0,
 }) {
-  console.log(variants);
-  console.log(selectedVariantIndex);
-  
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const safeVariants = variants || [];
   const safeSelectedIndex = Math.max(
@@ -180,11 +17,11 @@ export default function ProductGallery({
 
   // Embla carousel setup
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { 
+    {
       loop: false,
-      align: 'start',
-      containScroll: 'trimSnaps',
-      dragFree: true
+      align: "start",
+      containScroll: "trimSnaps",
+      dragFree: true,
     },
     [ClassNames()]
   );
@@ -199,10 +36,10 @@ export default function ProductGallery({
         variantIndex: variantIndex,
         variantId: variant.variant_id,
         variantDescription: variant.variant_description,
-        type: 'featured'
+        type: "featured",
       });
     }
-    
+
     // Add product images
     if (Array.isArray(variant.product_image)) {
       variant.product_image.forEach((img) => {
@@ -212,7 +49,7 @@ export default function ProductGallery({
             variantIndex: variantIndex,
             variantId: variant.variant_id,
             variantDescription: variant.variant_description,
-            type: 'product'
+            type: "product",
           });
         }
       });
@@ -221,7 +58,7 @@ export default function ProductGallery({
 
   // Find the first image index for the selected variant
   const getFirstImageIndexForVariant = (variantIndex) => {
-    return allImages.findIndex(img => img.variantIndex === variantIndex);
+    return allImages.findIndex((img) => img.variantIndex === variantIndex);
   };
 
   // Reset to first image of selected variant when variant changes
@@ -236,12 +73,15 @@ export default function ProductGallery({
     }
   }, [safeSelectedIndex, emblaApi]);
 
-  const handleThumbnailClick = useCallback((index) => {
-    setSelectedImageIndex(index);
-    if (emblaApi) {
-      emblaApi.scrollTo(index);
-    }
-  }, [emblaApi]);
+  const handleThumbnailClick = useCallback(
+    (index) => {
+      setSelectedImageIndex(index);
+      if (emblaApi) {
+        emblaApi.scrollTo(index);
+      }
+    },
+    [emblaApi]
+  );
 
   // Handle embla select event
   const onSelect = useCallback(() => {
@@ -252,8 +92,8 @@ export default function ProductGallery({
 
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.on('select', onSelect);
-    return () => emblaApi.off('select', onSelect);
+    emblaApi.on("select", onSelect);
+    return () => emblaApi.off("select", onSelect);
   }, [emblaApi, onSelect]);
 
   if (!safeVariants.length || !allImages.length) {
@@ -269,19 +109,19 @@ export default function ProductGallery({
   return (
     <div className="w-full space-y-3">
       {/* Main Image Display */}
-      <div className="relative w-full aspect-square bg-white overflow-hidden rounded-lg">
+      <div className="relative w-full aspect-[16/12] bg-white overflow-hidden rounded-lg">
         <Image
           src={currentImage?.url || "/placeholder.svg"}
-          alt={`${currentImage?.variantDescription || 'Product'} Image`}
+          alt={`${currentImage?.variantDescription || "Product"} Image`}
           fill
           className="object-cover transition-opacity duration-300"
           priority
         />
-        
+
         {/* Variant indicator on main image */}
         <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
           {currentImage?.variantDescription}
-          {currentImage?.type === 'featured' && ' ⭐'}
+          {currentImage?.type === "featured" && " ⭐"}
         </div>
 
         {/* Image counter */}
@@ -296,7 +136,7 @@ export default function ProductGallery({
           <div className="embla__container flex gap-2">
             {allImages.map((img, index) => {
               const globalIndex = index;
-              
+
               return (
                 <div
                   key={`thumb-${img.variantId}-${index}`}
@@ -319,18 +159,20 @@ export default function ProductGallery({
                       height={80}
                       className="object-cover w-full h-full"
                     />
-                    
+
                     {/* Featured image indicator */}
-                    {img.type === 'featured' && (
+                    {img.type === "featured" && (
                       <div className="absolute top-1 right-1 bg-yellow-500 text-white text-[10px] px-1 rounded">
                         ⭐
                       </div>
                     )}
-                    
+
                     {/* Variant divider indicator */}
-                    {index > 0 && allImages[index - 1]?.variantIndex !== img.variantIndex && (
-                      <div className="absolute -left-1 top-0 bottom-0 w-0.5 bg-blue-400"></div>
-                    )}
+                    {index > 0 &&
+                      allImages[index - 1]?.variantIndex !==
+                        img.variantIndex && (
+                        <div className="absolute -left-1 top-0 bottom-0 w-0.5 bg-blue-400"></div>
+                      )}
                   </button>
                 </div>
               );

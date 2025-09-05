@@ -1,0 +1,250 @@
+"use client";
+
+import { useState } from "react";
+import { Minus, Plus, ShoppingCart, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import ProductGallery from "@/components/home/products/list/ProductGallery";
+import Link from "next/link";
+
+export default function ProductDetails({ product }) {
+  const firstProduct = Array.isArray(product) ? product[0] : product;
+
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+
+  if (!firstProduct?.variants?.length) return null;
+
+  const selectedVariant = firstProduct.variants[selectedVariantIndex];
+  const discountedPrice = (
+    selectedVariant.product_price -
+    (selectedVariant.product_price * selectedVariant.product_discount) / 100
+  ).toFixed(2);
+
+  const handleQuantityIncrement = () => {
+    if (quantity < selectedVariant.available_count)
+      setQuantity((prev) => prev + 1);
+  };
+
+  const handleQuantityDecrement = () => {
+    if (quantity > 1) setQuantity((prev) => prev - 1);
+  };
+
+  const handleVariantChange = (index) => {
+    setSelectedVariantIndex(index);
+    setQuantity(1);
+  };
+
+  const toggleWishlist = () => {
+    setIsWishlisted(!isWishlisted);
+  };
+
+  return (
+    <div className="min-h-screen bg-background jost-text">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <nav className="text-sm text-muted-foreground mb-6">
+          <Link href="/">Home</Link> / <Link href="/products">Products</Link> /{" "}
+          <span className="text-foreground">{firstProduct.product_name}</span>
+        </nav>
+
+        <div className="grid md:grid-cols-2 gap-10">
+          <h1 className="inline-block md:hidden text-3xl font-bold text-foreground  text-balance">
+            {firstProduct.product_name}
+          </h1>
+          {/* Left Column - Gallery */}
+          <ProductGallery
+            variants={firstProduct.variants}
+            selectedVariantIndex={selectedVariantIndex}
+          />
+
+          {/* Right Column - Product Info */}
+          <div className="space-y-4">
+            {/* Product Header */}
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="secondary" className="text-xs">
+                  {firstProduct.category_name}
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  By {firstProduct.vendor_name}
+                </Badge>
+              </div>
+              <h1 className="hidden md:block text-3xl font-bold text-foreground mb-2 text-balance">
+                {firstProduct.product_name}
+              </h1>
+              <p className="text-muted-foreground text-base leading-relaxed">
+                {firstProduct.product_details?.product_description}
+              </p>
+            </div>
+
+            {/* Price */}
+            <div className="flex items-center gap-4">
+              <span className="text-3xl font-bold text-primary">
+                Rs. {discountedPrice}
+              </span>
+              {selectedVariant.product_discount > 0 && (
+                <>
+                  <span className="text-lg line-through text-muted-foreground">
+                    Rs. {selectedVariant.product_price}
+                  </span>
+                  <span className="bg-accent text-accent-foreground text-xs px-2 py-1 rounded">
+                    -{selectedVariant.product_discount}% OFF
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Variants */}
+            {firstProduct.variants.length > 1 && (
+              <div>
+                <h3 className="font-semibold text-lg mb-2">
+                  Available Options:
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {firstProduct.variants.map((variant, index) => (
+                    <div
+                      key={variant.variant_id}
+                      className={`cursor-pointer px-3 py-2 border rounded-md transition-all ${
+                        selectedVariantIndex === index
+                          ? "border-primary bg-primary/10"
+                          : "border-gray-300 hover:border-gray-400"
+                      }`}
+                      onClick={() => handleVariantChange(index)}
+                    >
+                      {variant.variant_description}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Quantity */}
+            <div>
+              <h3 className="font-semibold text-lg mb-2">Quantity:</h3>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center border border-border rounded-lg">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleQuantityDecrement}
+                    disabled={quantity <= 1}
+                    className="h-10 w-10"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <span className="px-4 py-2 border-x border-border min-w-[60px] text-center font-medium">
+                    {quantity}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleQuantityIncrement}
+                    disabled={quantity >= selectedVariant.available_count}
+                    className="h-10 w-10"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                <span className="text-sm text-muted-foreground">
+                  (Max: {selectedVariant.available_count})
+                </span>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3">
+              <Button
+                size="lg"
+                className="flex items-center gap-2"
+                disabled={selectedVariant.available_count === 0}
+              >
+                <ShoppingCart className="w-5 h-5" />
+                Add to Cart ({quantity})
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={toggleWishlist}
+                className={`px-4 ${
+                  isWishlisted
+                    ? "text-destructive border-destructive bg-destructive/10"
+                    : ""
+                }`}
+              >
+                <Heart
+                  className={`w-5 h-5 ${
+                    isWishlisted ? "fill-destructive" : ""
+                  }`}
+                />
+              </Button>
+            </div>
+
+            {selectedVariant.available_count === 0 && (
+              <div className="border border-destructive bg-destructive/10 p-3 rounded text-center text-destructive font-medium">
+                This variant is currently out of stock
+              </div>
+            )}
+
+            {/* Total */}
+            <div className="bg-muted p-3 rounded">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold">Total:</span>
+                <span className="text-2xl font-bold text-primary">
+                  Rs. {(Number(discountedPrice) * quantity).toFixed(2)}
+                </span>
+              </div>
+              {quantity > 1 && (
+                <p className="text-sm text-muted-foreground mt-1">
+                  Rs. {discountedPrice} × {quantity} items
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground mt-1">
+                + Rs. {firstProduct.total_tax} tax
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Product Details */}
+        <div className="mt-12">
+          <Separator className="mb-4" />
+          <div className="border rounded p-4">
+            <h3 className="font-bold text-lg mb-4">Product Details</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              {firstProduct.product_details &&
+                Object.entries(firstProduct.product_details)
+                  .filter(
+                    ([key, value]) =>
+                      value !== null && key !== "product_description"
+                  ) // remove nulls and description
+                  .map(([key, value]) => {
+                    // Convert key to readable label: product_volume -> Product Volume
+                    const label = key
+                      .split("_")
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                      )
+                      .join(" ");
+
+                    return (
+                      <div
+                        key={key}
+                        className="flex justify-between items-center border-b last:border-b-0 pb-2"
+                      >
+                        <span className="text-muted-foreground font-medium">
+                          {label}
+                        </span>
+                        <span className="text-foreground">{value}</span>
+                      </div>
+                    );
+                  })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
