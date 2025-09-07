@@ -51,7 +51,6 @@ function Login() {
       }
 
       const result = await res.json();
-      console.log(result);
 
       const redirectPath =
         redirect && redirect.startsWith("/")
@@ -60,10 +59,10 @@ function Login() {
           ? `/${redirect}`
           : "";
 
-      if (result?.message?.status === "success") {
+      if (result?.details) {
         if (redirectPath) {
           router.replace(redirectPath);
-        } else if (result?.role === "invent_vendor") {
+        } else if (result?.details[0]?.role_name === "invent_vendor") {
           router.push("/dashboard/vendor");
         } else if (result?.role === "invent_admin") {
           router.push("/dashboard/admin");
