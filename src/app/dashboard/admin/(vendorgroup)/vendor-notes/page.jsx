@@ -1,97 +1,38 @@
-"use client";
+import VendorNoteListAdmin from "@/components/admin/(vendorgroup)/vendor-notes/vendornotes-admin";
 
-import { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+const baseUrl =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
 
-import CategoryListSkeleton from "../../../../../components/admin/Skeleton/CategooryListSkeleton";
-import VendorNoteList from "../../../../../components/admin/(vendorgroup)/vendor-notes/VendorNoteList";
-import AddVendorNotesForm from "../../../../../components/admin/(vendorgroup)/vendor-notes/form/AddVendorNotesForm";
-// import SkeletonLoader from "../../../admin/_components/SkeletonLoader";
-export default function ManufacturerNotes() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState([]);
-  const [page, setPage] = useState(1);
-  const [meta, setMeta] = useState({ page_number: 1, total_pages: 1 });
-  const limit = 10;
+async function getAllVendorNotes(page = 1, limit = 10) {
+  try {
+    const res = await fetch(`${baseUrl}/getvendornotes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ page_number: page, limit }),
+      cache: "no-store",
+    });
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
+    if (!res.ok) throw new Error("Failed to fetch vendor notes");
+    const result = await res.json();
+    return {
+      data: result?.details || [],
+      meta: result?.hint || { page_number: page, total_pages: 1 },
+    };
+  } catch (err) {
+    console.error("Error fetching vendor notes:", err);
+    return { data: [], meta: { page_number: 1, total_pages: 1 } };
+  }
+}
 
-  const getvendorNotes = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch(`${baseUrl}/getvendornotes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ page_number: page, limit }),
-      });
-      if (res.ok) {
-        const result = await res.json();
-        console.log(result);
-        setData(result?.details || []);
-        setMeta(result?.hint || { page_number: page, total_pages: 1 });
-      } else {
-        console.error("Failed to fetch vendor");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  useEffect(() => {
-    getvendorNotes();
-  }, [page]);
-
-  console.log(data);
+export default async function Page({ searchParams }) {
+  const page = Number(searchParams?.page) || 1;
+  const { data, meta } = await getAllVendorNotes(page);
 
   return (
-    <div className="container max-w-7xl  mx-auto px-[2%] py-[2%] ">
-      <div className="flex items-center justify-between mb-6 pb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          Manage Vendor Notes
-        </h2>
-        <div className="flex gap-2">
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4  hover:bg-primary hover:opacity-90 cursor-pointer transition">
-                <PlusIcon className="w-5 h-5" />
-                <span className="hidden md:inline">Add Vendor Notes</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto rounded-lg shadow-lg">
-              <DialogHeader>
-                <DialogTitle>Add New Vendor Notes</DialogTitle>
-              </DialogHeader>
-              <AddVendorNotesForm setIsOpen={setIsOpen} />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-      {isLoading ? (
-        <CategoryListSkeleton count={6} />
-      ) : (
-        data && (
-          <VendorNoteList
-            data={data}
-            setData={setData}
-            page={page}
-            setPage={setPage}
-            meta={meta}
-          />
-        )
-      )}
-    </div>
+    <VendorNoteListAdmin
+      initialData={data}
+      initialMeta={meta}
+      initialPage={page}
+    />
   );
 }

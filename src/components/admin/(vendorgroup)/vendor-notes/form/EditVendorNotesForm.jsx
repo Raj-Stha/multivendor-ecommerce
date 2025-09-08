@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,7 +17,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -35,12 +35,10 @@ const formSchema = z.object({
 export default function EditVendorNotesForm({ data }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
-
+  const router = useRouter();
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
-  const router = useRouter();
 
-  console.log(data);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,25 +47,30 @@ export default function EditVendorNotesForm({ data }) {
     },
   });
 
+  useEffect(() => {
+    form.reset({
+      detail_name: data.detail_name ?? "",
+      returned: data.returned ?? true,
+    });
+  }, [data]);
+
   const updateData = async (values) => {
     try {
       const response = await fetch(`${baseUrl}/updatevendornotes`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
+
       const result = await response.json();
 
       if (!response.ok)
         throw new Error(result.error || "Something went wrong!");
 
-      router.refresh();
-      setOpenBox(false);
-      form.reset();
       toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
+      form.reset();
+      setOpenBox(false);
+      router.refresh();
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
@@ -85,12 +88,12 @@ export default function EditVendorNotesForm({ data }) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className=" bg-green-600 hover:bg-green-600 hover:opacity-90 cursor-pointer hover:text-white  text-white px-3 py-3"
+          className="bg-green-600 text-white hover:bg-green-600 hover:opacity-90 hover:text-white cursor-pointer px-3 py-3"
         >
           <PenTool className="text-white" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
+      <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Vendor Notes</DialogTitle>
         </DialogHeader>
@@ -125,7 +128,7 @@ export default function EditVendorNotesForm({ data }) {
                         id="returned"
                       />
                     </FormControl>
-                    <FormLabel htmlFor="restricted">Returned</FormLabel>
+                    <FormLabel htmlFor="returned">Returned</FormLabel>
                   </FormItem>
                 )}
               />
