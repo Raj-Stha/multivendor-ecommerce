@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   new_value: z.string().min(1, "New Value is required"),
@@ -39,13 +40,18 @@ export default function EditParameterForm({ data }) {
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
   const router = useRouter();
 
-  console.log(data);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       new_value: data.parameter_value ?? "",
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      new_value: data.parameter_value ?? "",
+    });
+  }, [data]);
 
   const updateData = async (values) => {
     try {
@@ -65,7 +71,6 @@ export default function EditParameterForm({ data }) {
       setOpenBox(false);
       form.reset();
       toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
