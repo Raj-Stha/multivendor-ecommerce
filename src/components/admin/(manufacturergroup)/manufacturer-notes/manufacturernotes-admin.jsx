@@ -12,12 +12,14 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import ManufacturerNoteList from "./manufacturernote-list";
 import AddManufacturerNotesForm from "./form/AddManufacturerNotesForm";
+import { useState } from "react";
 
 export default function ManufacturerNotesAdmin({
   initialData,
   initialMeta,
   initialPage,
 }) {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const handlePageChange = (newPage) => {
@@ -30,7 +32,7 @@ export default function ManufacturerNotesAdmin({
         <h2 className="text-2xl font-semibold text-gray-800">
           Manage Manufacturer Notes
         </h2>
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90 cursor-pointer transition">
               <PlusIcon className="w-5 h-5" />
@@ -41,7 +43,7 @@ export default function ManufacturerNotesAdmin({
             <DialogHeader>
               <DialogTitle>Add New Manufacturer Notes</DialogTitle>
             </DialogHeader>
-            <AddManufacturerNotesForm />
+            <AddManufacturerNotesForm setIsOpen={setIsOpen} />
           </DialogContent>
         </Dialog>
       </div>

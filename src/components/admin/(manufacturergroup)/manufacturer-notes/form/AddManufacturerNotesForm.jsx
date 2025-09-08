@@ -55,16 +55,12 @@ export default function AddManufacturerNotesForm({ setIsOpen }) {
 
       const result = await response.json();
 
-      // Show success notification
       toast.success("Created Successfully !!!");
 
-      // Close the dialog
       setIsOpen?.(false);
 
-      // Refresh the page after a short delay
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
+      form.reset();
+      router.refresh();
 
       return result;
     } catch (error) {
