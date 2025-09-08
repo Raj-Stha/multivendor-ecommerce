@@ -12,12 +12,10 @@ export default function CategoryNoteList({ data, page, setPage, meta }) {
               className="w-full border rounded-lg shadow-sm bg-white hover:shadow-md transition-all mb-4"
             >
               <div className="flex items-center justify-between w-full p-4">
-                <div className="flex items-center gap-4 w-full">
-                  <div className="flex-grow">
-                    <h3 className="text-lg font-bold text-gray-800">
-                      {d.detail_name}
-                    </h3>
-                  </div>
+                <div className="flex-grow">
+                  <h3 className="text-lg font-bold text-gray-800">
+                    {d.detail_name}
+                  </h3>
                 </div>
                 <EditCategoryNotesForm data={d} />
               </div>
