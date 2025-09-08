@@ -58,14 +58,9 @@ export default function AddCatgeoryNotesForm({ setIsOpen }) {
       // Show success notification
       toast.success("Created Successfully !!!");
 
-      // Close the dialog
-      setIsOpen?.(false);
-
-      // Refresh the page after a short delay
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-
+      setIsOpen(false);
+      form.reset();
+      router.refresh();
       return result;
     } catch (error) {
       toast.error(error.message || "Something went wrong!");

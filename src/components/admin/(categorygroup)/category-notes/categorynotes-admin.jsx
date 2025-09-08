@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import CategoryNoteList from "./categorynote-list";
 import AddCatgeoryNotesForm from "./form/AddCategoryNotesForm";
+import { useState } from "react";
 
 export default function CategoryNotesAdmin({
   initialData,
@@ -19,6 +20,7 @@ export default function CategoryNotesAdmin({
   initialPage,
 }) {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handlePageChange = (newPage) => {
     router.push(`?page=${newPage}`);
@@ -30,7 +32,7 @@ export default function CategoryNotesAdmin({
         <h2 className="text-2xl font-semibold text-gray-800">
           Manage Categories Notes
         </h2>
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90 cursor-pointer transition">
               <PlusIcon className="w-5 h-5" />
@@ -41,7 +43,7 @@ export default function CategoryNotesAdmin({
             <DialogHeader>
               <DialogTitle>Add New Category Notes</DialogTitle>
             </DialogHeader>
-            <AddCatgeoryNotesForm />
+            <AddCatgeoryNotesForm setIsOpen={setIsOpen} />
           </DialogContent>
         </Dialog>
       </div>
