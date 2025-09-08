@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   new_detail_name: z.string().min(1, "Detail Name is required"),
@@ -49,6 +50,13 @@ export default function EditPromoNotesForm({ data }) {
     },
   });
 
+  useEffect(() => {
+    form.reset({
+      new_detail_name: data.detail_name ?? "",
+      returned: data.returned ?? true,
+    });
+  }, [data]);
+
   const updateData = async (values) => {
     try {
       const response = await fetch(`${baseUrl}/updatepromosnotes`, {
@@ -67,7 +75,7 @@ export default function EditPromoNotesForm({ data }) {
       setOpenBox(false);
       form.reset();
       toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
+      // setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
