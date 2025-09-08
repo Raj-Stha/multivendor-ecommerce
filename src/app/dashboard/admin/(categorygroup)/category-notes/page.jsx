@@ -24,7 +24,7 @@ async function getAllCategories(page = 1, limit = 10) {
   }
 }
 
-export default async function Page({ searchParams }) {
+export default async function CategoryNotes({ searchParams }) {
   const page = Number(searchParams.page) || 1;
   const { data, meta } = await getAllCategories(page);
 

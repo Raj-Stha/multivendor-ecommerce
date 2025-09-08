@@ -13,7 +13,7 @@ import { PlusIcon } from "lucide-react";
 import CategoryNoteList from "./categorynote-list";
 import AddCatgeoryNotesForm from "./form/AddCategoryNotesForm";
 
-export default function CategoryAdmin({
+export default function CategoryNotesAdmin({
   initialData,
   initialMeta,
   initialPage,
