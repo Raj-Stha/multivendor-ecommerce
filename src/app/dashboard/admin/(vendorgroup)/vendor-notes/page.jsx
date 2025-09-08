@@ -54,6 +54,8 @@ export default function ManufacturerNotes() {
     getvendorNotes();
   }, [page]);
 
+  console.log(data);
+
   return (
     <div className="container max-w-7xl  mx-auto px-[2%] py-[2%] ">
       <div className="flex items-center justify-between mb-6 pb-4">
