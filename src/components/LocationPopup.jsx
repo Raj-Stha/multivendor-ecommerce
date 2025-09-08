@@ -2,32 +2,14 @@
 
 import { useState, useEffect } from "react";
 import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup as LeafletPopup,
-  useMap,
-} from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-
-// Fix Leaflet marker icons
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
+import { Button } from "@/components/ui/button";
+import { MapPin, Loader2 } from "lucide-react";
 
 const defaultLocation = { name: "Kathmandu, Nepal", lat: 27.7172, lon: 85.324 };
 
@@ -53,23 +35,14 @@ function getCookie(name) {
   return null;
 }
 
-// Change map center when location changes
-function ChangeMapView({ coords }) {
-  const map = useMap();
-  useEffect(() => {
-    if (coords) {
-      map.setView([coords.lat, coords.lon], 10);
-    }
-  }, [coords, map]);
-  return null;
-}
-
 export default function LocationPopup() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [locationError, setLocationError] = useState("");
 
   useEffect(() => {
     const cookieLocation = getCookie("user_location");
@@ -143,79 +116,205 @@ export default function LocationPopup() {
     setOpen(false);
   };
 
-  const handleMapClick = (e) => {
-    const loc = {
-      name: "Custom Location",
-      lat: e.latlng.lat,
-      lon: e.latlng.lng,
-    };
-    setSelectedLocation(loc);
-    setQuery(loc.name);
-    setCookie("user_location", JSON.stringify(loc), 7);
-    setOpen(false);
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    setIsGettingLocation(true);
+    setLocationError("");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          // Reverse geocoding to get location name
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
+          );
+          const data = await response.json();
+
+          const currentLoc = {
+            name:
+              data.display_name ||
+              `Current Location (${latitude.toFixed(4)}, ${longitude.toFixed(
+                4
+              )})`,
+            lat: latitude,
+            lon: longitude,
+          };
+
+          setSelectedLocation(currentLoc);
+          setQuery(currentLoc.name);
+          setSuggestions([]);
+          setCookie("user_location", JSON.stringify(currentLoc), 7);
+
+          try {
+            await fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/updatelocation`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  location: `${latitude},${longitude}`,
+                }),
+              }
+            );
+          } catch (apiError) {
+            console.error("Error sending location to API:", apiError);
+          }
+
+          setOpen(false);
+        } catch (error) {
+          console.error("Error getting location name:", error);
+          const currentLoc = {
+            name: `Current Location (${latitude.toFixed(
+              4
+            )}, ${longitude.toFixed(4)})`,
+            lat: latitude,
+            lon: longitude,
+          };
+          setSelectedLocation(currentLoc);
+          setQuery(currentLoc.name);
+          setSuggestions([]);
+          setCookie("user_location", JSON.stringify(currentLoc), 7);
+
+          try {
+            await fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/updatelocation`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  location: `${latitude},${longitude}`,
+                }),
+              }
+            );
+          } catch (apiError) {
+            console.error("Error sending location to API:", apiError);
+          }
+
+          setOpen(false);
+        } finally {
+          setIsGettingLocation(false);
+        }
+      },
+      (error) => {
+        setIsGettingLocation(false);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            setLocationError("Location access denied by user.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            setLocationError("Location information is unavailable.");
+            break;
+          case error.TIMEOUT:
+            setLocationError("Location request timed out.");
+            break;
+          default:
+            setLocationError(
+              "An unknown error occurred while getting location."
+            );
+            break;
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000,
+      }
+    );
   };
 
   return (
     <>
       {open && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 jost-text" />
       )}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-lg jost-text z-50">
+        <DialogContent className="max-w-lg z-50 jost-text">
           <DialogHeader>
             <DialogTitle>Select Your Location</DialogTitle>
           </DialogHeader>
 
-          <div className="relative w-full">
-            <Input
-              value={query}
-              onChange={handleInputChange}
-              placeholder="Enter your location (e.g., India, New York, London)"
-            />
-            {isSearching && (
-              <div className="absolute bg-white border w-full mt-1 rounded shadow-md z-10 p-2 text-sm text-gray-500">
-                Searching...
+          <div className="space-y-3">
+            <div className="relative w-full">
+              <Input
+                value={query}
+                onChange={handleInputChange}
+                placeholder="Enter your location (e.g., India, New York, London)"
+              />
+              {isSearching && (
+                <div className="absolute bg-white border w-full mt-1 rounded shadow-md z-10 p-2 text-sm text-gray-500">
+                  Searching...
+                </div>
+              )}
+              {!isSearching && suggestions.length > 0 && (
+                <ul className="absolute bg-white border w-full mt-1 rounded shadow-md z-[1000] max-h-48 overflow-y-auto">
+                  {suggestions.map((loc, index) => (
+                    <li
+                      key={index}
+                      className="p-2 cursor-pointer hover:bg-gray-100 text-sm border-b last:border-b-0"
+                      onClick={() => handleSelect(loc)}
+                    >
+                      {loc.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {locationError && (
+              <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
+                {locationError}
               </div>
             )}
-            {!isSearching && suggestions.length > 0 && (
-              <ul className="absolute bg-white border w-full mt-1 rounded shadow-md z-[1000] max-h-48 overflow-y-auto">
-                {suggestions.map((loc, index) => (
-                  <li
-                    key={index}
-                    className="p-2 cursor-pointer hover:bg-gray-100 text-sm border-b last:border-b-0"
-                    onClick={() => handleSelect(loc)}
-                  >
-                    {loc.name}
-                  </li>
-                ))}
-              </ul>
-            )}
+
+            <div className="text-sm mb-2">
+              Selected Location: {selectedLocation?.name}
+            </div>
           </div>
 
-          <div className="mt-2 text-sm mb-2">
-            Selected Location: {selectedLocation?.name}
+          <div className="w-full h-[300px] border rounded-lg overflow-hidden">
+            <iframe
+              src={`https://www.openstreetmap.org/export/embed.html?bbox=${
+                (selectedLocation?.lon || defaultLocation.lon) - 0.01
+              },${(selectedLocation?.lat || defaultLocation.lat) - 0.01},${
+                (selectedLocation?.lon || defaultLocation.lon) + 0.01
+              },${
+                (selectedLocation?.lat || defaultLocation.lat) + 0.01
+              }&layer=mapnik&marker=${
+                selectedLocation?.lat || defaultLocation.lat
+              },${selectedLocation?.lon || defaultLocation.lon}`}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              title="Location Map"
+            />
           </div>
 
-          <MapContainer
-            center={[
-              selectedLocation?.lat || defaultLocation.lat,
-              selectedLocation?.lon || defaultLocation.lon,
-            ]}
-            zoom={10}
-            style={{ height: "300px", width: "100%" }}
-            whenCreated={(map) => map.invalidateSize()}
-            onclick={handleMapClick}
-            className="z-49"
+          <Button
+            onClick={getCurrentLocation}
+            disabled={isGettingLocation}
+            variant="outline"
+            className="w-full flex items-center gap-2 bg-transparent"
           >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {selectedLocation && (
-              <Marker position={[selectedLocation.lat, selectedLocation.lon]}>
-                <LeafletPopup>{selectedLocation.name}</LeafletPopup>
-              </Marker>
+            {isGettingLocation ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <MapPin className="h-4 w-4" />
             )}
-            {selectedLocation && <ChangeMapView coords={selectedLocation} />}
-          </MapContainer>
+            {isGettingLocation
+              ? "Getting your location..."
+              : "Use my current location"}
+          </Button>
         </DialogContent>
       </Dialog>
     </>

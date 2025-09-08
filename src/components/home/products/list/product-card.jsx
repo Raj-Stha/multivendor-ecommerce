@@ -14,11 +14,13 @@ import {
 } from "@/components/ui/layout/linear-dialog";
 import { Button } from "@/components/ui/button";
 import ProductGallery from "./ProductGallery";
+import { useWishlist } from "@/app/(home)/_context/WishlistContext";
 
 export function ProductCard({ product, border = false }) {
+  const { wishlist, toggleWishlistItem } = useWishlist();
+
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
 
   if (!product?.variants?.length) return null;
 
@@ -29,25 +31,31 @@ export function ProductCard({ product, border = false }) {
   ).toFixed(2);
 
   const handleQuantityIncrement = () => {
-    if (quantity < selectedVariant.available_count) {
+    if (quantity < selectedVariant.available_count)
       setQuantity((prev) => prev + 1);
-    }
   };
 
   const handleQuantityDecrement = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
+    if (quantity > 1) setQuantity((prev) => prev - 1);
   };
 
   const handleVariantChange = (index) => {
     setSelectedVariantIndex(index);
-    // Reset quantity to 1 when variant changes
     setQuantity(1);
   };
 
-  const toggleWishlist = () => {
-    setIsWishlisted(!isWishlisted);
+  const isWishlisted = wishlist.some(
+    (item) =>
+      item.product_id === product.product_id &&
+      item.variant_id === selectedVariant.variant_id
+  );
+
+  const handleWishlistToggle = () => {
+    toggleWishlistItem(
+      product.product_id,
+      selectedVariant.variant_id,
+      product.vendor_id
+    );
   };
 
   return (
@@ -75,7 +83,6 @@ export function ProductCard({ product, border = false }) {
             />
           </Link>
 
-          {/* Single Eye Button - responsive visibility */}
           <DialogTrigger asChild>
             <button
               className="absolute top-2 right-2 z-10 p-2 rounded-full shadow-md flex items-center justify-center
@@ -129,15 +136,12 @@ export function ProductCard({ product, border = false }) {
 
           {/* Scrollable Content */}
           <div className="overflow-y-auto flex-1">
-            {/* Gallery + Variants */}
             <div className="grid sm:grid-cols-2 gap-6 p-6">
-              {/* Left - Gallery */}
               <ProductGallery
                 variants={product.variants}
                 selectedVariantIndex={selectedVariantIndex}
               />
 
-              {/* Right - Variants + Actions */}
               <div className="space-y-6">
                 <div>
                   {/* Price Section */}
@@ -188,13 +192,9 @@ export function ProductCard({ product, border = false }) {
                             }`}
                             onClick={() => handleVariantChange(index)}
                           >
-                            <div className="flex justify-between items-center">
-                              <div>
-                                <p className="font-medium text-sm">
-                                  {variant.variant_description}
-                                </p>
-                              </div>
-                            </div>
+                            <p className="font-medium text-sm">
+                              {variant.variant_description}
+                            </p>
                           </div>
                         );
                       })}
@@ -202,36 +202,7 @@ export function ProductCard({ product, border = false }) {
                   </div>
                 )}
 
-                {/* Quantity Selection */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-sm">Quantity:</h4>
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center border border-gray-300 rounded-lg">
-                      <button
-                        onClick={handleQuantityDecrement}
-                        disabled={quantity <= 1}
-                        className="p-2 cursor-pointer hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                      >
-                        <Minus size={16} />
-                      </button>
-                      <span className="px-4 py-2 border-x border-gray-300 min-w-[60px] text-center">
-                        {quantity}
-                      </span>
-                      <button
-                        onClick={handleQuantityIncrement}
-                        disabled={quantity >= selectedVariant.available_count}
-                        className="p-2 cursor-pointer hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                      >
-                        <Plus size={16} />
-                      </button>
-                    </div>
-                    <span className="text-sm text-gray-500">
-                      (Max: {selectedVariant.available_count})
-                    </span>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
+                {/* Quantity + Add to Cart */}
                 <div className="flex gap-3 pt-4">
                   <Button
                     className="w-fit cursor-pointer"
@@ -245,16 +216,20 @@ export function ProductCard({ product, border = false }) {
                   <Button
                     variant="outline"
                     size="lg"
-                    onClick={toggleWishlist}
-                    className={`px-4 cursor-pointer ${
+                    onClick={handleWishlistToggle}
+                    className={`px-4 cursor-pointer transition-colors ${
                       isWishlisted
-                        ? "text-red-500 border-red-300 bg-red-50"
-                        : ""
+                        ? "bg-red-500 text-white border-red-500 hover:bg-red-600"
+                        : "bg-white text-red-500 border-red-300 hover:bg-red-50"
                     }`}
                   >
                     <Heart
                       size={20}
-                      className={isWishlisted ? "fill-red-500" : ""}
+                      className={
+                        isWishlisted
+                          ? "fill-white"
+                          : "fill-white/0 stroke-red-500"
+                      }
                     />
                   </Button>
                 </div>
@@ -286,7 +261,6 @@ export function ProductCard({ product, border = false }) {
             </div>
           </div>
 
-          {/* Close Button */}
           <DialogClose className="absolute top-4 right-4 text-white dark:bg-gray-900 bg-gray-600 px-2 py-2 hover:bg-gray-500 rounded-full z-50">
             <X size={12} />
           </DialogClose>

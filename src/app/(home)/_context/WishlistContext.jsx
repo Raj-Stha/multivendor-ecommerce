@@ -1,109 +1,52 @@
 "use client";
+
 import { createContext, useContext, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast"; 
 
 const WishlistContext = createContext();
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export const WishlistProvider = ({ children }) => {
-  const { data: session } = useSession();
   const [wishlist, setWishlist] = useState([]);
 
-  const syncLocalWishlistWithBackend = async () => {
-    const local = JSON.parse(
-      localStorage.getItem("multivendor_guest_wishlist") || "[]"
-    );
-    if (!session?.backendToken || !local.length) return;
+  const loadWishlist = async (limit = 100, page_number = 1) => {
     try {
-      for (const item of local) {
-        await fetch("http://localhost:4000/api/v1/wishlist/add", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.backendToken}`,
-          },
-          body: JSON.stringify({ productId: item.id }),
-        });
-      }
-      localStorage.removeItem("multivendor_guest_wishlist");
-      await loadWishlistFromBackend();
-    } catch (error) {
-      console.error("Sync wishlist failed:", error);
-    }
-  };
-
-  const loadWishlistFromBackend = async () => {
-    try {
-      const res = await fetch("http://localhost:4000/api/v1/wishlist/get", {
+      const res = await fetch(`${API_BASE}/getwishlistdetails`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.backendToken}`,
         },
+        body: JSON.stringify({ limit, page_number }),
       });
       const data = await res.json();
-      setWishlist(data?.wishlist?.products || []);
+      setWishlist(data?.wishlist || []);
     } catch (error) {
       console.error("Error loading wishlist:", error);
+      toast.error("Failed to load wishlist");
     }
   };
 
-  const loadWishlist = () => {
-    if (session?.backendToken) {
-      loadWishlistFromBackend();
-    } else {
-      const local = JSON.parse(
-        localStorage.getItem("multivendor_guest_wishlist") || "[]"
-      );
-      setWishlist(local);
-    }
-  };
-
-  // Added showToast parameter
-  const toggleWishlistItem = async (product, showToast = true) => {
-    const isInWishlist = wishlist.some((item) => item.id === product.id);
-    if (!session?.backendToken) {
-      let local = JSON.parse(
-        localStorage.getItem("multivendor_guest_wishlist") || "[]"
-      );
-      if (isInWishlist) {
-        local = local.filter((item) => item.id !== product.id);
-        if (showToast) toast.info(`Removed "${product.name}" from wishlist`);
-      } else {
-        local.push(product);
-        if (showToast) toast.success(`Added "${product.name}" to wishlist`);
-      }
-      localStorage.setItem("multivendor_guest_wishlist", JSON.stringify(local));
-      setWishlist(local);
-    } else {
-      const endpoint = isInWishlist ? "remove" : "add";
-      const method = isInWishlist ? "DELETE" : "POST";
-      try {
-        await fetch(`http://localhost:4000/api/v1/wishlist/${endpoint}`, {
-          method,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.backendToken}`,
-          },
-          body: JSON.stringify({ productId: product.id }),
-        });
-        if (showToast) {
-          toast.success(
-            isInWishlist
-              ? `Removed "${product.name}" from wishlist`
-              : `Added "${product.name}" to wishlist`
-          );
-        }
-        await loadWishlistFromBackend();
-      } catch (error) {
-        if (showToast) toast.error("Error updating wishlist");
-      }
+  const toggleWishlistItem = async (product_id, variant_id, vendor_id) => {
+    try {
+      await fetch(`${API_BASE}/updatewishlist`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ product_id, variant_id, vendor_id }),
+      });
+      toast.success("Wishlist updated successfully");
+      await loadWishlist();
+    } catch (error) {
+      console.error(error);
+      toast.error("Error updating wishlist");
     }
   };
 
   useEffect(() => {
     loadWishlist();
-    if (session) syncLocalWishlistWithBackend();
-  }, [session]);
+  }, []);
 
   return (
     <WishlistContext.Provider
