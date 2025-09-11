@@ -20,7 +20,7 @@ export default function NotificationIcon() {
           </span>
         )}
       </div>
-      <span className="text-xs font-semibold md:hidden">Wishlist</span>
+      <span className="text-xs font-semibold sm:hidden">Wishlist</span>
     </Link>
   );
 }
