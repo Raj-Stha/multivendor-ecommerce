@@ -31,7 +31,7 @@ export function CartItem({ item }) {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-3 jost-text border border-gray-200">
       <div className="flex gap-4">
         <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg border">
           <Image
@@ -50,11 +50,6 @@ export function CartItem({ item }) {
               <p className="text-sm text-muted-foreground">
                 {item.variant_description}
               </p>
-              {item.product_discount > 0 && (
-                <Badge variant="destructive" className="mt-1 text-xs">
-                  {item.product_discount}% OFF
-                </Badge>
-              )}
             </div>
             <Button
               variant="ghost"
@@ -93,20 +88,17 @@ export function CartItem({ item }) {
             </div>
 
             <div className="text-right">
-              <div className="font-semibold">${totalPrice.toFixed(2)}</div>
               {item.product_discount > 0 && (
                 <div className="text-xs text-muted-foreground">
-                  <span className="line-through">
-                    ${(item.product_price * item.cart_quantity).toFixed(2)}
-                  </span>
+                  <div className="font-semibold text-base">
+                    ${discountedPrice.toFixed(2)} * {item.cart_quantity}
+                  </div>
+
                   <span className="ml-1 text-green-600">
                     Save ${savings.toFixed(2)}
                   </span>
                 </div>
               )}
-              <div className="text-xs text-muted-foreground">
-                ${discountedPrice.toFixed(2)} each
-              </div>
             </div>
           </div>
         </div>

@@ -84,8 +84,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const cartCount = cart.reduce((sum, item) => sum + item.cart_quantity, 0);
-
+  // const cartCount = cart.reduce((sum, item) => sum + item.cart_quantity, 0);
+  const cartCount = cart.length;
   useEffect(() => {
     getCart();
   }, [getCart]);

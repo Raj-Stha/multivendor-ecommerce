@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CartItem } from "./cart-items";
@@ -22,9 +21,10 @@ export function CartList({ cart }) {
   }, {});
 
   return (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-6 jost-text">
       <div className="lg:col-span-2 space-y-6">
-        <div className="flex items-center justify-between">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <h2 className="text-2xl font-semibold text-balance">
             Your Cart ({cart.length} {cart.length === 1 ? "item" : "items"})
           </h2>
@@ -34,28 +34,30 @@ export function CartList({ cart }) {
           </Button>
         </div>
 
-        {Object.entries(itemsByVendor).map(([vendorId, vendor]) => (
-          <Card key={vendorId} className="overflow-hidden">
-            <CardHeader className="bg-muted/50">
-              <CardTitle className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-xs">
-                  Vendor
-                </Badge>
-                {vendor.vendor_name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              {vendor.items.map((item, index) => (
-                <div key={item.variant_id}>
-                  <CartItem item={item} />
-                  {index < vendor.items.length - 1 && <Separator />}
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
+        {/* Cart Items */}
+        <div className="space-y-6">
+          {Object.entries(itemsByVendor).map(([vendorId, vendor]) => (
+            <div key={vendorId} className="space-y-3 border border-gray-300">
+              {/* Vendor Name */}
+              <div className="flex items-center mt-2">
+                <span className="font-medium px-2">{vendor.vendor_name}</span>
+              </div>
+
+              {/* Vendor Items */}
+              <div className="space-y-4 border-b border-gray-200 pb-1">
+                {vendor.items.map((item, index) => (
+                  <div key={item.variant_id}>
+                    <CartItem item={item} />
+                    {index < vendor.items.length - 1 && <Separator />}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* Order Summary */}
       <div className="lg:col-span-1">
         <OrderSummary items={cart} />
       </div>
