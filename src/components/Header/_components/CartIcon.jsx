@@ -8,7 +8,7 @@ export default function CartIcon() {
   return (
     <Link
       href="/cart"
-      className="relative hover:text-primary transition-colors items-baseline"
+      className="relative hover:text-primary transition-colors items-baseline pt-1"
     >
       <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-primary md:hover:text-white transition-colors" />
       {cartCount > 0 && (
