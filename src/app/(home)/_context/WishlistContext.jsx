@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { toast } from "react-hot-toast"; 
+import { toast } from "react-hot-toast";
 
 const WishlistContext = createContext();
 
@@ -17,10 +17,12 @@ export const WishlistProvider = ({ children }) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ limit, page_number }),
       });
       const data = await res.json();
-      setWishlist(data?.wishlist || []);
+      // Use data.details instead of data.wishlist
+      setWishlist(data?.details || []);
     } catch (error) {
       console.error("Error loading wishlist:", error);
       toast.error("Failed to load wishlist");
@@ -34,6 +36,7 @@ export const WishlistProvider = ({ children }) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ product_id, variant_id, vendor_id }),
       });
       toast.success("Wishlist updated successfully");
@@ -53,7 +56,7 @@ export const WishlistProvider = ({ children }) => {
       value={{
         wishlist,
         toggleWishlistItem,
-        wishlistCount: wishlist.length,
+        wishlistCount: wishlist.length, // this will now reflect data.details length
       }}
     >
       {children}
