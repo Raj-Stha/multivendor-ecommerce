@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
-  const token = req.cookies.get("jwt")?.value;
+  const token = req.cookies.get("token")?.value;
+
+  console.log(req.cookies);
+  console.log(req.cookies.get("token")?.value);
+  console.log("byyye");
 
   const publicRoutes = ["/auth/login", "/auth/register"];
   if (publicRoutes.some((route) => pathname.startsWith(route))) {

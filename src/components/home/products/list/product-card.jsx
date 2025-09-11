@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, ShoppingCart, X, Plus, Minus, Heart } from "lucide-react";
+import { Eye, ShoppingCart, X, Heart } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
@@ -15,9 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import ProductGallery from "./ProductGallery";
 import { useWishlist } from "@/app/(home)/_context/WishlistContext";
+import { useCart } from "@/app/(home)/_context/CartContext";
 
 export function ProductCard({ product, border = false }) {
   const { wishlist, toggleWishlistItem } = useWishlist();
+
+  const { updateCart } = useCart();
 
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -29,15 +32,6 @@ export function ProductCard({ product, border = false }) {
     selectedVariant.product_price -
     (selectedVariant.product_price * selectedVariant.product_discount) / 100
   ).toFixed(2);
-
-  const handleQuantityIncrement = () => {
-    if (quantity < selectedVariant.available_count)
-      setQuantity((prev) => prev + 1);
-  };
-
-  const handleQuantityDecrement = () => {
-    if (quantity > 1) setQuantity((prev) => prev - 1);
-  };
 
   const handleVariantChange = (index) => {
     setSelectedVariantIndex(index);
@@ -56,6 +50,16 @@ export function ProductCard({ product, border = false }) {
       selectedVariant.variant_id,
       product.vendor_id
     );
+  };
+
+  const handleAddToCart = () => {
+    updateCart({
+      product_id: product.product_id,
+      vendor_id: product.vendor_id,
+      variant_id: selectedVariant.variant_id,
+      order_count: quantity,
+      type: "add",
+    });
   };
 
   return (
@@ -143,29 +147,26 @@ export function ProductCard({ product, border = false }) {
               />
 
               <div className="space-y-6">
-                <div>
-                  {/* Price Section */}
-                  <div className="space-y-2 mb-6">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl font-normal text-primary">
-                        Rs. {discountedPrice}
-                      </span>
-                      {selectedVariant.product_discount > 0 && (
-                        <>
-                          <span className="text-lg line-through text-muted-foreground">
-                            Rs. {selectedVariant.product_price}
-                          </span>
-                          <div className="bg-red-100 text-red-600 px-2 py-1 rounded text-sm">
-                            -{selectedVariant.product_discount}%
-                          </div>
-                        </>
-                      )}
-                    </div>
-                    <p className="text-sm text-green-600">
-                      In Stock: {selectedVariant.available_count} items
-                      available
-                    </p>
+                {/* Price Section */}
+                <div className="space-y-2 mb-6">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl font-normal text-primary">
+                      Rs. {discountedPrice}
+                    </span>
+                    {selectedVariant.product_discount > 0 && (
+                      <>
+                        <span className="text-lg line-through text-muted-foreground">
+                          Rs. {selectedVariant.product_price}
+                        </span>
+                        <div className="bg-red-100 text-red-600 px-2 py-1 rounded text-sm">
+                          -{selectedVariant.product_discount}%
+                        </div>
+                      </>
+                    )}
                   </div>
+                  <p className="text-sm text-green-600">
+                    In Stock: {selectedVariant.available_count} items available
+                  </p>
                 </div>
 
                 {/* Variant Selection */}
@@ -175,29 +176,21 @@ export function ProductCard({ product, border = false }) {
                       Available Variants:
                     </h4>
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 md:gap-2">
-                      {product.variants.map((variant, index) => {
-                        const variantDiscountedPrice = (
-                          variant.product_price -
-                          (variant.product_price * variant.product_discount) /
-                            100
-                        ).toFixed(2);
-
-                        return (
-                          <div
-                            key={variant.variant_id}
-                            className={`p-3 w-fit border rounded-lg cursor-pointer transition-all ${
-                              selectedVariantIndex === index
-                                ? "border-primary bg-primary/5"
-                                : "border-gray-200 hover:border-gray-300"
-                            }`}
-                            onClick={() => handleVariantChange(index)}
-                          >
-                            <p className="font-medium text-sm">
-                              {variant.variant_description}
-                            </p>
-                          </div>
-                        );
-                      })}
+                      {product.variants.map((variant, index) => (
+                        <div
+                          key={variant.variant_id}
+                          className={`p-3 w-fit border rounded-lg cursor-pointer transition-all ${
+                            selectedVariantIndex === index
+                              ? "border-primary bg-primary/5"
+                              : "border-gray-200 hover:border-gray-300"
+                          }`}
+                          onClick={() => handleVariantChange(index)}
+                        >
+                          <p className="font-medium text-sm">
+                            {variant.variant_description}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -208,6 +201,7 @@ export function ProductCard({ product, border = false }) {
                     className="w-fit cursor-pointer"
                     size="lg"
                     disabled={selectedVariant.available_count === 0}
+                    onClick={handleAddToCart} // ✅ hook up addToCart
                   >
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     Add to Cart ({quantity})
@@ -233,15 +227,6 @@ export function ProductCard({ product, border = false }) {
                     />
                   </Button>
                 </div>
-
-                {/* Out of Stock Warning */}
-                {selectedVariant.available_count === 0 && (
-                  <div className="bg-red-50 border border-red-200 p-3 rounded-lg">
-                    <p className="text-red-600 text-sm font-medium">
-                      This variant is currently out of stock
-                    </p>
-                  </div>
-                )}
 
                 {/* Total Price Preview */}
                 <div className="bg-gray-50 p-4 rounded-lg">

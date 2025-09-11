@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import ProductGallery from "@/components/home/products/list/ProductGallery";
 import Link from "next/link";
+import { useCart } from "@/app/(home)/_context/CartContext";
 
 export default function ProductDetails({ product }) {
   const firstProduct = Array.isArray(product) ? product[0] : product;
@@ -14,6 +15,8 @@ export default function ProductDetails({ product }) {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  const { updateCart } = useCart();
 
   if (!firstProduct?.variants?.length) return null;
 
@@ -39,6 +42,16 @@ export default function ProductDetails({ product }) {
 
   const toggleWishlist = () => {
     setIsWishlisted(!isWishlisted);
+  };
+
+  const handleAddToCart = () => {
+    updateCart({
+      product_id: firstProduct.product_id,
+      vendor_id: firstProduct.vendor_id,
+      variant_id: selectedVariant.variant_id,
+      order_count: quantity,
+      type: "add",
+    });
   };
 
   return (
@@ -160,6 +173,7 @@ export default function ProductDetails({ product }) {
                 size="lg"
                 className="flex items-center gap-2"
                 disabled={selectedVariant.available_count === 0}
+                onClick={handleAddToCart} // ✅ add to cart handler
               >
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart ({quantity})
@@ -219,9 +233,8 @@ export default function ProductDetails({ product }) {
                   .filter(
                     ([key, value]) =>
                       value !== null && key !== "product_description"
-                  ) // remove nulls and description
+                  )
                   .map(([key, value]) => {
-                    // Convert key to readable label: product_volume -> Product Volume
                     const label = key
                       .split("_")
                       .map(
