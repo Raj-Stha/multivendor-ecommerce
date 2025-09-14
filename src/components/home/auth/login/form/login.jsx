@@ -52,6 +52,8 @@ function Login() {
 
       const result = await res.json();
 
+      console.log(result);
+
       const redirectPath =
         redirect && redirect.startsWith("/")
           ? redirect

@@ -69,7 +69,7 @@ function CategoryCard({ category, size = "medium" }) {
 
   return (
     <Link
-      href={`/product?category=${category.id}`}
+      href={`/products?category=${category.id}`}
       key={category.category_id}
       className="flex flex-col items-center jost-text group cursor-pointer bg-white space-y-4 p-3 border-1 hover:shadow-2xl"
     >

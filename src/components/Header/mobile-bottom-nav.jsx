@@ -33,8 +33,8 @@ const mobileNavItems = [
     name: "Account",
     icon: User,
     dropdown: [
-      { name: "Login", href: "/login" },
-      { name: "Register", href: "/register" },
+      { name: "Login", href: "/auth/login" },
+      { name: "Register", href: "/auth/register" },
     ],
   },
 ];

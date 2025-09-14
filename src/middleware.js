@@ -6,7 +6,6 @@ export async function middleware(req) {
 
   console.log(req.cookies);
   console.log(req.cookies.get("token")?.value);
-  console.log("byyye");
 
   const publicRoutes = ["/auth/login", "/auth/register"];
   if (publicRoutes.some((route) => pathname.startsWith(route))) {
@@ -26,8 +25,8 @@ export async function middleware(req) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         cache: "no-store",
       }
     );
@@ -41,17 +40,17 @@ export async function middleware(req) {
     const data = await res.json();
     const details = data?.details?.[0];
 
-    if (!details || Date.now() >= details.exp * 1000) {
-      return NextResponse.redirect(
-        new URL(`/auth/login?redirect=${pathname}`, req.url)
-      );
-    }
+    // if (!details || Date.now() >= details.exp * 1000) {
+    //   return NextResponse.redirect(
+    //     new URL(`/auth/login?redirect=${pathname}`, req.url)
+    //   );
+    // }
 
     if (
       pathname.startsWith("/dashboard/admin") &&
       details.role !== "invent_admin"
     ) {
-      return NextResponse.redirect(new URL("/", req.url)); // redirect to home
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
     if (

@@ -7,6 +7,7 @@ import ClientWrapper from "@/components/ClientWrapper";
 import { Providers } from "@/components/Providers";
 import { CartProvider } from "@/app/(home)/_context/CartContext";
 import { WishlistProvider } from "@/app/(home)/_context/WishlistContext";
+import { UserProvider } from "@/app/(home)/_context/UserContext";
 
 // Load fonts
 const nunito = Nunito({
@@ -51,11 +52,13 @@ export default function RootLayout({
         className={`${nunito.variable} ${rubik.variable} ${jost.variable} ${notoSans.variable} antialiased h-full`}
       >
         <Providers>
-          <CartProvider>
-            <WishlistProvider>
-              <ClientWrapper>{children}</ClientWrapper>
-            </WishlistProvider>
-          </CartProvider>
+          <UserProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <ClientWrapper>{children}</ClientWrapper>
+              </WishlistProvider>
+            </CartProvider>
+          </UserProvider>
         </Providers>
       </body>
     </html>

@@ -5,8 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Truck } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function OrderSummary({ items }) {
+  const router = useRouter();
   const subtotal = items.reduce((sum, item) => {
     const discountedPrice =
       item.product_price * (1 - item.product_discount / 100);
@@ -68,7 +70,11 @@ export function OrderSummary({ items }) {
         </div>
 
         <div className="space-y-3">
-          <Button className="w-full" size="lg">
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={() => router.push("/checkout")}
+          >
             Proceed to Checkout
           </Button>
 

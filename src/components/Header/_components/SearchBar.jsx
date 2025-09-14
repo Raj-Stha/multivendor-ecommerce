@@ -48,7 +48,7 @@ export default function ImprovedSearchBar({
           page: "1",
         });
         const response = await fetch(
-          `${apiBaseUrl}/product/filter-data?${searchParams}`,
+          `${apiBaseUrl}/products/filter-data?${searchParams}`,
           {
             signal: abortControllerRef.current.signal,
             headers: {
@@ -186,7 +186,7 @@ export default function ImprovedSearchBar({
                 {results.map((product) => (
                   <Link
                     key={product.id}
-                    href={`/product/${product.slug}`}
+                    href={`/products/${product.slug}`}
                     onClick={() => {
                       setIsOpen(false);
                       onProductSelect?.(product);

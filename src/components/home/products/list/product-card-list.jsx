@@ -111,7 +111,7 @@ export function ProductCardList({ products, border = false }) {
 
                 {/* Product Details */}
                 <div className="p-4 flex-1 flex flex-col bg-white">
-                  <Link href={`/product/${product.product_id}`}>
+                  <Link href={`/products/${product.product_id}`}>
                     <h4 className="text-sm text-gray-800 font-normal line-clamp-2 hover:text-primary transition-colors">
                       {product.product_name}
                     </h4>
