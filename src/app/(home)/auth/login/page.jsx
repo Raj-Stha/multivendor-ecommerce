@@ -1,6 +1,5 @@
-"use client";
-
 // import { generatePageMetadata } from "@/components/page-seo";
+import { Suspense } from "react";
 import LoginForm from "@/components/home/auth/login/form/login";
 
 // export const metadata = {
@@ -19,5 +18,9 @@ import LoginForm from "@/components/home/auth/login/form/login";
 // };
 
 export default function LoginPage() {
-  return <LoginForm />;
+  return (
+    <Suspense fallback={<div></div>}>
+      <LoginForm />
+    </Suspense>
+  );
 }
