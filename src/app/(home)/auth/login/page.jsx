@@ -19,7 +19,7 @@ import LoginForm from "@/components/home/auth/login/form/login";
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <LoginForm />
     </Suspense>
   );
