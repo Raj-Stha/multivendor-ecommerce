@@ -31,7 +31,7 @@ export default function AddVendorForm({ setIsOpen }) {
   const [isLoading, setIsLoading] = useState(false);
   const [locationCoordinates, setLocationCoordinates] = useState("");
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
   const router = useRouter();
 
   const form = useForm({

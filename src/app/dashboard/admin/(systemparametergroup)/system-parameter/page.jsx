@@ -1,7 +1,7 @@
 import SystemParameterAdmin from "@/components/admin/(systemparametergroup)/system/parameter-admin";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
 async function getParameters(page = 1, limit = 10) {
   try {
