@@ -88,7 +88,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 source-serif-text">
+    <div className="min-h-screen bg-gray-50 jost-text">
       {/* Main Content */}
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-5xl">
