@@ -54,7 +54,7 @@ async function getDetails(url) {
 }
 export default async function AdminDashboard() {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
   const [venderDetail] = await Promise.all([
     getDetails(`${baseUrl}/getvendordash`),

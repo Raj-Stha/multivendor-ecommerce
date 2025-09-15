@@ -22,7 +22,7 @@ export default async function AdminDashboard({ searchParams }) {
   const dateTo = search?.date_to || "2026-01-01";
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://45.117.153.186/api";
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
   const requestBody = { date_from: dateFrom, date_to: dateTo };
 
