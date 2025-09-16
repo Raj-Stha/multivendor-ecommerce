@@ -13,27 +13,36 @@ export default function Checkout() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadCart = async () => {
+    const loadData = async () => {
       setIsLoading(true);
       await getCart();
       await getUser();
       setIsLoading(false);
     };
-    loadCart();
+    loadData();
   }, [getCart, getUser]);
 
-  console.log(user);
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 bg-card border-b border-border">
-        <div className="container max-w-7xl mx-auto py-4">
-          <div className="">
-            <h1 className="text-2xl font-bold text-foreground">Checkout</h1>
-          </div>
-        </div>
-      </header>
+  useEffect(() => {
+    if (!isLoading && cart.length === 0) {
+      // If cart is empty, redirect to home (or cart page)
+      router.push("/cart");
+    }
+  }, [isLoading, cart, router]);
 
-      <main className="container mx-auto px-4 py-8">
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-medium">Loading...</p>
+      </div>
+    );
+  }
+
+  // Prevent rendering if cart is empty (to avoid flicker before redirect)
+  if (cart.length === 0) return null;
+
+  return (
+    <div className="min-h-screen bg-background jost-text">
+      <main className="container max-w-7xl mx-auto px-4 py-8">
         <CheckoutList cartData={cart} user={user} />
       </main>
     </div>

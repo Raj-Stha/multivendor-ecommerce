@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,7 +24,7 @@ import LocationPicker from "@/lib/locationpicker";
 
 // ✅ Validation Schema
 const checkoutSchema = z.object({
-  fullName: z.string().min(1, "First name is required"),
+  fullName: z.string().min(1, "Full name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(7, "Phone number is required"),
 });
@@ -32,20 +32,15 @@ const checkoutSchema = z.object({
 export function CheckoutList({ cartData, user }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [location, setLocation] = useState(false);
-  const [locationCoordinates, setLocationCoordinates] = useState("");
-  let lat = "";
-  let long = "";
 
-  console.log(user);
-  let deliveryLocation = "(9.255,9.6666)";
-  const match = deliveryLocation.match(/\(([^,]+),([^,]+)\)/);
+  // location state
+  const [locationCoordinates, setLocationCoordinates] = useState({
+    lat: "",
+    lon: "",
+    name: "",
+  });
 
-  if (match) {
-    lat = parseFloat(match[2].trim()); // second part
-    long = parseFloat(match[1].trim()); // first part
-  }
-
+  // ✅ prefill values
   const form = useForm({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -55,29 +50,55 @@ export function CheckoutList({ cartData, user }) {
     },
   });
 
-  const handleLocationSelect = (lat, lng) => {
-    const coordinates = `${lng}, ${lat}`;
-    setLocationCoordinates(coordinates);
-  };
+  // ✅ Load location based on session or guest
+  useEffect(() => {
+    if (user) {
+      // Logged-in user: try to use backend delivery_location
+      if (user.delivery_location) {
+        setLocationCoordinates(user.delivery_location);
+      }
+    } else {
+      // Guest: check localStorage
+      const stored = localStorage.getItem("user_location");
+      if (stored) {
+        setLocationCoordinates(JSON.parse(stored));
+      }
+    }
+  }, [user]);
 
-  console.log(locationCoordinates);
+  // ✅ When user picks new location (only for guest)
+  const handleLocationSelect = (lat, lon, name) => {
+    const loc = { lat, lon, name };
+    setLocationCoordinates(loc);
+
+    // Save to localStorage only if guest
+    if (!user) {
+      localStorage.setItem("user_location", JSON.stringify(loc));
+    }
+  };
 
   const onSubmit = async (values) => {
     setIsLoading(true);
     try {
-      console.log("Submitting checkout:", values);
+      const payload = {
+        ...values,
+        cart: cartData,
+        delivery_location: locationCoordinates,
+      };
+
+      console.log("Submitting checkout:", payload);
 
       // Example API call
       // const res = await fetch("/api/checkout", {
       //   method: "POST",
       //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ ...values, cart: cartData }),
+      //   body: JSON.stringify(payload),
       // });
 
       // if (!res.ok) throw new Error("Checkout failed");
 
-      // toast.success("Order placed successfully!");
-      // router.push("/thank-you");
+      toast.success("Order placed successfully!");
+      router.push("/thank-you");
     } catch (err) {
       console.error(err);
       toast.error(err.message || "Something went wrong!");
@@ -90,10 +111,13 @@ export function CheckoutList({ cartData, user }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex gap-8 max-w-7xl justify-between mx-auto"
+        className="flex flex-col md:flex-row gap-8 max-w-7xl justify-between mx-auto"
       >
         {/* LEFT: Shipping Info */}
-        <div className="space-y-8 w-[65%]">
+        <div className="space-y-8 w-full md:w-2/3">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Checkout</h1>
+          </div>
           <Card className="elegant-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -103,21 +127,23 @@ export function CheckoutList({ cartData, user }) {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Name */}
-              <div className=" ">
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="John Doe"
+                        {...field}
+                        readOnly={!!user} // make read-only if logged in
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {/* Email */}
               <FormField
@@ -131,6 +157,7 @@ export function CheckoutList({ cartData, user }) {
                         type="email"
                         placeholder="john@example.com"
                         {...field}
+                        readOnly={!!user}
                       />
                     </FormControl>
                     <FormMessage />
@@ -148,8 +175,9 @@ export function CheckoutList({ cartData, user }) {
                     <FormControl>
                       <Input
                         type="tel"
-                        placeholder="+1 (555) 123-4567"
+                        placeholder="+977 9800000000"
                         {...field}
+                        readOnly={!!user}
                       />
                     </FormControl>
                     <FormMessage />
@@ -157,49 +185,66 @@ export function CheckoutList({ cartData, user }) {
                 )}
               />
 
-              {location ? (
-                <div className="space-y-4">
-                  <Label>Delivery Location</Label>
-                  <LocationPicker
-                    onLocationSelect={handleLocationSelect}
-                    initialLocation={"(85.324, 27.7172)"}
-                  />
-                </div>
-              ) : (
+              {/* Delivery Location */}
+              {user ? (
+                // Logged-in user: show delivery location only
                 <Card>
                   <CardHeader>
-                    <CardTitle>Delivery Location</CardTitle>
+                    <CardTitle>Saved Delivery Location</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label className="pb-2">Latitude</Label>
-                        <Input value={lat} readOnly className="font-mono" />
+                        <Input
+                          value={locationCoordinates.lat}
+                          readOnly
+                          className="font-mono"
+                        />
                       </div>
                       <div>
                         <Label className="pb-2">Longitude</Label>
-                        <Input value={long} readOnly className="font-mono" />
+                        <Input
+                          value={locationCoordinates.lon}
+                          readOnly
+                          className="font-mono"
+                        />
                       </div>
                     </div>
-                    {/* {coordinates.address && (
-                      <div className="pb-2">
+                    {locationCoordinates.name && (
+                      <div>
                         <Label className="pb-2">Address</Label>
                         <Input
-                          value={coordinates.address}
+                          value={locationCoordinates.name}
                           readOnly
                           className="text-sm"
                         />
                       </div>
-                    )} */}
+                    )}
                   </CardContent>
                 </Card>
+              ) : (
+                // Guest user: show map picker
+                <div className="space-y-4">
+                  <Label>Select Delivery Location</Label>
+                  <LocationPicker
+                    onLocationSelect={(lat, lon, name) =>
+                      handleLocationSelect(lat, lon, name)
+                    }
+                    initialLocation={
+                      locationCoordinates.lat && locationCoordinates.lon
+                        ? `(${locationCoordinates.lat},${locationCoordinates.lon})`
+                        : "(85.324,27.7172)" // default to Kathmandu
+                    }
+                  />
+                </div>
               )}
             </CardContent>
           </Card>
         </div>
 
         {/* RIGHT: Order Summary */}
-        <div className="space-y-6 w-[35%]">
+        <div className="space-y-6 w-full md:w-1/3">
           <OrderSummary cartData={cartData} isLoading={isLoading} />
         </div>
       </form>
