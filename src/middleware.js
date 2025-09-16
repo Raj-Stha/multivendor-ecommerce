@@ -24,7 +24,6 @@ export async function middleware(req) {
       try {
         const { payload } = await verifyJWT(token);
 
-        // Only redirect if no redirect query is present
         const url = new URL(req.url);
         const redirectPath = url.searchParams.get("redirect");
 
@@ -41,19 +40,16 @@ export async function middleware(req) {
             return NextResponse.redirect(new URL(redirectPath || "/", req.url));
           case ROLES.GUEST:
           default:
-            return NextResponse.next(); // guest → allow login/register
+            return NextResponse.next();
         }
       } catch {
-        return NextResponse.next(); // invalid token → allow login/register
+        return NextResponse.next();
       }
     }
 
-    return NextResponse.next(); // no token → allow login/register
+    return NextResponse.next();
   }
 
-  // -----------------------------
-  // 2️⃣ Protected dashboard routes
-  // -----------------------------
   if (pathname.startsWith("/dashboard")) {
     if (!token) {
       return NextResponse.redirect(
@@ -64,14 +60,12 @@ export async function middleware(req) {
     try {
       const { payload } = await verifyJWT(token);
 
-      // Guest token cannot access dashboard
       if (payload.role === ROLES.GUEST) {
         return NextResponse.redirect(
           new URL(`/auth/login?redirect=${pathname}`, req.url)
         );
       }
 
-      // Role-based access
       if (
         pathname.startsWith("/dashboard/vendor") &&
         payload.role !== ROLES.VENDOR
@@ -86,7 +80,7 @@ export async function middleware(req) {
         return NextResponse.redirect(new URL("/", req.url));
       }
 
-      return NextResponse.next(); // valid token and role
+      return NextResponse.next();
     } catch {
       return NextResponse.redirect(
         new URL(`/auth/login?redirect=${pathname}`, req.url)
