@@ -7,6 +7,7 @@ import {
   useState,
   useCallback,
 } from "react";
+import toast from "react-hot-toast";
 
 const CartContext = createContext();
 
@@ -34,6 +35,7 @@ export const CartProvider = ({ children }) => {
       setCart(data.details || []);
     } catch (err) {
       console.error("Error loading cart:", err);
+      toast.error("Failed to load cart.");
     }
   }, [baseUrl]);
 
@@ -79,13 +81,22 @@ export const CartProvider = ({ children }) => {
       if (!res.ok) throw new Error("Failed to update cart");
 
       await getCart();
+
+      if (type === "add") {
+        toast.success("Item added to cart!");
+      } else if (type === "edit") {
+        toast.success("Cart updated successfully!");
+      } else if (type === "remove") {
+        toast.success("Item removed from cart!");
+      }
     } catch (err) {
       console.error("Error updating cart:", err);
+      toast.error("Failed to update cart.");
     }
   };
 
-  // const cartCount = cart.reduce((sum, item) => sum + item.cart_quantity, 0);
-  const cartCount = cart.length;
+  const cartCount = cart.reduce((sum, item) => sum + item.cart_quantity, 0);
+
   useEffect(() => {
     getCart();
   }, [getCart]);
