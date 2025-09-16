@@ -66,7 +66,7 @@ function Login() {
           router.replace(redirectPath);
         } else if (result?.details[0]?.role_name === "invent_vendor") {
           router.push("/dashboard/vendor");
-        } else if (result?.role === "invent_admin") {
+        } else if (result?.details[0]?.role_name === "invent_administrator") {
           router.push("/dashboard/admin");
         } else {
           router.push("/");
