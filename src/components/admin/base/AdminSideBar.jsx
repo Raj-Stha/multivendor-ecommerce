@@ -132,6 +132,23 @@ const SIDEBAR_ITEMS = [
 
   {
     type: "collapsible",
+    label: "User Management",
+    items: [
+      {
+        label: "User",
+        href: "/dashboard/admin/user",
+        icon: Package,
+      },
+      {
+        label: "User Notes",
+        href: "/dashboard/admin/user-notes",
+        icon: Box,
+      },
+    ],
+  },
+
+  {
+    type: "collapsible",
     label: "Promo Management",
     items: [
       {
