@@ -54,7 +54,6 @@ export function ProductFilterClient({
   initialSelectedFilters,
   initialSearchTerm,
   initialSortBy,
-  hasActiveFilters: initialHasActiveFilters,
 }) {
   const router = useRouter();
 
@@ -134,7 +133,7 @@ export function ProductFilterClient({
           process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api"
         }/getproducts`,
         {
-          limit: 10,
+          limit: 12,
           page_number: newPage,
           price_from: newFilters.priceRange.min,
           price_to: newFilters.priceRange.max,
@@ -186,8 +185,24 @@ export function ProductFilterClient({
     setSortBy("latest");
     setCurrentPage(1);
 
-    // 🔥 fetch products again with cleared filters
     updateURL(cleared, "", "latest", 1);
+  };
+
+  const handleSortChange = (newSortBy) => {
+    setSortBy(newSortBy);
+    updateURL(selectedFilters, debouncedSearchTerm, newSortBy, 1);
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
+      setCurrentPage(page);
+      updateURL(selectedFilters, debouncedSearchTerm, sortBy, page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const sortOptions = [
@@ -199,7 +214,7 @@ export function ProductFilterClient({
 
   return (
     <>
-      {/* Header (Search + Filter + Sort) */}
+      {/* Header */}
       <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
         {/* Mobile Header */}
         <div className="flex flex-col space-y-3 md:hidden">
@@ -233,7 +248,6 @@ export function ProductFilterClient({
             </Sheet>
           </div>
 
-          {/* Mobile Search */}
           <div className="relative">
             <input
               type="text"
@@ -263,7 +277,6 @@ export function ProductFilterClient({
               </p>
             </div>
 
-            {/* Desktop Search */}
             <div className="flex-1 max-w-md mx-8">
               <div className="relative">
                 <input
@@ -283,7 +296,6 @@ export function ProductFilterClient({
             </div>
           </div>
 
-          {/* Desktop Sort */}
           <div className="flex items-center gap-4">
             <div
               ref={sortRef}
@@ -350,11 +362,12 @@ export function ProductFilterClient({
         </div>
 
         <div className="flex-1 min-w-0 relative">
-          {products?.length > 0 ? (
+          {/* Show skeleton while loading */}
+          {loading ? (
+            <ProductSkeletonGrid count={8} />
+          ) : products?.length > 0 ? (
             <>
-              <div
-                className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-3`}
-              >
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-3">
                 {products.map((product, i) => (
                   <motion.div
                     key={`${product.product_id}-${product.vendor_id}`}
@@ -366,9 +379,87 @@ export function ProductFilterClient({
                   </motion.div>
                 ))}
               </div>
-              {loading && (
-                <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-                  <ProductSkeletonGrid count={8} />
+
+              {totalPages > 1 && (
+                <div className="mt-8 flex justify-center">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          className={
+                            currentPage <= 1
+                              ? "pointer-events-none opacity-50"
+                              : "cursor-pointer"
+                          }
+                        />
+                      </PaginationItem>
+
+                      {currentPage > 3 && (
+                        <>
+                          <PaginationItem>
+                            <PaginationLink
+                              onClick={() => handlePageChange(1)}
+                              className="cursor-pointer"
+                            >
+                              1
+                            </PaginationLink>
+                          </PaginationItem>
+                          {currentPage > 4 && <span className="px-2">...</span>}
+                        </>
+                      )}
+
+                      {Array.from(
+                        { length: Math.min(5, totalPages) },
+                        (_, i) => {
+                          const pageNum =
+                            Math.max(
+                              1,
+                              Math.min(totalPages - 4, currentPage - 2)
+                            ) + i;
+                          if (pageNum > totalPages) return null;
+                          return (
+                            <PaginationItem key={pageNum}>
+                              <PaginationLink
+                                onClick={() => handlePageChange(pageNum)}
+                                isActive={pageNum === currentPage}
+                                className="cursor-pointer"
+                              >
+                                {pageNum}
+                              </PaginationLink>
+                            </PaginationItem>
+                          );
+                        }
+                      )}
+
+                      {currentPage < totalPages - 2 && (
+                        <>
+                          {currentPage < totalPages - 3 && (
+                            <span className="px-2">...</span>
+                          )}
+                          <PaginationItem>
+                            <PaginationLink
+                              onClick={() => handlePageChange(totalPages)}
+                              className="cursor-pointer"
+                            >
+                              {totalPages}
+                            </PaginationLink>
+                          </PaginationItem>
+                        </>
+                      )}
+
+                      <PaginationItem>
+                        <PaginationNext
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          className={
+                            currentPage >= totalPages
+                              ? "pointer-events-none opacity-50"
+                              : "cursor-pointer"
+                          }
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
                 </div>
               )}
             </>

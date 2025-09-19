@@ -1,4 +1,4 @@
-// import { generatePageMetadata } from "@/components/page-seo";
+import { generatePageMetadata } from "@/components/page-seo";
 import { ProductFilterClient } from "@/components/home/products/filter/FilterPageClient";
 
 const baseUrl =
@@ -118,9 +118,36 @@ async function fetchProducts(params, limit) {
   }
 }
 
+export async function generateMetadata({ searchParams }) {
+  const params = await searchParams;
+  const searchTerm = params.search || "";
+  const category = params.category || "";
+
+  let title = "Products - Find Quality Items";
+  let description =
+    "Browse our extensive collection of quality products with advanced filtering and search capabilities.";
+
+  if (searchTerm) {
+    title = `Search Results for "${searchTerm}" - Products`;
+    description = `Find products matching "${searchTerm}". Browse through our filtered results with advanced search capabilities.`;
+  } else if (category) {
+    title = `Category Products - Filtered Results`;
+    description = `Browse products in your selected category with advanced filtering options.`;
+  }
+
+  return generatePageMetadata({
+    title,
+    description,
+    keywords: `products, search, filter, ${searchTerm}, category, shopping, quality items`,
+    url: `${
+      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    }/products`,
+  });
+}
+
 export default async function ProductPage({ searchParams }) {
   const params = await searchParams;
-  const limit = 10;
+  const limit = 12;
 
   const [filterData, productsData] = await Promise.all([
     fetchFilterData(),
