@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, User, Package, MapPin, LogOut } from "lucide-react";
+import { Menu, User, Package, LogOut } from "lucide-react";
 import Header from "@/components/Header/Header";
 import { TopBar } from "@/components/Header/top-bar";
 import MobileBottomNav from "@/components/Header/mobile-bottom-nav";
@@ -11,7 +11,6 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
 import UserDetails from "@/components/user/UserDetails";
 import UserOrders from "@/components/user/UserOrders";
 
@@ -20,23 +19,6 @@ export default function UserPage() {
   const [activeTab, setActiveTab] = useState("details");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
-
-  if (!user) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500">Loading user details...</p>
-      </div>
-    );
-  }
-
-  const userInfo = user[0]?.user_details || {};
-  const userLoginName = user[0]?.user_login_name || "-";
-  const deliveryLocation = user[0]?.delivery_location || "-";
-
-  const tabs = [
-    { id: "details", label: "Details", icon: User },
-    { id: "orders", label: "Orders", icon: Package },
-  ];
 
   const handleLogout = async () => {
     const success = await logoutUser();
@@ -50,8 +32,13 @@ export default function UserPage() {
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
-    setSidebarOpen(false); // Close mobile sidebar when tab changes
+    setSidebarOpen(false);
   };
+
+  const tabs = [
+    { id: "details", label: "Details", icon: User },
+    { id: "orders", label: "Orders", icon: Package },
+  ];
 
   const SidebarContent = () => (
     <div className="h-full flex flex-col jost-text">
@@ -96,6 +83,21 @@ export default function UserPage() {
     </div>
   );
 
+  const LoadingSkeleton = () => (
+    <div className="animate-pulse space-y-4">
+      <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+      <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+      <div className="h-40 bg-gray-200 rounded"></div>
+      <div className="h-6 bg-gray-300 rounded w-2/3"></div>
+      <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+    </div>
+  );
+
+  // Prepare user info safely
+  const userInfo = user?.[0]?.user_details || {};
+  const userLoginName = user?.[0]?.user_login_name || "-";
+  const deliveryLocation = user?.[0]?.delivery_location || "-";
+
   return (
     <>
       <TopBar />
@@ -125,15 +127,20 @@ export default function UserPage() {
 
           {/* Main Content */}
           <div className="flex-1 bg-white shadow-sm rounded-xl border p-6 lg:p-8 min-h-[600px]">
-            {activeTab === "details" && (
-              <UserDetails
-                userInfo={userInfo}
-                userLoginName={userLoginName}
-                deliveryLocation={deliveryLocation}
-              />
+            {user ? (
+              <>
+                {activeTab === "details" && (
+                  <UserDetails
+                    userInfo={userInfo}
+                    userLoginName={userLoginName}
+                    deliveryLocation={deliveryLocation}
+                  />
+                )}
+                {activeTab === "orders" && <UserOrders />}
+              </>
+            ) : (
+              <LoadingSkeleton />
             )}
-
-            {activeTab === "orders" && <UserOrders />}
           </div>
         </div>
       </div>
