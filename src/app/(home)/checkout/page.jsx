@@ -31,8 +31,22 @@ export default function Checkout() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg font-medium">Loading...</p>
+      <div className="container max-w-7xl mx-auto flex flex-col md:flex-row gap-4 px-4 py-8 min-h-screen">
+        {/* Left side skeleton */}
+        <div className="w-full md:w-2/3 space-y-4 animate-pulse">
+          <div className="h-8 bg-gray-300 rounded w-1/3"></div>
+          <div className="space-y-2">
+            <div className="h-6 bg-gray-300 rounded"></div>
+            <div className="h-6 bg-gray-300 rounded"></div>
+            <div className="h-6 bg-gray-300 rounded"></div>
+          </div>
+        </div>
+
+        {/* Right side skeleton */}
+        <div className="w-full md:w-1/3 space-y-2 animate-pulse mt-6 md:mt-0">
+          <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+          <div className="h-40 bg-gray-300 rounded"></div>
+        </div>
       </div>
     );
   }
