@@ -41,7 +41,7 @@ const SIDEBAR_ITEMS = [
     items: [
       {
         label: "Dashboard",
-        href: "/dashboard/admin",
+        href: "/dashboard/vendor",
         icon: LayoutDashboard,
       },
     ],
@@ -52,61 +52,11 @@ const SIDEBAR_ITEMS = [
   //   items: [
   //     {
   //       label: "Banners",
-  //       href: "/dashboard/admin/banners",
+  //       href: "/dashboard/vendor/banners",
   //       icon: ImageIcon,
   //     },
   //   ],
   // },
-  {
-    type: "collapsible",
-    label: "Category Management",
-    items: [
-      {
-        label: "Category",
-        href: "/dashboard/admin/category",
-        icon: Package,
-      },
-      {
-        label: "Category Notes",
-        href: "/dashboard/admin/category-notes",
-        icon: Box,
-      },
-    ],
-  },
-
-  {
-    type: "collapsible",
-    label: "Manufacturer Management",
-    items: [
-      {
-        label: "Manufacturer",
-        href: "/dashboard/admin/manufacturer",
-        icon: Package,
-      },
-      {
-        label: "Manufacturer Notes",
-        href: "/dashboard/admin/manufacturer-notes",
-        icon: Box,
-      },
-    ],
-  },
-
-  {
-    type: "collapsible",
-    label: "Vendor Management",
-    items: [
-      {
-        label: "Vendor",
-        href: "/dashboard/admin/vendor",
-        icon: Package,
-      },
-      {
-        label: "Vendor Notes",
-        href: "/dashboard/admin/vendor-notes",
-        icon: Box,
-      },
-    ],
-  },
 
   {
     type: "collapsible",
@@ -114,119 +64,24 @@ const SIDEBAR_ITEMS = [
     items: [
       {
         label: "Product",
-        href: "/dashboard/admin/product",
+        href: "/dashboard/vendor/product",
         icon: Package,
       },
       {
         label: "Product Notes",
-        href: "/dashboard/admin/product-notes",
+        href: "/dashboard/vendor/product-notes",
         icon: Box,
       },
       {
         label: "Product Map",
-        href: "/dashboard/admin/product-map",
+        href: "/dashboard/vendor/product-map",
         icon: Box,
       },
     ],
   },
-
-  {
-    type: "collapsible",
-    label: "User Management",
-    items: [
-      {
-        label: "User Notes",
-        href: "/dashboard/admin/user-notes",
-        icon: Box,
-      },
-    ],
-  },
-
-  {
-    type: "collapsible",
-    label: "Promo Management",
-    items: [
-      {
-        label: "Promo",
-        href: "/dashboard/admin/promo",
-        icon: Package,
-      },
-      {
-        label: "Promo Notes",
-        href: "/dashboard/admin/promo-notes",
-        icon: Box,
-      },
-    ],
-  },
-
-  {
-    type: "group",
-    label: "System Paramters",
-    items: [
-      {
-        label: "System",
-        href: "/dashboard/admin/system-parameter",
-        icon: Settings,
-      },
-    ],
-  },
-  // {
-  //   type: "collapsible",
-  //   label: "Order Management",
-  //   items: [
-  //     {
-  //       label: "All Orders",
-  //       href: "/dashboard/admin/orders",
-  //       icon: ShoppingBag,
-  //     },
-  //     {
-  //       label: "Pending Orders",
-  //       href: "/dashboard/admin/orders/pending",
-  //       icon: ShoppingBag,
-  //     },
-  //     {
-  //       label: "Completed Orders",
-  //       href: "/dashboard/admin/orders/completed",
-  //       icon: ShoppingBag,
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: "group",
-  //   label: "User Management",
-  //   items: [
-  //     {
-  //       label: "Users",
-  //       href: "/dashboard/admin/users",
-  //       icon: Users,
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: "group",
-  //   label: "Analytics",
-  //   items: [
-  //     {
-  //       label: "Reports",
-  //       href: "/dashboard/admin/analytics",
-  //       icon: BarChart3,
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: "group",
-  //   label: "Settings",
-  //   items: [
-  //     {
-  //       label: "Settings",
-  //       href: "/dashboard/admin/settings",
-  //       icon: Settings,
-  //     },
-  //   ],
-  // },
 ];
 
-export function AdminSidebar() {
+export function VendorSidebar() {
   const pathname = usePathname();
 
   const isActive = (path) => {
@@ -329,14 +184,14 @@ export function AdminSidebar() {
           <Avatar>
             <AvatarImage
               src="/placeholder.svg?height=40&width=40"
-              alt="Admin"
+              alt="vendor"
             />
             <AvatarFallback>AD</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-sm font-medium">Admin User</span>
+            <span className="text-sm font-medium">Vendor User</span>
             <span className="text-xs text-muted-foreground">
-              admin@example.com
+              vendor@example.com
             </span>
           </div>
           <button className="ml-auto rounded-full p-2 hover:bg-muted">
