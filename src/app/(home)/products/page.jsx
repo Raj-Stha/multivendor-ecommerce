@@ -123,7 +123,7 @@ export async function generateMetadata({ searchParams }) {
   const searchTerm = params.search || "";
   const category = params.category || "";
 
-  let title = "Products - Find Quality Items";
+  let title = `Products - ${process.env.NEXT_PUBLIC_WEBSITE_NAME}`;
   let description =
     "Browse our extensive collection of quality products with advanced filtering and search capabilities.";
 

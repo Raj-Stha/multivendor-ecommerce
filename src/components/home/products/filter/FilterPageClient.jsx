@@ -206,10 +206,10 @@ export function ProductFilterClient({
   };
 
   const sortOptions = [
-    { name: "Latest", value: "latest" },
-    { name: "Oldest", value: "oldest" },
-    { name: "Price: Low to High", value: "asc" },
-    { name: "Price: High to Low", value: "desc" },
+    { name: "Latest", value: "age_asc" },
+    { name: "Oldest", value: "age_desc" },
+    { name: "Price: Low to High", value: "price_asc" },
+    { name: "Price: High to Low", value: "price_desc" },
   ];
 
   return (
