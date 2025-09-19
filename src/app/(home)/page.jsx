@@ -53,7 +53,7 @@ export default async function Home() {
     safeFetch(`${baseurl}/getproducts`, {
       method: "POST",
       body: {
-        limit: 2,
+        limit: 12,
         page_number: 1,
         price_from: 0,
         price_to: 100000,

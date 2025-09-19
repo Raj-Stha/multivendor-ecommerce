@@ -18,7 +18,7 @@ export default function ProductGrid({ initialProducts, baseurl }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          limit: 2,
+          limit: 12,
           page_number: page + 1,
           price_from: 0,
           price_to: 100000,
