@@ -21,7 +21,7 @@ const mobileNavItems = [
   },
   {
     name: "Search",
-    href: "/search",
+    href: "/products",
     icon: Search,
   },
   {
