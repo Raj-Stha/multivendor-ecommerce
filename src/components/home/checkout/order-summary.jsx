@@ -1,12 +1,14 @@
-import { useState } from "react";
+"use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { toast } from "react-hot-toast";
 
-export function OrderSummary({ cartData, isLoading }) {
+export function OrderSummary({ cartData, isLoading, onCompleteOrder }) {
   const [shippingMethod, setShippingMethod] = useState("standard");
 
   // Calculate totals
@@ -30,7 +32,6 @@ export function OrderSummary({ cartData, isLoading }) {
   }, 0);
 
   const shipping = subtotal > 50 ? 0 : 5.99;
-  //   const shippingCost = shippingMethod === "express" ? 15.0 : 5.0;
   const total = subtotal + tax + shipping;
 
   return (
@@ -133,8 +134,9 @@ export function OrderSummary({ cartData, isLoading }) {
           </div>
 
           <Button
-            type="submit"
+            type="button"
             className="w-full h-12 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90"
+            onClick={onCompleteOrder}
             disabled={isLoading}
           >
             {isLoading ? "Processing..." : "🔒 Complete Order"}

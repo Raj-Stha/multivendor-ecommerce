@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Menu, User, Package, LogOut } from "lucide-react";
 import Header from "@/components/Header/Header";
 import { TopBar } from "@/components/Header/top-bar";
@@ -8,7 +9,6 @@ import MobileBottomNav from "@/components/Header/mobile-bottom-nav";
 import Footer from "@/components/Footer";
 import { useUser } from "@/app/(home)/_context/UserContext";
 import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import UserDetails from "@/components/user/UserDetails";
@@ -18,7 +18,18 @@ export default function UserPage() {
   const { user, logoutUser } = useUser();
   const [activeTab, setActiveTab] = useState("details");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  // Check URL query for tab on mount
+  useEffect(() => {
+    const tabFromQuery = searchParams.get("tab");
+    if (tabFromQuery === "orders") {
+      setActiveTab("orders");
+    } else {
+      setActiveTab("details"); // default
+    }
+  }, [searchParams]);
 
   const handleLogout = async () => {
     const success = await logoutUser();
@@ -33,6 +44,7 @@ export default function UserPage() {
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
     setSidebarOpen(false);
+    router.replace(`/dashboard/user?tab=${tabId}`);
   };
 
   const tabs = [
@@ -93,7 +105,6 @@ export default function UserPage() {
     </div>
   );
 
-  // Prepare user info safely
   const userInfo = user?.[0]?.user_details || {};
   const userLoginName = user?.[0]?.user_login_name || "-";
   const deliveryLocation = user?.[0]?.delivery_location || "-";

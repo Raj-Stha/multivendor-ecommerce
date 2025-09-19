@@ -5,100 +5,116 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
+
+import { useCart } from "@/app/(home)/_context/CartContext";
+import { useUser } from "@/app/(home)/_context/UserContext";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Label } from "@/components/ui/label";
-import { OrderSummary } from "./order-summary";
 import LocationPicker from "@/lib/locationpicker";
+import { OrderSummary } from "./order-summary";
 
-// ✅ Validation Schema
-const checkoutSchema = z.object({
-  fullName: z.string().min(1, "Full name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(7, "Phone number is required"),
+// Guest validation schema
+const guestSchema = z.object({
+  user_login_name: z.string().min(1, "Username is required"),
+  useremail: z.string().email("Invalid email address"),
 });
 
-export function CheckoutList({ cartData, user }) {
+export function CheckoutList() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const { cart, getCart } = useCart();
+  const { user, getUser } = useUser();
 
-  // location state
+  const [isLoading, setIsLoading] = useState(true);
   const [locationCoordinates, setLocationCoordinates] = useState({
     lat: "",
     lon: "",
     name: "",
   });
 
-  // ✅ prefill values
-  const form = useForm({
-    resolver: zodResolver(checkoutSchema),
-    defaultValues: {
-      fullName: user?.fullName || "",
-      email: user?.email || "",
-      phone: user?.phone || "",
-    },
-  });
-
-  // ✅ Load location based on session or guest
+  // Fetch cart & user
   useEffect(() => {
-    if (user) {
-      // Logged-in user: try to use backend delivery_location
-      if (user.delivery_location) {
-        setLocationCoordinates(user.delivery_location);
-      }
+    const loadData = async () => {
+      setIsLoading(true);
+      await getCart();
+      await getUser();
+      setIsLoading(false);
+    };
+    loadData();
+  }, [getCart, getUser]);
+
+  // Redirect if cart empty
+  useEffect(() => {
+    if (!isLoading && cart.length === 0) router.push("/cart");
+  }, [isLoading, cart, router]);
+
+  // Set initial location
+  useEffect(() => {
+    if (user && user[0]?.delivery_location) {
+      setLocationCoordinates({
+        lat: "",
+        lon: "",
+        name: user[0].delivery_location,
+      });
     } else {
-      // Guest: check localStorage
       const stored = localStorage.getItem("user_location");
-      if (stored) {
-        setLocationCoordinates(JSON.parse(stored));
-      }
+      if (stored) setLocationCoordinates(JSON.parse(stored));
     }
   }, [user]);
 
-  // ✅ When user picks new location (only for guest)
+  // Guest location select
   const handleLocationSelect = (lat, lon, name) => {
     const loc = { lat, lon, name };
     setLocationCoordinates(loc);
-
-    // Save to localStorage only if guest
-    if (!user) {
-      localStorage.setItem("user_location", JSON.stringify(loc));
-    }
+    if (!user) localStorage.setItem("user_location", JSON.stringify(loc));
   };
 
-  const onSubmit = async (values) => {
+  // Guest form
+  const form = useForm({
+    resolver: zodResolver(guestSchema),
+    defaultValues: { user_login_name: "", useremail: "" },
+  });
+
+  // Complete order
+  const handleCompleteOrder = async () => {
     setIsLoading(true);
     try {
-      const payload = {
-        ...values,
-        cart: cartData,
-        delivery_location: locationCoordinates,
-      };
+      const payload = user
+        ? {
+            user_login_name: user[0]?.user_login_name, // ignored for logged-in
+            user_email: user[0]?.user_email,
+            delivery_location: locationCoordinates.name, // ignored for logged-in
+          }
+        : {
+            user_login_name: form.getValues("user_login_name"),
+            user_email: form.getValues("useremail"),
+            delivery_location: `(${locationCoordinates.lat},${locationCoordinates.lon})`,
+          };
 
-      console.log("Submitting checkout:", payload);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/publishcart`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload),
+        }
+      );
 
-      // Example API call
-      // const res = await fetch("/api/checkout", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(payload),
-      // });
+      if (!res.ok) throw new Error("Failed to complete order");
 
-      // if (!res.ok) throw new Error("Checkout failed");
-
-      toast.success("Order placed successfully!");
-      router.push("/thank-you");
+      toast.success("Order completed successfully!");
+      router.push("/products");
     } catch (err) {
       console.error(err);
       toast.error(err.message || "Something went wrong!");
@@ -107,145 +123,98 @@ export function CheckoutList({ cartData, user }) {
     }
   };
 
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  if (cart.length === 0) return null;
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col md:flex-row gap-8 max-w-7xl justify-between mx-auto"
-      >
-        {/* LEFT: Shipping Info */}
+      <form className="flex flex-col md:flex-row gap-8 max-w-7xl justify-between mx-auto py-8">
+        {/* LEFT */}
         <div className="space-y-8 w-full md:w-2/3">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Checkout</h1>
-          </div>
+          <h1 className="text-2xl font-bold text-foreground">Checkout</h1>
           <Card className="elegant-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="text-accent">🚚</span>
-                Shipping Information
+                🚚 User Information
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Name */}
-              <FormField
-                control={form.control}
-                name="fullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="John Doe"
-                        {...field}
-                        readOnly={!!user} // make read-only if logged in
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Email */}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="john@example.com"
-                        {...field}
-                        readOnly={!!user}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Phone */}
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="+977 9800000000"
-                        {...field}
-                        readOnly={!!user}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Delivery Location */}
               {user ? (
-                // Logged-in user: show delivery location only
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Saved Delivery Location</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label className="pb-2">Latitude</Label>
-                        <Input
-                          value={locationCoordinates.lat}
-                          readOnly
-                          className="font-mono"
-                        />
-                      </div>
-                      <div>
-                        <Label className="pb-2">Longitude</Label>
-                        <Input
-                          value={locationCoordinates.lon}
-                          readOnly
-                          className="font-mono"
-                        />
-                      </div>
-                    </div>
-                    {locationCoordinates.name && (
-                      <div>
-                        <Label className="pb-2">Address</Label>
-                        <Input
-                          value={locationCoordinates.name}
-                          readOnly
-                          className="text-sm"
-                        />
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ) : (
-                // Guest user: show map picker
-                <div className="space-y-4">
-                  <Label>Select Delivery Location</Label>
-                  <LocationPicker
-                    onLocationSelect={(lat, lon, name) =>
-                      handleLocationSelect(lat, lon, name)
-                    }
-                    initialLocation={
-                      locationCoordinates.lat && locationCoordinates.lon
-                        ? `(${locationCoordinates.lat},${locationCoordinates.lon})`
-                        : "(85.324,27.7172)" // default to Kathmandu
-                    }
-                  />
+                <div className="space-y-2">
+                  <div>
+                    <Label>Username</Label>
+                    <Input value={user[0]?.user_login_name} readOnly />
+                  </div>
+                  <div>
+                    <Label>Email</Label>
+                    <Input value={user[0]?.user_email} readOnly />
+                  </div>
+                  <div>
+                    <Label>Delivery Location</Label>
+                    <Input value={locationCoordinates.name} readOnly />
+                  </div>
                 </div>
+              ) : (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="user_login_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Username</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter username" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="useremail"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="email"
+                            placeholder="Enter email"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="space-y-4">
+                    <Label>Select Delivery Location</Label>
+                    <LocationPicker
+                      onLocationSelect={handleLocationSelect}
+                      initialLocation={
+                        locationCoordinates.lat && locationCoordinates.lon
+                          ? `(${locationCoordinates.lat},${locationCoordinates.lon})`
+                          : "(26.6522709,87.8886493)"
+                      }
+                    />
+                  </div>
+                </>
               )}
             </CardContent>
           </Card>
         </div>
 
-        {/* RIGHT: Order Summary */}
+        {/* RIGHT */}
         <div className="space-y-6 w-full md:w-1/3">
-          <OrderSummary cartData={cartData} isLoading={isLoading} />
+          <OrderSummary
+            cartData={cart}
+            isLoading={isLoading}
+            onCompleteOrder={handleCompleteOrder}
+          />
         </div>
       </form>
     </Form>
