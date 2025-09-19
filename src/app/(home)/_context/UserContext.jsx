@@ -34,11 +34,37 @@ export const UserProvider = ({ children }) => {
       }
 
       const data = await res.json();
-      console.log(data);
+      console.log("Fetched user:", data);
       setUser(data.details || null);
     } catch (err) {
       console.error("Error loading user:", err);
       setUser(null);
+    }
+  }, [baseUrl]);
+
+  const logoutUser = useCallback(async () => {
+    try {
+      const url = `${baseUrl}/logoutuser`;
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        console.error("Logout failed");
+        return false;
+      }
+
+      const data = await res.json();
+      console.log("Logout response:", data);
+
+      setUser(null); // clear user state
+      return true;
+    } catch (err) {
+      console.error("Error logging out:", err);
+      return false;
     }
   }, [baseUrl]);
 
@@ -47,7 +73,7 @@ export const UserProvider = ({ children }) => {
   }, [getUser]);
 
   return (
-    <UserContext.Provider value={{ user, getUser }}>
+    <UserContext.Provider value={{ user, getUser, logoutUser }}>
       {children}
     </UserContext.Provider>
   );
