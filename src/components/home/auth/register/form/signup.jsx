@@ -6,13 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
-import { toast } from "react-toastify";
-import { PasswordField } from "../../password-field";
+import { toast } from "react-hot-toast";
+// import { PasswordField } from "../../password-field"; // PasswordField commented out
 
 function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState(""); // commented out
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isFormLoading, setIsFormLoading] = useState(false);
@@ -24,44 +24,56 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    // setIsFormLoading(true);
+    setIsFormLoading(true);
 
-    if (!name || !email || !password) {
+    if (!name || !email) {
       setError("Please fill in all fields.");
       setIsFormLoading(false);
       return;
     }
 
-    const data = {
-      name,
-      email,
-      password,
-    };
-    console.log(data);
+    try {
+      const response = await fetch(`${baseUrl}/createuser`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_login_name: name,
+          user_email: email,
+          // password, // if password is disabled
+        }),
+      });
 
-    // try {
-    //   const response = await fetch(`${API_BASE_URL}/users/register`, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ name, email, password }),
-    //   });
+      const data = await response.json();
+      console.log("API response:", data);
 
-    //   const data = await response.json();
+      if (response.ok && data.code === "00000") {
+        // Show details or message from API
+        const messageToShow =
+          data.details?.[0] ||
+          data.message?.status ||
+          "Account created successfully!";
+        toast.success(messageToShow);
 
-    //   if (response.ok) {
-    //     toast.success("Signup successfull! ");
-    //   } else {
-    //     setError(data.message || "Failed to create an account.");
-    //     toast.error(data.message || "Failed to create an account.");
-    //   }
-    // } catch (err) {
-    //   const errorMessage = "An error occurred. Please try again.";
-    //   setError(errorMessage);
-    //   toast.error(errorMessage);
-    //   console.error("Signup error:", err);
-    // } finally {
-    //   setIsFormLoading(false);
-    // }
+        router.push("/auth/login");
+      } else {
+        // Handle errors from API
+        const errorMessage =
+          data.message?.status === "nosession"
+            ? "You are not authenticated. Please try again."
+            : data.details?.[0] ||
+              data.message?.status ||
+              "Failed to create account.";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      }
+    } catch (err) {
+      const errorMessage = "An error occurred. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
+      console.error("Signup error:", err);
+    } finally {
+      setIsFormLoading(false);
+    }
   };
 
   const handleLoginRedirect = () => {
@@ -86,10 +98,8 @@ function SignUp() {
         {/* Main Content */}
         <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
           <div className="w-full max-w-6xl">
-            {/* Mobile-first responsive grid */}
             <div className="backdrop-blur-sm shadow-2xl overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
-                {/* Welcome Section - Hidden on mobile, visible on large screens */}
                 <div className="hidden md:flex flex-col justify-center items-center text-center p-8 xl:p-12 bg-transparent text-white">
                   <div className="space-y-4 max-w-md nunito-text">
                     <div className="space-y-4">
@@ -103,9 +113,7 @@ function SignUp() {
                   </div>
                 </div>
 
-                {/* Form Section */}
                 <div className="p-6 flex flex-col justify-center bg-white/95 nunito-text">
-                  {/* Mobile header - only visible on small screens */}
                   <div className="md:hidden text-center ">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                       Create Account
@@ -128,7 +136,7 @@ function SignUp() {
                     <h3 className="text-3xl font-semibold text-primary">
                       Sign Up{" "}
                     </h3>
-                    {/* Signup Form */}
+
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="space-y-2">
                         <Label
@@ -168,6 +176,8 @@ function SignUp() {
                         />
                       </div>
 
+                      {/* Password Section commented out */}
+                      {/*
                       <div className="space-y-2">
                         <Label
                           htmlFor="password"
@@ -192,6 +202,7 @@ function SignUp() {
                           }}
                         />
                       </div>
+                      */}
 
                       <Button
                         type="submit"
@@ -209,7 +220,6 @@ function SignUp() {
                       </Button>
                     </form>
 
-                    {/* Login Redirect */}
                     <div className="text-center pt-4">
                       <span className="text-gray-600 text-base">
                         Already have an account?{" "}
