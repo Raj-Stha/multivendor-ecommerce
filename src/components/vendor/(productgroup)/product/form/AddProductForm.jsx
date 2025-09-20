@@ -21,7 +21,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
 
 const formSchema = z.object({
-  new_product_name: z.string().min(1, "Product Name is required"),
+  vendor_product_name: z.string().min(1, "Product Name is required"),
   tax1_rate: z.coerce.number().min(0, "Tax Rate (1) is required"),
   tax2_rate: z.coerce.number().min(0, "Tax Rate (2) is required"),
   tax3_rate: z.coerce.number().min(0, "Tax Rate (3) is required"),
@@ -39,11 +39,10 @@ export default function AddProductForm({ setIsOpen }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      new_product_name: "",
+      vendor_product_name: "",
       tax1_rate: 0,
       tax2_rate: 0,
       tax3_rate: 0,
-      restricted: false,
       restricted: false,
       active: true,
     },
@@ -88,7 +87,6 @@ export default function AddProductForm({ setIsOpen }) {
 
   const onSubmit = async (values) => {
     setIsLoading(true);
-    values.vendor_id = 27;
     try {
       await uploadData(values);
     } catch (error) {
@@ -103,7 +101,7 @@ export default function AddProductForm({ setIsOpen }) {
           <div className=" py-2">
             <FormField
               control={form.control}
-              name="new_product_name"
+              name="vendor_product_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="pb-2">Product Name</FormLabel>

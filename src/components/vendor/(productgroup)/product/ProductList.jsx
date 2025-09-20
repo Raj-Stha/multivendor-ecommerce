@@ -54,11 +54,11 @@ export default function ProductList({ data, meta, page, setPage }) {
                       <span
                         className={`px-3 shadow-sm py-2 rounded-sm ${
                           d.restricted
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-green-100 text-green-800"
                         }`}
                       >
-                        {d.restricted ? "Non Restricted" : "Restricted"}
+                        {d.restricted ? "Restricted" : "Non Restricted"}
                       </span>
                       <span
                         className={`px-3 shadow-sm py-2 rounded-sm ${
@@ -123,7 +123,7 @@ export default function ProductList({ data, meta, page, setPage }) {
                               Restricted
                             </span>
                             <span className="text-gray-800 font-semibold">
-                              {d?.restricted}
+                              {String(d?.restricted)}
                             </span>
                           </div>
 
@@ -132,7 +132,7 @@ export default function ProductList({ data, meta, page, setPage }) {
                               Active
                             </span>
                             <span className="text-gray-800 font-semibold">
-                              {d?.active}
+                              {String(d?.active)}
                             </span>
                           </div>
 
@@ -142,105 +142,91 @@ export default function ProductList({ data, meta, page, setPage }) {
                         </div>
                       </div>
 
-                      {/* Variants Information */}
-                      {d?.variant && d?.variant.length > 0 ? (
-                        <div className="bg-white p-4 rounded-md shadow-sm border">
-                          <div className="flex justify-between pb-3  items-center">
-                            <h4 className="font-semibold text-md  text-gray-700">
-                              Product Variants ({d.variant.length})
-                            </h4>
-                            {d.vendor_product_id && (
-                              <AddVariantsForm
-                                productID={d.vendor_product_id}
-                              />
-                            )}
-                          </div>
-                          <div className="space-y-4">
-                            {d.variant.map((variant, index) => (
-                              <div
-                                key={variant.vendor_variant_id}
-                                className={`p-3 rounded-lg border-l-4 bg-gray-50 ${
-                                  index % 4 === 0
-                                    ? " border-l-blue-400"
-                                    : index % 4 === 1
-                                    ? " border-l-green-400"
-                                    : index % 4 === 2
-                                    ? " border-l-purple-400"
-                                    : " border-l-orange-400"
-                                }`}
-                              >
-                                <div className="space-y-2">
-                                  <div className="flex justify-between items-center">
-                                    <span className="font-semibold text-gray-700">
-                                      Variant #{index + 1}
-                                    </span>
-                                    <span className="text-xs text-gray-500">
-                                      ID: {variant.vendor_variant_id}
-                                    </span>
-                                  </div>
-
-                                  {variant.vendor_variant_description && (
-                                    <>
-                                      <div className="flex justify-between items-center py-1 border-b">
-                                        <span className="font-medium text-gray-600 capitalize">
-                                          Stock:
-                                        </span>
-                                        <span className="text-gray-800 font-semibold">
-                                          {variant.available_count}
-                                        </span>
-                                      </div>
-
-                                      <div className="flex justify-between items-center py-1 border-b">
-                                        <span className="font-medium text-gray-600 capitalize">
-                                          Price:
-                                        </span>
-                                        <span className="text-green-600 font-semibold">
-                                          ${variant.product_price}
-                                        </span>
-                                      </div>
-
-                                      <div className="flex justify-between items-center py-1 border-b">
-                                        <span className="font-medium text-gray-600 capitalize">
-                                          Discount Price:
-                                        </span>
-                                        <span className="text-red-800 font-semibold">
-                                          ${variant.product_discount}
-                                        </span>
-                                      </div>
-
-                                      <div className="flex justify-between items-end">
-                                        <div className=" pt-2 border-b border-gray-200">
-                                          <h5 className="font-medium text-gray-700 mb-1">
-                                            Variant Description:
-                                          </h5>
-                                          <p className="text-sm text-gray-600 leading-relaxed">
-                                            {variant.vendor_variant_description}
-                                          </p>
-                                        </div>
-                                        <div className="">
-                                          <EditVariantsForm
-                                            data={variant}
-                                            productID={d.vendor_product_id}
-                                          />
-                                        </div>
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="bg-white p-4 rounded-md shadow-sm border">
-                          <h4 className="font-semibold text-md mb-3 text-gray-700">
-                            Product Variants
+                      <div className="bg-white p-4 rounded-md shadow-sm border">
+                        <div className="flex justify-between pb-3  items-center">
+                          <h4 className="font-semibold text-md  text-gray-700">
+                            Product Variants ({d.variant.length})
                           </h4>
-                          <p className="text-sm text-gray-500">
-                            No variants available for this product.
-                          </p>
+                          {d.vendor_product_id && (
+                            <AddVariantsForm productID={d.vendor_product_id} />
+                          )}
                         </div>
-                      )}
+                        <div className="space-y-4">
+                          {d.variant.map((variant, index) => (
+                            <div
+                              key={variant.vendor_variant_id}
+                              className={`p-3 rounded-lg border-l-4 bg-gray-50 ${
+                                index % 4 === 0
+                                  ? " border-l-blue-400"
+                                  : index % 4 === 1
+                                  ? " border-l-green-400"
+                                  : index % 4 === 2
+                                  ? " border-l-purple-400"
+                                  : " border-l-orange-400"
+                              }`}
+                            >
+                              <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                  <span className="font-semibold text-gray-700">
+                                    Variant #{index + 1}
+                                  </span>
+                                  <span className="text-xs text-gray-500">
+                                    ID: {variant.vendor_variant_id}
+                                  </span>
+                                </div>
+
+                                {variant.vendor_variant_description && (
+                                  <>
+                                    <div className="flex justify-between items-center py-1 border-b">
+                                      <span className="font-medium text-gray-600 capitalize">
+                                        Stock:
+                                      </span>
+                                      <span className="text-gray-800 font-semibold">
+                                        {variant.available_count}
+                                      </span>
+                                    </div>
+
+                                    <div className="flex justify-between items-center py-1 border-b">
+                                      <span className="font-medium text-gray-600 capitalize">
+                                        Price:
+                                      </span>
+                                      <span className="text-green-600 font-semibold">
+                                        ${variant.product_price}
+                                      </span>
+                                    </div>
+
+                                    <div className="flex justify-between items-center py-1 border-b">
+                                      <span className="font-medium text-gray-600 capitalize">
+                                        Discount Price:
+                                      </span>
+                                      <span className="text-red-800 font-semibold">
+                                        ${variant.product_discount}
+                                      </span>
+                                    </div>
+
+                                    <div className="flex justify-between items-end">
+                                      <div className=" pt-2 border-b border-gray-200">
+                                        <h5 className="font-medium text-gray-700 mb-1">
+                                          Variant Description:
+                                        </h5>
+                                        <p className="text-sm text-gray-600 leading-relaxed">
+                                          {variant.vendor_variant_description}
+                                        </p>
+                                      </div>
+                                      <div className="">
+                                        <EditVariantsForm
+                                          data={variant}
+                                          productID={d.vendor_product_id}
+                                        />
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </AccordionContent>

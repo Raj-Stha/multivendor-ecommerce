@@ -29,7 +29,7 @@ import { toast } from "react-toastify";
 import { useEffect } from "react";
 
 const formSchema = z.object({
-  new_product_name: z.string().min(1, "Product Name is required"),
+  vendor_product_name: z.string().min(1, "Product Name is required"),
   tax1_rate: z.coerce.number().min(0, "Tax Rate (1) is required"),
   tax2_rate: z.coerce.number().min(0, "Tax Rate (2) is required"),
   tax3_rate: z.coerce.number().min(0, "Tax Rate (3) is required"),
@@ -48,11 +48,10 @@ export default function EditProductForm({ data }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      new_product_name: data?.vendor_product_name ?? "",
+      vendor_product_name: data?.vendor_product_name ?? "",
       tax1_rate: data?.vendor_tax1_rate ?? 0,
       tax2_rate: data?.vendor_tax2_rate ?? 0,
       tax3_rate: data?.vendor_tax3_rate ?? 0,
-      restricted: data?.restricted ?? false,
       restricted: data?.restricted ?? false,
       active: data?.active ?? true,
     },
@@ -61,7 +60,7 @@ export default function EditProductForm({ data }) {
   useEffect(() => {
     if (data) {
       form.reset({
-        new_product_name: data.vendor_product_name ?? "",
+        vendor_product_name: data.vendor_product_name ?? "",
         tax1_rate: data.tax1_rate ?? 0,
         tax2_rate: data.tax2_rate ?? 0,
         tax3_rate: data.tax3_rate ?? 0,
@@ -100,7 +99,6 @@ export default function EditProductForm({ data }) {
 
   const onSubmit = async (values) => {
     values.vendor_product_id = data?.vendor_product_id;
-    values.vendor_id = data?.vendor_id;
     setIsLoading(true);
     await updateData(values);
   };
@@ -124,7 +122,7 @@ export default function EditProductForm({ data }) {
             <div className=" py-2">
               <FormField
                 control={form.control}
-                name="new_product_name"
+                name="vendor_product_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="pb-2">Product Name</FormLabel>
