@@ -46,6 +46,17 @@ const SIDEBAR_ITEMS = [
       },
     ],
   },
+
+  {
+    type: "single",
+    items: [
+      {
+        label: "Products",
+        href: "/dashboard/vendor/product",
+        icon: Package,
+      },
+    ],
+  },
   // {
   //   type: "group",
   //   label: "Banner Management",
@@ -58,27 +69,27 @@ const SIDEBAR_ITEMS = [
   //   ],
   // },
 
-  {
-    type: "collapsible",
-    label: "Product Management",
-    items: [
-      {
-        label: "Product",
-        href: "/dashboard/vendor/product",
-        icon: Package,
-      },
-      {
-        label: "Product Notes",
-        href: "/dashboard/vendor/product-notes",
-        icon: Box,
-      },
-      {
-        label: "Product Map",
-        href: "/dashboard/vendor/product-map",
-        icon: Box,
-      },
-    ],
-  },
+  // {
+  //   type: "collapsible",
+  //   label: "Product Management",
+  //   items: [
+  //     {
+  //       label: "Product",
+  //       href: "/dashboard/vendor/product",
+  //       icon: Package,
+  //     },
+  //     {
+  //       label: "Product Notes",
+  //       href: "/dashboard/vendor/product-notes",
+  //       icon: Box,
+  //     },
+  //     {
+  //       label: "Product Map",
+  //       href: "/dashboard/vendor/product-map",
+  //       icon: Box,
+  //     },
+  //   ],
+  // },
 ];
 
 export function VendorSidebar() {
