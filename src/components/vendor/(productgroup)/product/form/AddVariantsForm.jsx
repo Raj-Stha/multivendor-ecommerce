@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { Switch } from "@/components/ui/switch";
 import { PenTool, Plus } from "lucide-react";
 import {
   Dialog,
@@ -28,7 +27,12 @@ import {
 import { toast } from "react-toastify";
 
 const formSchema = z.object({
-  variant_description: z.string().min(1, "Variant Description is required"),
+  vendor_variant_description: z
+    .string()
+    .min(1, "Variant Description is required"),
+  available_count: z.coerce.number().min(0, "Stock is required"),
+  product_price: z.coerce.number().min(0, "Price is required"),
+  product_discount: z.coerce.number().min(0, "Discount Price is required"),
 });
 
 export default function AddVariantsForm({ productID }) {
@@ -42,13 +46,16 @@ export default function AddVariantsForm({ productID }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      variant_description: "",
+      vendor_variant_description: "",
+      available_count: 0,
+      product_discount: 0,
+      product_price: 0,
     },
   });
 
   const updateData = async (values) => {
     try {
-      const response = await fetch(`${baseUrl}/updatevariants`, {
+      const response = await fetch(`${baseUrl}/updatevendorvariants`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +81,7 @@ export default function AddVariantsForm({ productID }) {
 
   const onSubmit = async (values) => {
     setIsLoading(true);
-    values.product_id = productID;
+    values.vendor_product_id = productID;
     await updateData(values);
   };
 
@@ -87,25 +94,75 @@ export default function AddVariantsForm({ productID }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
         <DialogHeader>
-          <DialogTitle>Add Variant </DialogTitle>
+          <DialogTitle>Add Product Variant </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid space-y-4 py-4">
-              <FormField
-                control={form.control}
-                name="variant_description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="pb-2">Variant Description</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Variant Description" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="product_price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pb-2">Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Price"
+                      {...field}
+                      type="number"
+                      step="0.01"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="product_discount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pb-2">Discount</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Discount"
+                      {...field}
+                      type="number"
+                      step="0.01"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="available_count"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pb-2">Stock</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Stock" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="vendor_variant_description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pb-2">Variant Description</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Variant Description" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <DialogFooter className="flex justify-end sm:justify-end mt-4">
               <Button type="submit" className="px-6" disabled={isLoading}>

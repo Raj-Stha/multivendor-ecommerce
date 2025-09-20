@@ -145,11 +145,11 @@ export default function ProductList({ data, meta, page, setPage }) {
                       {/* Variants Information */}
                       {d?.variant && d?.variant.length > 0 ? (
                         <div className="bg-white p-4 rounded-md shadow-sm border">
-                          <div className="flex justify-between items-center">
-                            <h4 className="font-semibold text-md mb-3 text-gray-700">
+                          <div className="flex justify-between pb-3  items-center">
+                            <h4 className="font-semibold text-md  text-gray-700">
                               Product Variants ({d.variant.length})
                             </h4>
-                            {d.product_id && (
+                            {d.vendor_product_id && (
                               <AddVariantsForm
                                 productID={d.vendor_product_id}
                               />
