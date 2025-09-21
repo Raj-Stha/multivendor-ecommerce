@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const getStatusColor = (status) => {
   if (!status) return "bg-gray-100 text-gray-800 border-gray-200";
@@ -34,7 +35,7 @@ const getStatusColor = (status) => {
       return "bg-blue-100 text-blue-800 border-blue-200";
     case "PROCESSING":
       return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "COMPLETED":
+    case "ACCEPTED":
       return "bg-green-100 text-green-800 border-green-200";
     case "CANCELLED":
       return "bg-red-100 text-red-800 border-red-200";
@@ -62,9 +63,11 @@ const formatCurrency = (amount) => {
 
 export function OrdersTable({ data, meta, page, setPage }) {
   const [expandedRows, setExpandedRows] = useState(new Set());
+  const [loading, setLoading] = useState(false);
   const [orderStatuses, setOrderStatuses] = useState({});
 
-  console.log(data);
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -89,9 +92,44 @@ export function OrdersTable({ data, meta, page, setPage }) {
     setExpandedRows(newExpanded);
   };
 
-  const updateOrderStatus = (orderId, newStatus) => {
-    setOrderStatuses((prev) => ({ ...prev, [orderId]: newStatus }));
-    console.log(`[v0] Updating order ${orderId} status to ${newStatus}`);
+  async function updateData(url, formData) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return null;
+    }
+  }
+
+  const updateOrderStatus = async (orderId, newStatus) => {
+    setLoading(true);
+    try {
+      const url = `${baseUrl}/updatevendororder`;
+      const res = await updateData(url, {
+        order_id: orderId,
+        status: newStatus,
+      });
+
+      if (!res) {
+        toast.error("Something went wrong!");
+        return;
+      }
+
+      setOrderStatuses((prev) => ({ ...prev, [orderId]: newStatus }));
+      toast.success(`Order ${orderId} marked as ${newStatus}`);
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      toast.error("Failed to update order status.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -262,21 +300,29 @@ export function OrdersTable({ data, meta, page, setPage }) {
                               updateOrderStatus(order.order_id, "PROCESSING")
                             }
                           >
-                            Mark as Processing
+                            PROCESSING
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem
+                            onClick={() =>
+                              updateOrderStatus(order.order_id, "NEW")
+                            }
+                          >
+                            NEW
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() =>
-                              updateOrderStatus(order.order_id, "COMPLETED")
+                              updateOrderStatus(order.order_id, "ACCEPTED")
                             }
                           >
-                            Mark as Completed
+                            Completed
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() =>
                               updateOrderStatus(order.order_id, "CANCELLED")
                             }
                           >
-                            Mark as Cancelled
+                            CANCELLED
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
