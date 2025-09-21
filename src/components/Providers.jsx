@@ -1,13 +1,12 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Toaster } from "react-hot-toast"; // ✅ Added
+import { Toaster } from "react-hot-toast";
 
 export function Providers({ children }) {
   return (
-    <SessionProvider>
+    <>
       {children}
 
       {/* React Toastify */}
@@ -41,6 +40,6 @@ export function Providers({ children }) {
           },
         }}
       />
-    </SessionProvider>
+    </>
   );
 }

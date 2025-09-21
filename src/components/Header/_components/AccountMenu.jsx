@@ -76,8 +76,6 @@ export default function AccountMenu() {
   const { data: session } = useSession();
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
-  const firstName = session?.user?.name?.split(" ")[0] || "";
-
   const handleLogout = () => {
     toast.success("Logged out successfully");
     signOut({ callbackUrl: "/" });
@@ -91,7 +89,7 @@ export default function AccountMenu() {
     >
       <div className="text-xs mr-1">
         <div className="flex lg:gap-3 items-center">
-          {session?.user?.image ? (
+          {/* {session?.user?.image ? (
             <div className="h-7 w-7 rounded-full overflow-hidden">
               <Image
                 src={session.user.image}
@@ -102,16 +100,14 @@ export default function AccountMenu() {
               />
             </div>
           ) : (
-            // <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-medium">
-            //   {session?.user?.name ? (
-            //     session.user.name.charAt(0).toUpperCase()
-            //   ) : (
-            //     <User className="h-5 w-5" />
-            //   )}
-            // </div>
-
-            <></>
-          )}
+            <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-medium">
+              {session?.user?.name ? (
+                session.user.name.charAt(0).toUpperCase()
+              ) : (
+                <User className="h-5 w-5" />
+              )}
+            </div>
+          )} */}
           <div>
             {/* {session?.user ? (
               <span className="hidden md:block text-gray-500">
