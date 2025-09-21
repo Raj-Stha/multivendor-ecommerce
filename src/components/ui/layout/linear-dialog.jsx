@@ -8,10 +8,13 @@ import React, {
   useRef,
   useState,
 } from "react";
+import ReactDOM from "react-dom";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { XIcon } from "lucide-react";
+
 const DialogContext = React.createContext(null);
+
 function useDialog() {
   const context = useContext(DialogContext);
   if (!context) {
@@ -19,20 +22,24 @@ function useDialog() {
   }
   return context;
 }
+
 function DialogProvider({ children, transition }) {
   const [isOpen, setIsOpen] = useState(false);
   const uniqueId = useId();
   const triggerRef = useRef(null);
+
   const contextValue = useMemo(
     () => ({ isOpen, setIsOpen, uniqueId, triggerRef }),
     [isOpen, uniqueId]
   );
+
   return (
     <DialogContext.Provider value={contextValue}>
       <MotionConfig transition={transition}>{children}</MotionConfig>
     </DialogContext.Provider>
   );
 }
+
 function Dialog({ children, transition }) {
   return (
     <DialogProvider>
@@ -40,11 +47,14 @@ function Dialog({ children, transition }) {
     </DialogProvider>
   );
 }
+
 function DialogTrigger({ children, className, style, triggerRef }) {
   const { setIsOpen, isOpen, uniqueId } = useDialog();
+
   const handleClick = useCallback(() => {
     setIsOpen(!isOpen);
   }, [isOpen, setIsOpen]);
+
   const handleKeyDown = useCallback(
     (event) => {
       if (event.key === "Enter" || event.key === " ") {
@@ -54,6 +64,7 @@ function DialogTrigger({ children, className, style, triggerRef }) {
     },
     [isOpen, setIsOpen]
   );
+
   return (
     <motion.div
       ref={triggerRef}
@@ -71,16 +82,19 @@ function DialogTrigger({ children, className, style, triggerRef }) {
     </motion.div>
   );
 }
+
 function DialogContent({ children, className, style }) {
   const { setIsOpen, isOpen, uniqueId, triggerRef } = useDialog();
-  const containerRef = useRef(null);
+  const containerRef = useRef < HTMLDivElement > null;
+
   const [firstFocusableElement, setFirstFocusableElement] = useState(null);
   const [lastFocusableElement, setLastFocusableElement] = useState(null);
+
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
+      if (event.key === "Escape") setIsOpen(false);
+
       if (event.key === "Tab") {
         if (!firstFocusableElement || !lastFocusableElement) return;
         if (event.shiftKey) {
@@ -96,17 +110,19 @@ function DialogContent({ children, className, style }) {
         }
       }
     };
+
     document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [setIsOpen, firstFocusableElement, lastFocusableElement]);
+
+  // Focus trap
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
-      const focusableElements = containerRef.current?.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
+      const focusableElements =
+        containerRef.current?.querySelectorAll <
+        HTMLElement >
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
       if (focusableElements && focusableElements.length > 0) {
         setFirstFocusableElement(focusableElements[0]);
         setLastFocusableElement(
@@ -122,54 +138,62 @@ function DialogContent({ children, className, style }) {
       triggerRef.current?.focus();
     }
   }, [isOpen, triggerRef]);
+
   return (
-    <>
-      <motion.div
-        ref={containerRef}
-        layoutId={`dialog-${uniqueId}`}
-        className={cn("overflow-hidden", className)}
-        style={style}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={`dialog-title-${uniqueId}`}
-        aria-describedby={`dialog-description-${uniqueId}`}
-      >
-        {children}
-      </motion.div>
-    </>
+    <motion.div
+      ref={containerRef}
+      layoutId={`dialog-${uniqueId}`}
+      className={cn("overflow-hidden", className)}
+      style={style}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={`dialog-title-${uniqueId}`}
+      aria-describedby={`dialog-description-${uniqueId}`}
+    >
+      {children}
+    </motion.div>
   );
 }
+
 function DialogContainer({ children, className }) {
   const { isOpen, setIsOpen, uniqueId } = useDialog();
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    if (isOpen) {
-      window.scrollTo(0, 0);
-    }
+    if (isOpen) window.scrollTo(0, 0);
     setMounted(true);
     return () => setMounted(false);
   }, []);
+
   if (!mounted) return null;
-  return (
+
+  return ReactDOM.createPortal(
     <AnimatePresence initial={false} mode="sync">
       {isOpen && (
         <>
           <motion.div
             key={`backdrop-${uniqueId}`}
-            className="fixed inset-0 h-full z-50  w-full bg-white/40 backdrop-blur-sm dark:bg-black/40 "
+            className="fixed inset-0 h-full w-full z-40 bg-black/40 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
           />
-          <div className={cn(`fixed  inset-0 z-50  mx-auto`, className)}>
+          <div
+            className={cn(
+              `fixed inset-0 z-50 flex items-center justify-center`,
+              className
+            )}
+          >
             {children}
           </div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
+
 function DialogTitle({ children, className, style }) {
   const { uniqueId } = useDialog();
   return (
@@ -183,6 +207,7 @@ function DialogTitle({ children, className, style }) {
     </motion.div>
   );
 }
+
 function DialogSubtitle({ children, className, style }) {
   const { uniqueId } = useDialog();
   return (
@@ -195,6 +220,7 @@ function DialogSubtitle({ children, className, style }) {
     </motion.div>
   );
 }
+
 function DialogDescription({
   children,
   className,
@@ -221,6 +247,7 @@ function DialogDescription({
     </motion.div>
   );
 }
+
 function DialogImage({ src, alt, className, style }) {
   const { uniqueId } = useDialog();
   return (
@@ -233,18 +260,18 @@ function DialogImage({ src, alt, className, style }) {
     />
   );
 }
+
 function DialogClose({ children, className, variants }) {
   const { setIsOpen, uniqueId } = useDialog();
-  const handleClose = useCallback(() => {
-    setIsOpen(false);
-  }, [setIsOpen]);
+  const handleClose = useCallback(() => setIsOpen(false), [setIsOpen]);
+
   return (
     <motion.button
       onClick={handleClose}
       type="button"
       aria-label="Close dialog"
       key={`dialog-close-${uniqueId}`}
-      className={cn("absolute right-6 top-6", className)}
+      className={cn("absolute right-6 top-6 z-50", className)}
       initial="initial"
       animate="animate"
       exit="exit"
@@ -254,6 +281,7 @@ function DialogClose({ children, className, variants }) {
     </motion.button>
   );
 }
+
 export {
   Dialog,
   DialogTrigger,

@@ -2,7 +2,8 @@ import Hero from "./_components/slider";
 import ProductSliderSection from "./_components/product-slider-section";
 import CategoriesSection from "./_components/categories-section";
 import ProductGrid from "./_components/product-grid-section";
-import LocationPopup from "@/components/LocationPopup"; 
+import LocationPopup from "@/components/LocationPopup";
+import ProductSlider from "./_components/product-slider";
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -65,10 +66,11 @@ export default async function Home() {
 
   return (
     <div className="bg-[#f5f5f5]">
-      <LocationPopup /> 
+      <LocationPopup />
       <Hero />
       <ProductSliderSection products={productData?.details} />
       <CategoriesSection categories={categoryData?.details} />
+      <ProductSlider products={productData?.details} />
       <ProductGrid initialProducts={productData2?.details} baseurl={baseurl} />
     </div>
   );
