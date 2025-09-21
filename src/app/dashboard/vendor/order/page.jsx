@@ -26,7 +26,7 @@ export default function VendorDashboard() {
   const [meta, setMeta] = useState({ page_number: 1, total_pages: 1 });
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const limit = 4;
+  const limit = 10;
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";

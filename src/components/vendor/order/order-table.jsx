@@ -64,6 +64,8 @@ export function OrdersTable({ data, meta, page, setPage }) {
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [orderStatuses, setOrderStatuses] = useState({});
 
+  console.log(data);
+
   useEffect(() => {
     if (data && data.length > 0) {
       setOrderStatuses(
@@ -154,12 +156,11 @@ export function OrdersTable({ data, meta, page, setPage }) {
               <TrendingUp className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
-                  Avg Order Value
+                  Total Tax
                 </p>
                 <p className="text-2xl font-bold text-foreground">
                   {formatCurrency(
-                    data.reduce((sum, order) => sum + order.total_amount, 0) /
-                      data.length
+                    data.reduce((sum, order) => sum + order.total_tax, 0)
                   )}
                 </p>
               </div>
@@ -224,7 +225,7 @@ export function OrdersTable({ data, meta, page, setPage }) {
                       #{order.order_id}
                     </TableCell>
 
-                    <TableCell className="font-semibold">
+                    <TableCell className="font-semibold text-green-800">
                       {formatCurrency(order.total_amount)}
                     </TableCell>
                     <TableCell>
@@ -323,7 +324,7 @@ export function OrdersTable({ data, meta, page, setPage }) {
                                 </div>
                               </div>
 
-                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-3 border-t border-border">
+                              {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-3 border-t border-border">
                                 <div>
                                   <p className="text-xs text-muted-foreground">
                                     Net Amount
@@ -363,49 +364,48 @@ export function OrdersTable({ data, meta, page, setPage }) {
                                     {detail.tax3_rate}%
                                   </p>
                                 </div>
+                              </div> */}
+                              <div className="bg-accent/50 rounded-lg px-4 py-4  mt-4">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">
+                                      Order Amount
+                                    </p>
+                                    <p className="text-lg font-bold text-green-600 text-success">
+                                      {formatCurrency(order.total_amount)}
+                                    </p>
+                                  </div>
+
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">
+                                      MPR (Exc. Tax)
+                                    </p>
+                                    <p className="text-lg font-bold text-foreground">
+                                      {formatCurrency(order.amount)}
+                                    </p>
+                                  </div>
+
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">
+                                      Total Tax
+                                    </p>
+                                    <p className="text-lg font-bold text-foreground">
+                                      {formatCurrency(order.total_tax)}
+                                    </p>
+                                  </div>
+
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">
+                                      Discount (MRP)
+                                    </p>
+                                    <p className="text-lg font-bold text-destructive">
+                                      -{formatCurrency(order.total_discount)}
+                                    </p>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           ))}
-
-                          <div className="bg-accent/50 rounded-lg p-4 mt-4">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                              <div>
-                                <p className="text-xs text-muted-foreground">
-                                  Order Total
-                                </p>
-                                <p className="text-lg font-bold text-foreground">
-                                  {formatCurrency(order.amount)}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="text-xs text-muted-foreground">
-                                  After Discount
-                                </p>
-                                <p className="text-lg font-bold text-success">
-                                  {formatCurrency(order.total_amount)}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="text-xs text-muted-foreground">
-                                  Total Tax
-                                </p>
-                                <p className="text-lg font-bold text-foreground">
-                                  {formatCurrency(order.total_tax)}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="text-xs text-muted-foreground">
-                                  Total Savings
-                                </p>
-                                <p className="text-lg font-bold text-destructive">
-                                  -{formatCurrency(order.total_discount)}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
                         </div>
                       </TableCell>
                     </TableRow>
