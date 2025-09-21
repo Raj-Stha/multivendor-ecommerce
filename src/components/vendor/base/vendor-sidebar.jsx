@@ -57,6 +57,17 @@ const SIDEBAR_ITEMS = [
       },
     ],
   },
+
+  {
+    type: "single",
+    items: [
+      {
+        label: "Order",
+        href: "/dashboard/vendor/order",
+        icon: Package,
+      },
+    ],
+  },
   // {
   //   type: "group",
   //   label: "Banner Management",
