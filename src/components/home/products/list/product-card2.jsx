@@ -72,7 +72,7 @@ export function ProductCard({ product, border = false }) {
     >
       {/* Product Card */}
       <div
-        className={`w-full jost-text cursor-pointer flex flex-col h-full transition-all duration-300 hover:shadow-xl bg-white group overflow-hidden relative ${
+        className={`group w-full jost-text cursor-pointer flex flex-col h-full transition-all duration-300 hover:shadow-xl bg-white overflow-hidden relative ${
           border ? "border border-gray-300 rounded-none" : ""
         }`}
       >

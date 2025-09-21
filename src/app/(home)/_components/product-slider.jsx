@@ -15,7 +15,7 @@ function NextArrow(props) {
         bg-white border border-gray-300 shadow-md rounded-full p-2
         transition duration-300
         hover:bg-primary hover:text-white
-        md:opacity-0 md:group-hover:opacity-100  /* Desktop hover only */
+       
         opacity-100 /* Always visible on mobile */
       `}
       style={{ ...style }}
@@ -34,7 +34,7 @@ function PrevArrow(props) {
         bg-white border border-gray-300 shadow-md rounded-full p-2
         transition duration-300
         hover:bg-primary hover:text-white
-        md:opacity-0 md:group-hover:opacity-100  /* Desktop hover only */
+         
         opacity-100 /* Always visible on mobile */
       `}
       style={{ ...style }}
@@ -62,6 +62,7 @@ export default function ProductSlider({ products }) {
       { breakpoint: 1280, settings: { slidesToShow: 5, slidesToScroll: 2 } },
       { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 2 } },
       { breakpoint: 768, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+      { breakpoint: 640, settings: { slidesToShow: 2, slidesToScroll: 1 } },
       { breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 1 } },
     ],
   };
@@ -90,7 +91,7 @@ export default function ProductSlider({ products }) {
           <hr className="border-gray-200 " />
 
           {/* Slider */}
-          <div className="p-1 md:p-3 relative group">
+          <div className="p-1 md:p-3 relative ">
             <Slider {...sliderSettings}>
               {products.map((product) => (
                 <motion.div
