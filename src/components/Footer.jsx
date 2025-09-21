@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 
 export default function Footer() {
   return (
-    <footer className="bg-primary/90 text-white mt-16 jost-text">
+    <footer className="bg-primary/90 text-white  jost-text">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Company Info */}
         <div>

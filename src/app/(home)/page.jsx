@@ -4,6 +4,7 @@ import CategoriesSection from "./_components/categories-section";
 import ProductGrid from "./_components/product-grid-section";
 import LocationPopup from "@/components/LocationPopup";
 import ProductSlider from "./_components/product-slider";
+import ProductGrid2 from "./_components/product-grid-2";
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -32,37 +33,50 @@ async function safeFetch(url, options = {}) {
 }
 
 export default async function Home() {
-  const [productData, categoryData, productData2] = await Promise.all([
-    safeFetch(`${baseurl}/getproducts`, {
-      method: "POST",
-      body: {
-        limit: 8,
-        page_number: 1,
-        price_from: 0,
-        price_to: 100000,
-        product_name: "",
-        order_by: "price_desc",
-      },
-    }),
-    safeFetch(`${baseurl}/getcategory`, {
-      method: "POST",
-      body: {
-        page_number: 1,
-        limit: 16,
-      },
-    }),
-    safeFetch(`${baseurl}/getproducts`, {
-      method: "POST",
-      body: {
-        limit: 12,
-        page_number: 1,
-        price_from: 0,
-        price_to: 100000,
-        product_name: "",
-        order_by: "price_desc",
-      },
-    }),
-  ]);
+  const [productData, categoryData, productData2, category21] =
+    await Promise.all([
+      safeFetch(`${baseurl}/getproducts`, {
+        method: "POST",
+        body: {
+          limit: 12,
+          page_number: 1,
+          price_from: 0,
+          price_to: 100000,
+          product_name: "",
+          order_by: "price_desc",
+        },
+      }),
+      safeFetch(`${baseurl}/getcategory`, {
+        method: "POST",
+        body: {
+          page_number: 1,
+          limit: 16,
+        },
+      }),
+      safeFetch(`${baseurl}/getproducts`, {
+        method: "POST",
+        body: {
+          limit: 12,
+          page_number: 1,
+          price_from: 0,
+          price_to: 100000,
+          product_name: "",
+          order_by: "price_desc",
+        },
+      }),
+      safeFetch(`${baseurl}/getproducts`, {
+        method: "POST",
+        body: {
+          limit: 8,
+          page_number: 1,
+          price_from: 0,
+          price_to: 100000,
+          product_name: "",
+          order_by: "price_desc",
+          // category_id: "21",
+        },
+      }),
+    ]);
 
   return (
     <div className="bg-[#f5f5f5]">
@@ -71,7 +85,8 @@ export default async function Home() {
       <ProductSliderSection products={productData?.details} />
       <CategoriesSection categories={categoryData?.details} />
       <ProductSlider products={productData?.details} />
-      <ProductGrid initialProducts={productData2?.details} baseurl={baseurl} />
+      <ProductGrid2 initialProducts={category21?.details} />
+      {/* <ProductGrid initialProducts={productData2?.details} baseurl={baseurl} /> */}
     </div>
   );
 }
