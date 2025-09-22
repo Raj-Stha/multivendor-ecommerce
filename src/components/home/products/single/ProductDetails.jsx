@@ -8,13 +8,14 @@ import { Separator } from "@/components/ui/separator";
 import ProductGallery from "@/components/home/products/list/ProductGallery";
 import Link from "next/link";
 import { useCart } from "@/app/(home)/_context/CartContext";
+import { useWishlist } from "@/app/(home)/_context/WishlistContext";
 
 export default function ProductDetails({ product }) {
   const firstProduct = Array.isArray(product) ? product[0] : product;
 
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { wishlist, toggleWishlistItem } = useWishlist();
 
   const { updateCart } = useCart();
 
@@ -40,8 +41,20 @@ export default function ProductDetails({ product }) {
     setQuantity(1);
   };
 
-  const toggleWishlist = () => {
-    setIsWishlisted(!isWishlisted);
+  // Inside ProductDetails component
+
+  const isWishlisted = wishlist.some(
+    (item) =>
+      item.product_id === firstProduct.product_id &&
+      item.variant_id === selectedVariant.variant_id
+  );
+
+  const handleWishlistToggle = () => {
+    toggleWishlistItem(
+      firstProduct.product_id,
+      selectedVariant.variant_id,
+      firstProduct.vendor_id
+    );
   };
 
   const handleAddToCart = () => {
@@ -181,17 +194,20 @@ export default function ProductDetails({ product }) {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={toggleWishlist}
-                className={`px-4 ${
+                onClick={handleWishlistToggle}
+                className={`px-4 cursor-pointer transition-colors ${
                   isWishlisted
-                    ? "text-destructive border-destructive bg-destructive/10"
-                    : ""
+                    ? "bg-red-500 text-white border-red-500 hover:bg-red-600"
+                    : "bg-white text-red-500 border-red-300 hover:bg-red-50"
                 }`}
               >
                 <Heart
-                  className={`w-5 h-5 ${
-                    isWishlisted ? "fill-destructive" : ""
-                  }`}
+                  size={20}
+                  className={
+                    isWishlisted
+                      ? "fill-white stroke-white"
+                      : "fill-white/0 stroke-red-500"
+                  }
                 />
               </Button>
             </div>
