@@ -1,13 +1,48 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Instagram, Facebook, Twitter, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export default function Footer() {
+  const [categories, setCategories] = useState([]);
+
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`${baseurl}/getcategory`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            page_number: 1,
+            limit: 16,
+          }),
+        });
+
+        const data = await res.json();
+        if (data?.details) {
+          const normalized = data.details.slice(0,6).map((category) => ({
+            id: category.category_id || category.id,
+            name: category.category_name || category.name,
+            image: category.category_image || category.image,
+          }));
+          setCategories(normalized);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
-    <footer className="bg-primary/90 text-white  jost-text">
+    <footer className="bg-primary/90 text-white jost-text">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Company Info */}
         <div>
@@ -72,42 +107,24 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Categories */}
+        {/* Categories (dynamic) */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Popular Categories</h3>
           <ul className="space-y-2 text-white/90">
-            <li>
-              <Link
-                href="/category/cosmetics"
-                className="hover:text-white transition"
-              >
-                Cosmetics
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/category/skincare"
-                className="hover:text-white transition"
-              >
-                Skincare
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/category/accessories"
-                className="hover:text-white transition"
-              >
-                Accessories
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/category/makeup-tools"
-                className="hover:text-white transition"
-              >
-                Makeup Tools
-              </Link>
-            </li>
+            {categories.length > 0 ? (
+              categories.slice(0,6).map((category) => (
+                <li key={category.id}>
+                  <Link
+                    href={`/products?category=${category.id}`}
+                    className="hover:text-white transition"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <li className="text-white/70 text-sm">Loading...</li>
+            )}
           </ul>
         </div>
 
@@ -138,8 +155,8 @@ export default function Footer() {
 
       {/* Footer Bottom */}
       <div className="border-t border-gray-800 mt-8 py-6 text-center text-white text-sm">
-        &copy; {new Date().getFullYear()} Daraz. All rights reserved. | Designed
-        with ❤️ in Nepal
+        &copy; {new Date().getFullYear()} KinMel Mandu. All rights reserved. |
+        Designed with ❤️ in Nepal
       </div>
     </footer>
   );
