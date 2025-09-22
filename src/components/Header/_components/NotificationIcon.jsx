@@ -13,9 +13,9 @@ export default function NotificationIcon() {
       className="flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-colors text-gray-800 hover:text-primary md:hover:text-white"
     >
       <div className="relative">
-        <Heart className="h-5 w-5" />
+        <Heart className="h-6 w-6 text-primary sm:text-white hover:text-primary md:hover:text-white transition-colors" />
         {wishlistCount > 0 && (
-          <span className="absolute -top-2 -right-2 bg-primary border border-white text-white text-xs rounded-full h-5 w-5 flex items-center justify-center nunito-text font-medium">
+          <span className="absolute -top-3 -right-2 bg-white border-primary text-primary text-xs rounded-full h-5 w-5 flex items-center justify-center nunito-text font-medium">
             {wishlistCount}
           </span>
         )}

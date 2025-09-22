@@ -218,7 +218,7 @@ export default function ProductSlider({ products }) {
         <div className="container max-w-7xl mx-auto px-4 py-4">
           <div className="bg-white">
             <div className="flex justify-between p-3 items-baseline">
-              <div className="text-xl md:text-2xl text-black">Flash Sale</div>
+              <div className="text-xl md:text-2xl text-primary">Flash Sale</div>
               <Link
                 href="/products"
                 className="w-fit relative flex items-center justify-center
@@ -259,7 +259,7 @@ export default function ProductSlider({ products }) {
         <div className="bg-white">
           {/* Header */}
           <div className="flex justify-between p-3 items-baseline">
-            <div className="text-xl md:text-2xl text-black">Flash Sale</div>
+            <div className="text-xl md:text-2xl text-primary">Flash Sale</div>
             <Link
               href="/products"
               className="w-fit relative flex items-center justify-center

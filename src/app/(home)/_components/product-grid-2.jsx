@@ -14,7 +14,7 @@ export default function ProductGrid2({ initialProducts }) {
         <div className="bg-white  shadow-sm p-4 sm:p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl md:text-2xl   text-gray-900">Vegetables</h2>
+            <h2 className="text-xl md:text-2xl   text-primary">Vegetables</h2>
             <Link
               href="/products?category=21"
               className="flex text-sm gap-1 sm:gap-2 items-center font-medium text-primary "

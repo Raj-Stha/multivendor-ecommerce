@@ -104,19 +104,21 @@ export function ProductCard({ product, border = false }) {
           href={`/products/${product.vendor_id}/${product.product_id}`}
           className="p-4 flex-1 flex flex-col bg-white"
         >
-          <h4 className="text-sm text-gray-800 font-normal line-clamp-2 hover:text-primary transition-colors">
+          <h4 className="text-sm text-black font-normal line-clamp-2 hover:text-primary transition-colors">
             {product.product_name}
           </h4>
 
           {/* Price */}
           <div className="mt-auto">
-            <p className="text-md text-primary">Rs. {discountedPrice}</p>
+            <p className="text-md text-primary font-medium">
+              Rs. {discountedPrice}
+            </p>
             {selectedVariant.product_discount > 0 && (
               <div className="flex gap-2">
                 <p className="text-xs line-through text-gray-400">
                   Rs. {selectedVariant.product_price}
                 </p>
-                <p className="text-xs text-black">
+                <p className="text-xs text-secondary">
                   -{selectedVariant.product_discount}%
                 </p>
               </div>
@@ -133,9 +135,12 @@ export function ProductCard({ product, border = false }) {
         >
           {/* Sticky Header */}
           <div className="sticky top-0 z-50 p-4 border-b bg-white dark:bg-black backdrop-blur-sm">
-            <DialogTitle className="text-2xl font-normal text-zinc-900 dark:text-zinc-50">
+            <Link
+              href={`/products/${product.vendor_id}/${product.product_id}`}
+              className="text-2xl font-normal text-primary dark:text-zinc-50"
+            >
               {product.product_name}
-            </DialogTitle>
+            </Link>
           </div>
 
           {/* Scrollable Content */}

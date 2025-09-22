@@ -18,7 +18,7 @@ export default function CategoriesSection({ categories }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-4 noto-sans-text">
         <div>
-          <h2 className="text-2xl text-gray-900 mb-1">Categories</h2>
+          <h2 className="text-2xl text-primary mb-1">Categories</h2>
         </div>
       </div>
 

@@ -7,7 +7,7 @@ import NotificationIcon from "./NotificationIcon";
 
 export default function DesktopNav() {
   return (
-    <nav className="sticky top-0 z-50 bg-primary shadow-md w-full sticky-nav">
+    <nav className="bg-primary shadow-md w-full sticky-nav">
       <div className="container max-w-7xl mx-auto py-3 px-4 md:px-6 flex items-center justify-between gap-4">
         {/* Logo */}
         <div className="flex-shrink-0">
