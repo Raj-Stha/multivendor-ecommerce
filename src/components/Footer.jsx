@@ -11,7 +11,15 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Company Info */}
         <div>
-          <h2 className="text-xl font-bold mb-4">Daraz</h2>
+          <div className="flex-shrink-0 pb-2">
+            <Link href="/" className="transition-opacity hover:opacity-80">
+              <img
+                src="/logo/logo.png"
+                alt="KinMel Mandu Logo"
+                className="h-12 w-auto"
+              />
+            </Link>
+          </div>
           <p className="text-white/90 mb-4">
             Your one-stop multivendor marketplace for cosmetics, accessories,
             and more. Quality products from trusted sellers across Nepal.
