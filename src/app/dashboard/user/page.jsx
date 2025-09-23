@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Menu, User, Package, LogOut } from "lucide-react";
 import Header from "@/components/Header/Header";
@@ -14,7 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import UserDetails from "@/components/user/UserDetails";
 import UserOrders from "@/components/user/UserOrders";
 
-export default function UserPage() {
+function UserDashboard() {
   const { user, logoutUser } = useUser();
   const [activeTab, setActiveTab] = useState("details");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -159,5 +159,14 @@ export default function UserPage() {
       <MobileBottomNav />
       <Footer />
     </>
+  );
+}
+
+// Wrap the client dashboard in Suspense in the page
+export default function UserPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading User Dashboard...</div>}>
+      <UserDashboard />
+    </Suspense>
   );
 }

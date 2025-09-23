@@ -1,62 +1,53 @@
-import { NextRequest, NextResponse } from "next/server";
-
-export async function GET(
-  req: NextRequest,
-  context: { params: { path: string[] } }
-) {
-  const params = await context.params;
-  return proxy(req, params.path);
-}
-
-export async function POST(
-  req: NextRequest,
-  context: { params: { path: string[] } }
-) {
-  const params = await context.params;
-  return proxy(req, params.path);
-}
-
-export async function PUT(
-  req: NextRequest,
-  context: { params: { path: string[] } }
-) {
-  const params = await context.params;
-  return proxy(req, params.path);
-}
-
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { path: string[] } }
-) {
-  const params = await context.params;
-  return proxy(req, params.path);
-}
+import { NextRequest } from "next/server";
 
 async function proxy(req: NextRequest, path: string[]) {
   const backendUrl = `https://ecom.kalpabrikshya.com.np/api/${path.join("/")}`;
 
-  // Clone headers from the incoming request
+  // copy headers
   const headers: Record<string, string> = {};
   req.headers.forEach((value, key) => {
     headers[key] = value;
   });
 
-  // Forward body if not GET
+  // only send body for non-GET
   const body = req.method !== "GET" ? await req.text() : undefined;
 
   const res = await fetch(backendUrl, {
     method: req.method,
     headers,
     body,
-    credentials: "include", // optional
+    credentials: "include",
   });
 
   const data = await res.text();
 
-  // Forward the backend response including status and headers
-  const responseHeaders = new Headers(res.headers);
   return new Response(data, {
     status: res.status,
-    headers: responseHeaders,
+    headers: res.headers,
   });
+}
+
+// --- shared type for params ---
+type Params = { path: string[] };
+
+// helper to extract params safely
+function getPath(context: unknown): string[] {
+  return (context as { params: Params }).params.path;
+}
+
+// --- Handlers ---
+export async function GET(req: NextRequest, context: unknown) {
+  return proxy(req, getPath(context));
+}
+
+export async function POST(req: NextRequest, context: unknown) {
+  return proxy(req, getPath(context));
+}
+
+export async function PUT(req: NextRequest, context: unknown) {
+  return proxy(req, getPath(context));
+}
+
+export async function DELETE(req: NextRequest, context: unknown) {
+  return proxy(req, getPath(context));
 }
