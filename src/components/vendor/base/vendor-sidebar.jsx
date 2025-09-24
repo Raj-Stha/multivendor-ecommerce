@@ -68,6 +68,17 @@ const SIDEBAR_ITEMS = [
       },
     ],
   },
+
+  {
+    type: "single",
+    items: [
+      {
+        label: "Profile",
+        href: "/dashboard/vendor/profile",
+        icon: Package,
+      },
+    ],
+  },
   // {
   //   type: "group",
   //   label: "Banner Management",
