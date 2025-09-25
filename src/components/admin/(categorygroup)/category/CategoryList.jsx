@@ -1,4 +1,6 @@
-import EditCategoryForm from "./form/EditCategoryForm";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -7,15 +9,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Image from "next/image";
+import EditCategoryForm from "./form/EditCategoryForm";
 import EditCategoryDetailsForm from "./form/EditCategoryDetailsForm";
 
-export default function CategoryList({
-  data,
-  categoryNotes,
-  meta,
-  page,
-  setPage,
-}) {
+export default function CategoryList({ data, categoryNotes, meta, page }) {
+  const router = useRouter();
+
+  const goToPage = (newPage) => {
+    router.push(`?page=${newPage}`);
+  };
+
   return (
     <div>
       {data && data.length > 0 ? (
@@ -41,7 +44,6 @@ export default function CategoryList({
                     </h3>
                   </AccordionTrigger>
 
-                  {/* Move the button outside AccordionTrigger */}
                   <div className="ml-4">
                     <EditCategoryForm data={d} />
                   </div>
@@ -95,11 +97,13 @@ export default function CategoryList({
               </AccordionItem>
             ))}
           </Accordion>
+
+          {/* Pagination */}
           <div className="flex justify-center gap-[2%] mt-6">
             <Button
               variant="default"
               className="cursor-pointer"
-              onClick={() => setPage(page - 1)}
+              onClick={() => goToPage(page - 1)}
               disabled={meta.page_number <= 1}
             >
               Previous
@@ -112,7 +116,7 @@ export default function CategoryList({
             <Button
               variant="default"
               className="cursor-pointer"
-              onClick={() => setPage(page + 1)}
+              onClick={() => goToPage(page + 1)}
               disabled={meta.page_number >= meta.total_pages}
             >
               Next
@@ -122,8 +126,7 @@ export default function CategoryList({
       ) : (
         <div className="w-full text-center py-8">
           <p className="text-gray-500">
-            {" "}
-            No categories found. Add a new category to get started.{" "}
+            No categories found. Add a new category to get started.
           </p>
         </div>
       )}

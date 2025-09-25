@@ -1,6 +1,5 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import CategoryList from "../../../../../components/admin/(categorygroup)/category/CategoryList";
+import AddCatgeoryForm from "../../../../../components/admin/(categorygroup)/category/form/AddCategoryForm";
 import {
   Dialog,
   DialogContent,
@@ -10,19 +9,17 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import CategoryList from "../../../../../components/admin/(categorygroup)/category/CategoryList";
-import AddCatgeoryForm from "../../../../../components/admin/(categorygroup)/category/form/AddCategoryForm";
-import AddCategoryDetailsForm from "../../../../../components/admin/(categorygroup)/category/form/AddCategoryDetailsForm";
-import CategoryListSkeleton from "../../../../../components/admin/Skeleton/CategooryListSkeleton";
+
+const baseUrl =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
 async function getData(url, formData) {
   try {
     const res = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
+      cache: "no-store", // always fresh SSR
     });
 
     if (!res.ok) {
@@ -37,50 +34,23 @@ async function getData(url, formData) {
   }
 }
 
-export default function CategoryAdmin() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isCatOpen, setIsCatOpen] = useState(false);
-  const [categoryNotes, setCategoryNotes] = useState([]);
-  const [data, setData] = useState([]);
-  const [meta, setMeta] = useState({ page_number: 1, total_pages: 1 });
-  const [page, setPage] = useState(1);
+export default async function CategoryAdmin({ searchParams }) {
+  const page = Number(searchParams?.page) || 1;
   const limit = 10;
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
+  const categoriesRes = await getData(`${baseUrl}/getcategory`, {
+    page_number: page,
+    limit,
+  });
 
-  const getAllCategories = async () => {
-    try {
-      setIsLoading(true);
-      let url = `${baseUrl}/getcategory`;
-      const categoryRes = await getData(url, { page_number: page, limit });
+  const notesRes = await getData(`${baseUrl}/getcategorynotes`, {
+    page_number: page,
+    limit: 0,
+  });
 
-      if (categoryRes) {
-        setData(categoryRes.details || []);
-        setMeta(categoryRes.hint || { page_number: page, total_pages: 1 });
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getCategoryNotes = async () => {
-    try {
-      let url = `${baseUrl}/getcategorynotes`;
-      const res = await getData(url, { page_number: page, limit: 0 });
-      setCategoryNotes(res?.details || []);
-    } catch (error) {
-      console.error("Error fetching category notes:", error);
-    }
-  };
-
-  useEffect(() => {
-    getAllCategories();
-    getCategoryNotes();
-  }, [page]);
+  const data = categoriesRes?.details || [];
+  const meta = categoriesRes?.hint || { page_number: page, total_pages: 1 };
+  const categoryNotes = notesRes?.details || [];
 
   return (
     <div className="container max-w-7xl mx-auto px-[2%] py-[2%]">
@@ -90,7 +60,7 @@ export default function CategoryAdmin() {
         </h2>
         <div className="flex gap-2">
           {/* Add Category */}
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <Dialog>
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
                 <PlusIcon className="w-5 h-5" />
@@ -101,45 +71,18 @@ export default function CategoryAdmin() {
               <DialogHeader>
                 <DialogTitle>Add New Category</DialogTitle>
               </DialogHeader>
-              <AddCatgeoryForm setIsOpen={setIsOpen} />
+              <AddCatgeoryForm />
             </DialogContent>
           </Dialog>
-
-          {/* Add Category Details */}
-          {/* <Dialog open={isCatOpen} onOpenChange={setIsCatOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
-                <PlusIcon className="w-5 h-5" />
-                <span className="hidden md:inline">Add Category Details</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto rounded-lg shadow-lg">
-              <DialogHeader>
-                <DialogTitle>Add New Category Details</DialogTitle>
-              </DialogHeader>
-              <AddCategoryDetailsForm
-                setIsOpen={setIsCatOpen}
-                categoryNotes={categoryNotes}
-                category={data}
-              />
-            </DialogContent>
-          </Dialog> */}
         </div>
       </div>
 
-      {isLoading ? (
-        <CategoryListSkeleton count={6} />
-      ) : (
-        <>
-          <CategoryList
-            data={data}
-            categoryNotes={categoryNotes}
-            meta={meta}
-            page={page}
-            setPage={setPage}
-          />
-        </>
-      )}
+      <CategoryList
+        data={data}
+        categoryNotes={categoryNotes}
+        meta={meta}
+        page={page}
+      />
     </div>
   );
 }
