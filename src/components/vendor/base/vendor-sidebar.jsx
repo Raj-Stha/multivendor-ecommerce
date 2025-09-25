@@ -2,17 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BarChart3,
-  Box,
-  ChevronDown,
-  ImageIcon,
   LayoutDashboard,
-  LogOut,
   Package,
-  Settings,
   ShoppingBag,
-  Tag,
-  Users,
+  ChevronDown,
+  Box,
 } from "lucide-react";
 
 import {
@@ -27,135 +21,102 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { useUser } from "@/app/(home)/_context/UserContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const SIDEBAR_ITEMS = [
   {
     type: "single",
     items: [
-      {
-        label: "Dashboard",
-        href: "/dashboard/vendor",
-        icon: LayoutDashboard,
-      },
+      { label: "Dashboard", href: "/dashboard/vendor", icon: LayoutDashboard },
     ],
   },
-
   {
     type: "single",
     items: [
-      {
-        label: "Products",
-        href: "/dashboard/vendor/product",
-        icon: Package,
-      },
+      { label: "Products", href: "/dashboard/vendor/product", icon: Package },
     ],
   },
-
+  {
+    type: "single",
+    items: [{ label: "Order", href: "/dashboard/vendor/order", icon: Package }],
+  },
   {
     type: "single",
     items: [
-      {
-        label: "Order",
-        href: "/dashboard/vendor/order",
-        icon: Package,
-      },
+      { label: "Profile", href: "/dashboard/vendor/profile", icon: Package },
     ],
   },
-
-  {
-    type: "single",
-    items: [
-      {
-        label: "Profile",
-        href: "/dashboard/vendor/profile",
-        icon: Package,
-      },
-    ],
-  },
-  // {
-  //   type: "group",
-  //   label: "Banner Management",
-  //   items: [
-  //     {
-  //       label: "Banners",
-  //       href: "/dashboard/vendor/banners",
-  //       icon: ImageIcon,
-  //     },
-  //   ],
-  // },
-
-  // {
-  //   type: "collapsible",
-  //   label: "Product Management",
-  //   items: [
-  //     {
-  //       label: "Product",
-  //       href: "/dashboard/vendor/product",
-  //       icon: Package,
-  //     },
-  //     {
-  //       label: "Product Notes",
-  //       href: "/dashboard/vendor/product-notes",
-  //       icon: Box,
-  //     },
-  //     {
-  //       label: "Product Map",
-  //       href: "/dashboard/vendor/product-map",
-  //       icon: Box,
-  //     },
-  //   ],
-  // },
 ];
 
 export function VendorSidebar() {
   const pathname = usePathname();
   const { user, getUser, logoutUser } = useUser();
   const router = useRouter();
+  const { toggleSidebar, open } = useSidebar();
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     async function fetchUser() {
       try {
         await getUser();
       } catch (error) {
-        console.error("Failed to fetch user:", error);
+        console.error(error);
       }
     }
-
     fetchUser();
   }, [getUser]);
 
-  const isActive = (path) => {
-    return pathname === path || pathname.startsWith(`${path}/`);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isActive = (path) =>
+    pathname === path || pathname.startsWith(`${path}/`);
+
+  const handleLinkClick = () => {
+    if (isMobile && open) toggleSidebar();
   };
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b">
-        <div className="flex items-center gap-2 px-4 py-2">
-          <ShoppingBag className="h-6 w-6" />
-          <span className="text-xl font-bold">E-Commerce</span>
+      <SidebarHeader className="border-b flex  px-4 py-6">
+        <div className="flex  w-full justify-between">
+          <div className="flex items-center gap-2">
+            <ShoppingBag className="h-6 w-6" />
+            <span className="text-xl font-bold">E-Commerce</span>
+          </div>
+          {isMobile && (
+            <button
+              onClick={toggleSidebar}
+              className="py-1 hover:bg-muted bg-gray-200 px-2   rounded-md"
+            >
+              ✕
+            </button>
+          )}
         </div>
       </SidebarHeader>
+
       <SidebarContent className="py-4">
         {SIDEBAR_ITEMS.map((section, index) => {
           if (section.type === "single") {
@@ -164,7 +125,11 @@ export function VendorSidebar() {
                 <SidebarMenu>
                   {section.items.map((item, i) => (
                     <SidebarMenuItem key={i}>
-                      <SidebarMenuButton asChild isActive={isActive(item.href)}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive(item.href)}
+                        onClick={handleLinkClick}
+                      >
                         <Link href={item.href}>
                           <item.icon />
                           <span>{item.label}</span>
@@ -188,6 +153,7 @@ export function VendorSidebar() {
                         <SidebarMenuButton
                           asChild
                           isActive={isActive(item.href)}
+                          onClick={handleLinkClick}
                         >
                           <Link href={item.href}>
                             <item.icon />
@@ -209,7 +175,7 @@ export function VendorSidebar() {
                   <SidebarGroupLabel asChild>
                     <CollapsibleTrigger className="flex w-full items-center justify-between">
                       <span>{section.label}</span>
-                      <ChevronDown className="h-4 w-4 transition-transform  group-data-[state=open]/collapsible:rotate-180" />
+                      <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
                   </SidebarGroupLabel>
                   <CollapsibleContent>
@@ -220,6 +186,7 @@ export function VendorSidebar() {
                             <SidebarMenuButton
                               asChild
                               isActive={isActive(item.href)}
+                              onClick={handleLinkClick}
                             >
                               <Link href={item.href}>
                                 <item.icon />
@@ -239,6 +206,7 @@ export function VendorSidebar() {
           return null;
         })}
       </SidebarContent>
+
       <SidebarFooter className="border-t p-4">
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -260,8 +228,6 @@ export function VendorSidebar() {
                   vendor@example.com
                 </span>
               </div>
-
-              <LogOut className="h-4 w-4" />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -282,6 +248,7 @@ export function VendorSidebar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   );
