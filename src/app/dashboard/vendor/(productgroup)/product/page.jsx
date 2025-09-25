@@ -1,6 +1,5 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import ProductList from "../../../../../components/vendor/(productgroup)/product/ProductList";
+import AddProductForm from "../../../../../components/vendor/(productgroup)/product/form/AddProductForm";
 import {
   Dialog,
   DialogContent,
@@ -10,9 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import ProductList from "../../../../../components/vendor/(productgroup)/product/ProductList";
-import AddProductForm from "../../../../../components/vendor/(productgroup)/product/form/AddProductForm";
-import CategoryListSkeleton from "@/components/admin/Skeleton/CategooryListSkeleton";
 
 async function getData(url, formData) {
   try {
@@ -22,6 +18,7 @@ async function getData(url, formData) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
+      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -36,34 +33,20 @@ async function getData(url, formData) {
   }
 }
 
-export default function ProductAdmin() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState([]);
-  const [meta, setMeta] = useState({ page_number: 1, total_pages: 1 });
-  const [page, setPage] = useState(1);
+export default async function ProductAdmin({ searchParams }) {
+  const page = Number(searchParams?.page) || 1;
   const limit = 10;
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
-  const getAllProducts = async () => {
-    try {
-      setIsLoading(true);
-      let url = `${baseUrl}/getvendorproducts`;
-      const productRes = await getData(url, { page_number: page, limit });
-      setData(productRes.details || []);
-      setMeta(productRes.hint || { page_number: page, total_pages: 1 });
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const productRes = await getData(`${baseUrl}/getvendorproducts`, {
+    page_number: page,
+    limit,
+  });
 
-  useEffect(() => {
-    getAllProducts();
-  }, [page]);
+  const data = productRes?.details || [];
+  const meta = productRes?.hint || { page_number: page, total_pages: 1 };
 
   return (
     <div className="container max-w-7xl mx-auto px-[2%] py-[2%]">
@@ -72,7 +55,7 @@ export default function ProductAdmin() {
           Manage Products
         </h2>
         <div className="flex gap-2">
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <Dialog>
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
                 <PlusIcon className="w-5 h-5" />
@@ -83,26 +66,20 @@ export default function ProductAdmin() {
               <DialogHeader>
                 <DialogTitle>Add New Product</DialogTitle>
               </DialogHeader>
-
-              <AddProductForm setIsOpen={setIsOpen} />
+              <AddProductForm />
             </DialogContent>
           </Dialog>
         </div>
       </div>
 
-      {isLoading ? (
-        <CategoryListSkeleton count={6} />
+      {data.length === 0 ? (
+        <div className="w-full text-center py-8">
+          <p className="text-gray-500">
+            No product found. Add a new product to get started.
+          </p>
+        </div>
       ) : (
-        <>
-          {data && (
-            <ProductList
-              data={data}
-              meta={meta}
-              page={page}
-              setPage={setPage}
-            />
-          )}
-        </>
+        <ProductList data={data} meta={meta} />
       )}
     </div>
   );

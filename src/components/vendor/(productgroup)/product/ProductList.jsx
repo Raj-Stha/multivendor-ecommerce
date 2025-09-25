@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/accordion";
 import EditVariantsForm from "./form/EditVariantsForm";
 import AddVariantsForm from "./form/AddVariantsForm";
+import { useRouter } from "next/navigation";
 
-export default function ProductList({ data, meta, page, setPage }) {
+export default function ProductList({ data, meta }) {
+  const router = useRouter();
   return (
     <div>
       {data && data.length > 0 ? (
@@ -238,7 +240,7 @@ export default function ProductList({ data, meta, page, setPage }) {
             <Button
               variant="default"
               className="cursor-pointer"
-              onClick={() => setPage(page - 1)}
+              onClick={() => router.push(`?page=${meta.page_number - 1}`)}
               disabled={meta.page_number <= 1}
             >
               Previous
@@ -249,7 +251,7 @@ export default function ProductList({ data, meta, page, setPage }) {
             <Button
               variant="default"
               className="cursor-pointer"
-              onClick={() => setPage(page + 1)}
+              onClick={() => router.push(`?page=${meta.page_number + 1}`)}
               disabled={meta.page_number >= meta.total_pages}
             >
               Next
