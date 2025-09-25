@@ -61,6 +61,7 @@ export const UserProvider = ({ children }) => {
       console.log("Logout response:", data);
 
       setUser(null); // clear user state
+      getUser();
       return true;
     } catch (err) {
       console.error("Error logging out:", err);

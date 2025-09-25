@@ -35,6 +35,19 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { useUser } from "@/app/(home)/_context/UserContext";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 const SIDEBAR_ITEMS = [
   {
     type: "single",
@@ -116,6 +129,20 @@ const SIDEBAR_ITEMS = [
 
 export function VendorSidebar() {
   const pathname = usePathname();
+  const { user, getUser, logoutUser } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        await getUser();
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    }
+
+    fetchUser();
+  }, [getUser]);
 
   const isActive = (path) => {
     return pathname === path || pathname.startsWith(`${path}/`);
@@ -129,11 +156,11 @@ export function VendorSidebar() {
           <span className="text-xl font-bold">E-Commerce</span>
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="py-4">
         {SIDEBAR_ITEMS.map((section, index) => {
           if (section.type === "single") {
             return (
-              <SidebarGroup key={index}>
+              <SidebarGroup key={index} className="py-1">
                 <SidebarMenu>
                   {section.items.map((item, i) => (
                     <SidebarMenuItem key={i}>
@@ -213,24 +240,47 @@ export function VendorSidebar() {
         })}
       </SidebarContent>
       <SidebarFooter className="border-t p-4">
-        <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarImage
-              src="/placeholder.svg?height=40&width=40"
-              alt="vendor"
-            />
-            <AvatarFallback>AD</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">Vendor User</span>
-            <span className="text-xs text-muted-foreground">
-              vendor@example.com
-            </span>
-          </div>
-          <button className="ml-auto rounded-full p-2 hover:bg-muted">
-            <LogOut className="h-4 w-4" />
-          </button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex items-center gap-3 cursor-pointer">
+              <Avatar>
+                <AvatarImage
+                  src="/placeholder.svg?height=40&width=40"
+                  alt="vendor"
+                />
+                <AvatarFallback>AD</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                {user && (
+                  <span className="text-sm font-medium">
+                    {user[0]?.user_login_name}
+                  </span>
+                )}
+                <span className="text-xs text-muted-foreground">
+                  vendor@example.com
+                </span>
+              </div>
+
+              <LogOut className="h-4 w-4" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() => router.push("/dashboard/vendor/profile")}
+            >
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={async () => {
+                const res = await logoutUser();
+                if (res) router.replace("/");
+              }}
+            >
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
