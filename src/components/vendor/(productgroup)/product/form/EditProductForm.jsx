@@ -85,11 +85,10 @@ export default function EditProductForm({ data }) {
       if (!response.ok)
         throw new Error(result.error || "Something went wrong!");
 
-      router.refresh();
+      toast.success("Updated Successfully !!!");
       setOpenBox(false);
       form.reset();
-      toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
+      router.refresh();
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
@@ -113,7 +112,10 @@ export default function EditProductForm({ data }) {
           <PenTool className="text-white" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
+      <DialogContent
+        className="sm:max-w-[500px] max-h-[80%] overflow-y-auto"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Product </DialogTitle>
         </DialogHeader>

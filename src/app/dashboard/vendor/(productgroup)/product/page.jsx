@@ -1,14 +1,5 @@
 import ProductList from "../../../../../components/vendor/(productgroup)/product/ProductList";
 import AddProductForm from "../../../../../components/vendor/(productgroup)/product/form/AddProductForm";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
 
 async function getData(url, formData) {
   try {
@@ -55,20 +46,7 @@ export default async function ProductAdmin({ searchParams }) {
           Manage Products
         </h2>
         <div className="flex gap-2">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
-                <PlusIcon className="w-5 h-5" />
-                <span className="hidden md:inline">Add Product</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto rounded-lg shadow-lg">
-              <DialogHeader>
-                <DialogTitle>Add New Product</DialogTitle>
-              </DialogHeader>
-              <AddProductForm />
-            </DialogContent>
-          </Dialog>
+          <AddProductForm />
         </div>
       </div>
 

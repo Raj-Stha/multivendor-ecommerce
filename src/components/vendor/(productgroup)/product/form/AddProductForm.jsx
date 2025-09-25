@@ -19,6 +19,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { PlusIcon } from "lucide-react";
 
 const formSchema = z.object({
   vendor_product_name: z.string().min(1, "Product Name is required"),
@@ -29,7 +36,8 @@ const formSchema = z.object({
   active: z.boolean(),
 });
 
-export default function AddProductForm({ setIsOpen }) {
+export default function AddProductForm() {
+  const [open, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const baseUrl =
@@ -67,15 +75,9 @@ export default function AddProductForm({ setIsOpen }) {
 
       // Show success notification
       toast.success("Created Successfully !!!");
-
-      // Close the dialog
-      setIsOpen?.(false);
-
-      // Refresh the page after a short delay
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-
+      setIsOpen(false);
+      form.reset();
+      router.refresh();
       return result;
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
@@ -96,124 +98,140 @@ export default function AddProductForm({ setIsOpen }) {
 
   return (
     <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className=" py-2">
-            <FormField
-              control={form.control}
-              name="vendor_product_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="pb-2">Product Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Product Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+      <Dialog open={open} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
+            <PlusIcon className="w-5 h-5" />
+            <span className="hidden md:inline">Add Product</span>
+          </Button>
+        </DialogTrigger>
+        <DialogContent
+          className="sm:max-w-[500px] max-h-[80%] overflow-y-auto rounded-lg shadow-lg"
+          onInteractOutside={(event) => event.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle>Add New Product</DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className=" py-2">
+                <FormField
+                  control={form.control}
+                  name="vendor_product_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="pb-2">Product Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Product Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-          <FormField
-            control={form.control}
-            name="tax1_rate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="pb-2">Tax Rate (1)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Tax Rate (1)"
-                    {...field}
-                    type="number"
-                    step="0.01"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="tax1_rate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="pb-2">Tax Rate (1)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Tax Rate (1)"
+                        {...field}
+                        type="number"
+                        step="0.01"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="tax2_rate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="pb-2">Tax Rate (2)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Tax Rate (2)"
-                    {...field}
-                    type="number"
-                    step="0.01"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="tax2_rate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="pb-2">Tax Rate (2)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Tax Rate (2)"
+                        {...field}
+                        type="number"
+                        step="0.01"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="tax3_rate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="pb-2">Tax Rate (3)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Tax Rate (3)"
-                    {...field}
-                    type="number"
-                    step="0.01"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="tax3_rate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="pb-2">Tax Rate (3)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Tax Rate (3)"
+                        {...field}
+                        type="number"
+                        step="0.01"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="grid grid-cols-1 pt-2 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="restricted"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-2">
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      id="restricted"
-                    />
-                  </FormControl>
-                  <FormLabel htmlFor="restricted">Restricted</FormLabel>
-                </FormItem>
-              )}
-            />
+              <div className="grid grid-cols-1 pt-2 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="restricted"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          id="restricted"
+                        />
+                      </FormControl>
+                      <FormLabel htmlFor="restricted">Restricted</FormLabel>
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="active"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-2">
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      id="active"
-                    />
-                  </FormControl>
-                  <FormLabel htmlFor="active">Active</FormLabel>
-                </FormItem>
-              )}
-            />
-          </div>
+                <FormField
+                  control={form.control}
+                  name="active"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          id="active"
+                        />
+                      </FormControl>
+                      <FormLabel htmlFor="active">Active</FormLabel>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-          <DialogFooter className="flex justify-end sm:justify-end mt-4">
-            <Button type="submit" className="px-6" disabled={isLoading}>
-              {isLoading ? "Submitting..." : "Submit"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </Form>
+              <DialogFooter className="flex justify-end sm:justify-end mt-4">
+                <Button type="submit" className="px-6" disabled={isLoading}>
+                  {isLoading ? "Submitting..." : "Submit"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -67,11 +67,10 @@ export default function AddVariantsForm({ productID }) {
       if (!response.ok)
         throw new Error(result.error || "Something went wrong!");
 
-      router.refresh();
+      toast.success("Added Successfully !!!");
       setOpenBox(false);
       form.reset();
-      toast.success("Added Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
+      router.refresh();
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
@@ -92,7 +91,10 @@ export default function AddVariantsForm({ productID }) {
           <Plus className="" /> Add
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
+      <DialogContent
+        className="sm:max-w-[500px] max-h-[80%] overflow-y-auto"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Add Product Variant </DialogTitle>
         </DialogHeader>

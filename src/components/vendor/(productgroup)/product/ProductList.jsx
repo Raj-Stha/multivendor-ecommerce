@@ -35,19 +35,19 @@ export default function ProductList({ data, meta }) {
                       {d.vendor_product_name}
                     </h3>
                     <div className="flex flex-wrap gap-2 text-sm ">
-                      {d.tax1_rate && (
+                      {d.tax1_rate > 0 && (
                         <span className="px-3 shadow-sm py-2 rounded-sm">
                           Tax rate 1: {d.tax1_rate}
                         </span>
                       )}
 
-                      {d.tax2_rate && (
+                      {d.tax2_rate > 0 && (
                         <span className="px-3 shadow-sm py-2 rounded-sm">
                           Tax rate 2: {d.tax2_rate}
                         </span>
                       )}
 
-                      {d.tax1_rate && (
+                      {d.tax3_rate > 0 && (
                         <span className="px-3 shadow-sm py-2 rounded-sm">
                           Tax rate 3: {d.tax3_rate}
                         </span>
