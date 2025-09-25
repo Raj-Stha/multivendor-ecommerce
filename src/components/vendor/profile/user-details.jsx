@@ -77,10 +77,6 @@ export default function UserDetails({ user }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">User Details</h1>
-      </div>
-
       <div className="space-y-5">
         {displayFields.map((field) => {
           if (field === "shipping_address") return null;
@@ -90,7 +86,7 @@ export default function UserDetails({ user }) {
             <div key={field} className="hover:shadow-md space-y-4 transition">
               <Label
                 htmlFor={field}
-                className="block text-sm font-medium text-gray-600 mb-2"
+                className="block text-base  font-medium mb-3"
               >
                 {formatLabel(field)}
               </Label>
@@ -142,10 +138,10 @@ export default function UserDetails({ user }) {
         })}
       </div>
 
-      <div className="w-full flex justify-center py-8">
+      <div className="w-full flex justify-center py-6">
         <button
           onClick={handleSave}
-          className="w-full sm:w-auto px-6 py-3 rounded-xl 
+          className="w-full sm:w-auto px-4 py-3 rounded-xl 
                      bg-green-600 text-white cursor-pointer hover:opacity-90"
         >
           Update Details

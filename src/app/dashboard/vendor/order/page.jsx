@@ -3,7 +3,7 @@
 import { OrdersTable } from "@/components/vendor/order/order-table";
 import OrdersTableSkeleton from "@/components/vendor/order/loading";
 import { useEffect, useState } from "react";
-
+import { SidebarTrigger } from "@/components/ui/sidebar";
 // Mock API fetch function
 async function getData(url, formData) {
   try {
@@ -51,17 +51,18 @@ export default function VendorDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-8 px-4">
-        <div className="mb-8">
-          <h3 className="text-2xl font-bold text-foreground mb-1">
-            Manage Order
-          </h3>
-          <p className="text-muted-foreground">
-            Manage your orders and track performance
-          </p>
+      <header className="sticky top-0 z-50 w-full shadow py-5 px-3 bg-white">
+        <div className="flex items-center justify-between ">
+          <div className="flex space-x-2 items-center">
+            <SidebarTrigger />
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Manage Order
+            </h2>
+          </div>
         </div>
+      </header>
 
-        {/* Show skeleton while loading */}
+      <div className="container mx-auto py-8 px-4">
         {loading ? (
           <OrdersTableSkeleton />
         ) : (

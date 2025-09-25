@@ -169,7 +169,7 @@ export function LocationPicker({ onLocationSelect, initialLocation }) {
       {/* Address Input */}
       <Card>
         <CardContent className="space-y-4">
-          <div className="flex gap-2">
+          <div className="space-y-3 lg:space-y-0 lg:flex gap-2">
             <div className="flex-1">
               <Label htmlFor="address" className="pb-4">
                 Enter Address
@@ -187,7 +187,7 @@ export function LocationPicker({ onLocationSelect, initialLocation }) {
               <Button
                 onClick={handleAddressSearch}
                 disabled={isLoading}
-                className="px-6 hover:opacity-90"
+                className="px-6 hover:opacity-90 "
               >
                 {isLoading ? "Searching..." : "Search"}
               </Button>
@@ -195,7 +195,7 @@ export function LocationPicker({ onLocationSelect, initialLocation }) {
                 onClick={handleUseMyLocation}
                 disabled={isLoading}
                 variant="secondary"
-                className="px-4 text-white"
+                className="px-4 text-white  "
               >
                 <LocateFixed className="w-4 h-4 mr-1" />
                 Use My Location

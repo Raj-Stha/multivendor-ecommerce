@@ -1,5 +1,6 @@
 import ProductList from "../../../../../components/vendor/(productgroup)/product/ProductList";
 import AddProductForm from "../../../../../components/vendor/(productgroup)/product/form/AddProductForm";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 async function getData(url, formData) {
   try {
@@ -40,25 +41,31 @@ export default async function ProductAdmin({ searchParams }) {
   const meta = productRes?.hint || { page_number: page, total_pages: 1 };
 
   return (
-    <div className="container max-w-7xl mx-auto px-[2%] py-[2%]">
-      <div className="flex items-center justify-between mb-6 pb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          Manage Products
-        </h2>
-        <div className="flex gap-2">
-          <AddProductForm />
+    <>
+      <header className="sticky top-0 z-50 w-full shadow py-5 px-3 bg-white">
+        <div className="flex items-center justify-between ">
+          <div className="flex space-x-2 items-center">
+            <SidebarTrigger />
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Manage Products
+            </h2>
+          </div>
+          <div className="flex gap-2">
+            <AddProductForm />
+          </div>
         </div>
+      </header>
+      <div className="container mx-auto px-[2%] py-[2%]">
+        {data.length === 0 ? (
+          <div className="w-full text-center py-8">
+            <p className="text-gray-500">
+              No product found. Add a new product to get started.
+            </p>
+          </div>
+        ) : (
+          <ProductList data={data} meta={meta} />
+        )}
       </div>
-
-      {data.length === 0 ? (
-        <div className="w-full text-center py-8">
-          <p className="text-gray-500">
-            No product found. Add a new product to get started.
-          </p>
-        </div>
-      ) : (
-        <ProductList data={data} meta={meta} />
-      )}
-    </div>
+    </>
   );
 }
