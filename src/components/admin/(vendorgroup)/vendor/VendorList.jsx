@@ -1,4 +1,5 @@
-import EditVendorForm from "./form/EditVendorForm";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -6,16 +7,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Image from "next/image";
+import EditVendorForm from "./form/EditVendorForm";
 import EditVendorDetailsForm from "./form/EditVendorDetailsForm";
 
-export default function VendorList({
-  data,
-  categoryNotes,
-  meta,
-  page,
-  setPage,
-}) {
+export default function VendorList({ data, categoryNotes, meta, page }) {
+  const goToPage = (newPage) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", newPage);
+    window.location.search = params.toString();
+  };
+
   return (
     <div>
       {data && data.length > 0 ? (
@@ -27,21 +28,12 @@ export default function VendorList({
                 value={`item-${d.vendor_id}`}
                 className="mb-4 border rounded-lg shadow-sm bg-white hover:shadow-md transition-all"
               >
-                <div className="flex items-center justify-between w-full px-4 py-2 ">
-                  <AccordionTrigger className="flex items-center gap-4 flex-grow text-left hover:no-underline ">
-                    {/* <Image
-                      className="w-12 h-12 object-cover rounded border"
-                      src={d?.category_image || "/placeholder.svg"}
-                      alt={d.category_name}
-                      width={48}
-                      height={48}
-                    /> */}
+                <div className="flex items-center justify-between w-full px-4 py-2">
+                  <AccordionTrigger className="flex items-center gap-4 flex-grow text-left hover:no-underline">
                     <h3 className="text-lg font-bold text-gray-800">
                       {d.vendor_name}
                     </h3>
                   </AccordionTrigger>
-
-                  {/* Move the button outside AccordionTrigger */}
                   <div className="ml-4">
                     <EditVendorForm data={d} />
                   </div>
@@ -95,24 +87,20 @@ export default function VendorList({
               </AccordionItem>
             ))}
           </Accordion>
+
+          {/* Pagination */}
           <div className="flex justify-center gap-[2%] mt-6">
             <Button
-              variant="default"
-              className="cursor-pointer"
-              onClick={() => setPage(page - 1)}
+              onClick={() => goToPage(page - 1)}
               disabled={meta.page_number <= 1}
             >
               Previous
             </Button>
-
             <span className="self-center text-sm text-gray-600">
               Page {meta.page_number} of {meta.total_pages}
             </span>
-
             <Button
-              variant="default"
-              className="cursor-pointer"
-              onClick={() => setPage(page + 1)}
+              onClick={() => goToPage(page + 1)}
               disabled={meta.page_number >= meta.total_pages}
             >
               Next
@@ -122,7 +110,7 @@ export default function VendorList({
       ) : (
         <div className="w-full text-center py-8">
           <p className="text-gray-500">
-            No vendor found. Add a new vendor to get started.{" "}
+            No vendor found. Add a new vendor to get started.
           </p>
         </div>
       )}

@@ -76,7 +76,6 @@ export default function EditVendorForm({ data }) {
       setOpenBox(false);
       form.reset();
       toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
@@ -107,7 +106,10 @@ export default function EditVendorForm({ data }) {
           <PenTool className="text-white" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto ">
+      <DialogContent
+        className="sm:max-w-[700px] max-h-[80%] overflow-y-auto "
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Vendor</DialogTitle>
         </DialogHeader>
