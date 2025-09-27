@@ -182,7 +182,6 @@ export default function ProductList({
           ))}
 
           {/* Pagination */}
-          {/* Pagination */}
           <div className="flex justify-center gap-[2%] mt-6">
             <Button
               className="bg-primary text-white hover:bg-primary/90"
