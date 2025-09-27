@@ -33,6 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   promo_id: z.string().min(1, "Promo is required"),
@@ -45,8 +46,7 @@ export default function EditPromoDetailsForm({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
-
-  console.log(data);
+  const router = useRouter();
 
   const [selectedPromoId, setSelectedPromoId] = useState(
     String(data?.promo_id || "")
@@ -106,8 +106,9 @@ export default function EditPromoDetailsForm({
 
       const result = await response.json();
       toast.success("Updated Successfully!");
+      router.refresh();
       setOpenBox(false);
-      setTimeout(() => window.location.reload(), 500);
+      form.reset();
       return result;
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
@@ -156,7 +157,10 @@ export default function EditPromoDetailsForm({
           <PenTool className="text-white" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto">
+      <DialogContent
+        className="sm:max-w-[700px] max-h-[80%] overflow-y-auto"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Promo</DialogTitle>
         </DialogHeader>

@@ -1,4 +1,7 @@
+"use client";
+
 import EditPromoForm from "./form/EditPromoForm";
+import EditPromoDetailsForm from "./form/EditPromoDetailsForm";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -6,10 +9,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Image from "next/image";
-import EditPromoDetailsForm from "./form/EditPromoDetailsForm";
+import { useRouter } from "next/navigation";
 
-export default function PromoList({ data, promoNotes, meta, page, setPage }) {
+export default function PromoList({ data, promoNotes, meta, page }) {
+  const router = useRouter();
+
+  const goToPage = (newPage) => {
+    router.push(`?page=${newPage}`);
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
@@ -19,8 +27,9 @@ export default function PromoList({ data, promoNotes, meta, page, setPage }) {
       day: "numeric",
     });
   };
+
   return (
-    <div>
+    <>
       {data && data.length > 0 ? (
         <>
           <Accordion type="single" collapsible className="w-full">
@@ -30,25 +39,18 @@ export default function PromoList({ data, promoNotes, meta, page, setPage }) {
                 value={`item-${d.promo_id}`}
                 className="mb-4 border rounded-lg shadow-sm bg-white hover:shadow-md transition-all"
               >
-                <div className="flex items-center justify-between w-full px-4 py-2 ">
-                  <AccordionTrigger className="flex items-center gap-4 flex-grow text-left hover:no-underline ">
-                    {/* <Image
-                      className="w-12 h-12 object-cover rounded border"
-                      src={d?.category_image || "/placeholder.svg"}
-                      alt={d.category_name}
-                      width={48}
-                      height={48}
-                    /> */}
+                <div className="flex items-center justify-between w-full px-4 py-2">
+                  <AccordionTrigger className="flex items-center gap-4 flex-grow text-left hover:no-underline">
                     <div className="flex flex-col">
                       <h3 className="text-lg font-bold text-gray-800 mb-2">
                         {d.promo_name}
                       </h3>
                       <div className="flex gap-4 text-gray-600 mt-1">
-                        <span className=" px-2  text-sm bg-gray-50 ">
+                        <span className="px-2 text-sm bg-gray-50">
                           <span className="font-medium">From:</span>{" "}
                           {formatDate(d.valid_from)}
                         </span>
-                        <span className=" px-2  text-sm bg-gray-50 ">
+                        <span className="px-2 text-sm bg-gray-50">
                           <span className="font-medium">To:</span>{" "}
                           {formatDate(d.valid_to)}
                         </span>
@@ -65,7 +67,6 @@ export default function PromoList({ data, promoNotes, meta, page, setPage }) {
                     </div>
                   </AccordionTrigger>
 
-                  {/* Move the button outside AccordionTrigger */}
                   <div className="ml-4">
                     <EditPromoForm data={d} />
                   </div>
@@ -118,11 +119,12 @@ export default function PromoList({ data, promoNotes, meta, page, setPage }) {
               </AccordionItem>
             ))}
           </Accordion>
+
+          {/* Pagination */}
           <div className="flex justify-center gap-[2%] mt-6">
             <Button
-              variant="default"
-              className="cursor-pointer"
-              onClick={() => setPage(page - 1)}
+              className="bg-primary text-white hover:bg-primary/90"
+              onClick={() => goToPage(page - 1)}
               disabled={meta.page_number <= 1}
             >
               Previous
@@ -133,9 +135,8 @@ export default function PromoList({ data, promoNotes, meta, page, setPage }) {
             </span>
 
             <Button
-              variant="default"
-              className="cursor-pointer"
-              onClick={() => setPage(page + 1)}
+              className="bg-primary text-white hover:bg-primary/90"
+              onClick={() => goToPage(page + 1)}
               disabled={meta.page_number >= meta.total_pages}
             >
               Next
@@ -145,10 +146,10 @@ export default function PromoList({ data, promoNotes, meta, page, setPage }) {
       ) : (
         <div className="w-full text-center py-8">
           <p className="text-gray-500">
-            No promo found. Add a new promo to get started.{" "}
+            No promo found. Add a new promo to get started.
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 }
