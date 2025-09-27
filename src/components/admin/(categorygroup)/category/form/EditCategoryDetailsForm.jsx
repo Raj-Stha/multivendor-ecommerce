@@ -33,6 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   category_id: z.string().min(1, "Category is required"),
@@ -45,6 +46,7 @@ export default function EditCategoryDetailsForm({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
+  const router = useRouter();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     String(data?.category_id || "")
@@ -105,7 +107,8 @@ export default function EditCategoryDetailsForm({
       const result = await response.json();
       toast.success("Updated Successfully!");
       setOpenBox(false);
-      setTimeout(() => window.location.reload(), 500);
+      form.reset();
+      router.refresh();
       return result;
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
@@ -156,7 +159,10 @@ export default function EditCategoryDetailsForm({
           <PenTool className="text-white" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto">
+      <DialogContent
+        className="sm:max-w-[700px] max-h-[80%] overflow-y-auto"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Category</DialogTitle>
         </DialogHeader>

@@ -86,8 +86,9 @@ export default function AddCatgeoryForm({
 
       const result = await response.json();
       toast.success("Created Successfully !!!");
-      setIsOpen?.(false);
-      setTimeout(() => window.location.reload(), 500);
+      setIsOpen(false);
+      form.reset();
+      router.refresh();
       return result;
     } catch (error) {
       toast.error(error.message || "Something went wrong!");

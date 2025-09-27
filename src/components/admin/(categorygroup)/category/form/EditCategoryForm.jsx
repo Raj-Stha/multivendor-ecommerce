@@ -68,7 +68,6 @@ export default function EditCategoryForm({ data }) {
       setOpenBox(false);
       form.reset();
       toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
@@ -92,7 +91,10 @@ export default function EditCategoryForm({ data }) {
           <PenTool className="text-white" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
+      <DialogContent
+        className="sm:max-w-[500px] max-h-[80%] overflow-y-auto"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Category</DialogTitle>
         </DialogHeader>
