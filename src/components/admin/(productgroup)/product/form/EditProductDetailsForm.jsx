@@ -33,6 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   product_id: z.string().min(1, "Product is required"),
@@ -45,6 +46,7 @@ export default function EditProductDetailsForm({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
+  const router = useRouter();
 
   const [selectedProductId, setSelectedProductId] = useState(
     String(data?.product_id || "")
@@ -105,7 +107,8 @@ export default function EditProductDetailsForm({
       const result = await response.json();
       toast.success("Updated Successfully!");
       setOpenBox(false);
-      setTimeout(() => window.location.reload(), 500);
+      router.refresh();
+      form.reset();
       return result;
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
@@ -154,7 +157,10 @@ export default function EditProductDetailsForm({
           <PenTool className="text-white" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] max-h-[80%] overflow-y-auto">
+      <DialogContent
+        className="sm:max-w-[700px] max-h-[80%] overflow-y-auto"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Product Details</DialogTitle>
         </DialogHeader>

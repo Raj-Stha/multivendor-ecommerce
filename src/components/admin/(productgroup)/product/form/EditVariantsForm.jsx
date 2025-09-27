@@ -64,7 +64,6 @@ export default function EditVariantsForm({ data, productID }) {
       setOpenBox(false);
       form.reset();
       toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
@@ -90,7 +89,10 @@ export default function EditVariantsForm({ data, productID }) {
           <PenTool className="" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
+      <DialogContent
+        className="sm:max-w-[500px] max-h-[80%] overflow-y-auto"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Variant </DialogTitle>
         </DialogHeader>

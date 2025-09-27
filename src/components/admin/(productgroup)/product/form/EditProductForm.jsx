@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -69,6 +69,18 @@ export default function EditProductForm({ data, category, manu }) {
     },
   });
 
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        new_product_name: data?.product_name ?? "",
+        category_id: selectedCategoryId ? String(selectedCategoryId) : "",
+        manufacturer_id: selectedManuId ? String(selectedManuId) : "",
+        restricted: data?.restricted ?? false,
+        active: data?.active ?? true,
+      });
+    }
+  }, [data, form]);
+
   const updateData = async (values) => {
     try {
       const response = await fetch(`${baseUrl}/updateproduct`, {
@@ -87,7 +99,6 @@ export default function EditProductForm({ data, category, manu }) {
       setOpenBox(false);
       form.reset();
       toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
@@ -111,7 +122,10 @@ export default function EditProductForm({ data, category, manu }) {
           <PenTool className="text-white" /> Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
+      <DialogContent
+        className="sm:max-w-[500px] max-h-[80%] overflow-y-auto "
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Product </DialogTitle>
         </DialogHeader>
