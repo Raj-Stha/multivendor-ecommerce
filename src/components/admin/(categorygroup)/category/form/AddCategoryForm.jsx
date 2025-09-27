@@ -84,7 +84,6 @@ export default function AddCatgeoryForm() {
 
   const onSubmit = async (values) => {
     setIsLoading(true);
-
     try {
       await uploadData(values);
     } catch (error) {
