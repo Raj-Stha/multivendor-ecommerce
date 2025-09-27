@@ -1,8 +1,7 @@
-"use client";
+import ProductMapList from "@/components/admin/(productgroup)/product-map/ProductMapList";
 
-import { useEffect, useState } from "react";
-import ProductMapList from "../../../../../components/admin/(productgroup)/product-map/ProductMapList";
-import CategoryListSkeleton from "../../../../../components/admin/Skeleton/CategooryListSkeleton";
+const baseUrl =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
 async function getData(url, formData) {
   try {
@@ -12,10 +11,11 @@ async function getData(url, formData) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
+      cache: "no-store", // disable caching (always fresh)
     });
 
     if (!res.ok) {
-      console.error("Failed to fetch categories");
+      console.error("Failed to fetch:", url);
       return null;
     }
 
@@ -26,53 +26,25 @@ async function getData(url, formData) {
   }
 }
 
-export default function ProductAdmin() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState([]);
-  const [allProduct, setAllProduct] = useState([]);
-  const [meta, setMeta] = useState({ page_number: 1, total_pages: 1 });
-  const [page, setPage] = useState(1);
+export default async function ProductAdmin({ searchParams }) {
+  const page = parseInt(searchParams.page) || 1;
   const limit = 10;
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
+  // Fetch all products
+  const allProductRes = await getData(`${baseUrl}/getadminproducts`, {
+    page_number: page,
+    limit: 0,
+  });
+  const allProduct = allProductRes?.details || [];
 
-  const getAllProducts = async () => {
-    try {
-      setIsLoading(true);
-      let url = `${baseUrl}/getadminproducts`;
-      const allProductRes = await getData(url, { page_number: page, limit: 0 });
-      if (allProductRes) {
-        setAllProduct(allProductRes.details || []);
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Fetch unmapped vendor variants
+  const productMapRes = await getData(`${baseUrl}/getunmappedvendorvariants`, {
+    page_number: page,
+    limit,
+  });
 
-  const getProductMaps = async () => {
-    try {
-      setIsLoading(true);
-      let url = `${baseUrl}/getunmappedvendorvariants`;
-      const productMapRes = await getData(url, { page_number: page, limit });
-      if (productMapRes) {
-        setData(productMapRes.details || []);
-        setMeta(productMapRes.hint || { page_number: page, total_pages: 1 });
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getAllProducts();
-    getProductMaps();
-  }, [page]);
+  const data = productMapRes?.details || [];
+  const meta = productMapRes?.hint || { page_number: page, total_pages: 1 };
 
   return (
     <div className="container max-w-7xl mx-auto px-[2%] py-[2%]">
@@ -82,21 +54,12 @@ export default function ProductAdmin() {
         </h2>
       </div>
 
-      {isLoading ? (
-        <CategoryListSkeleton count={6} />
-      ) : (
-        <>
-          {data && (
-            <ProductMapList
-              data={data}
-              allProduct={allProduct}
-              meta={meta}
-              page={page}
-              setPage={setPage}
-            />
-          )}
-        </>
-      )}
+      <ProductMapList
+        data={data}
+        allProduct={allProduct}
+        meta={meta}
+        page={page}
+      />
     </div>
   );
 }

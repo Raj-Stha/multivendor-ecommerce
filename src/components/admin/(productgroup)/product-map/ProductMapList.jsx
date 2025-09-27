@@ -2,14 +2,15 @@
 
 import EditProductMapForm from "./form/EditProductMapForm";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
-export default function ProductMapList({
-  data,
-  allProduct,
-  meta,
-  page,
-  setPage,
-}) {
+export default function ProductMapList({ data, allProduct, meta, page }) {
+  const router = useRouter();
+
+  const goToPage = (newPage) => {
+    router.push(`?page=${newPage}`);
+  };
+
   return (
     <div>
       {data && data.length > 0 ? (
@@ -51,11 +52,11 @@ export default function ProductMapList({
             </div>
           ))}
 
+          {/* Pagination */}
           <div className="flex justify-center gap-[2%] mt-6">
             <Button
-              variant="default"
-              className="cursor-pointer"
-              onClick={() => setPage(page - 1)}
+              className="bg-primary text-white hover:bg-primary/90"
+              onClick={() => goToPage(page - 1)}
               disabled={meta.page_number <= 1}
             >
               Previous
@@ -64,9 +65,8 @@ export default function ProductMapList({
               Page {meta.page_number} of {meta.total_pages}
             </span>
             <Button
-              variant="default"
-              className="cursor-pointer"
-              onClick={() => setPage(page + 1)}
+              className="bg-primary text-white hover:bg-primary/90"
+              onClick={() => goToPage(page + 1)}
               disabled={meta.page_number >= meta.total_pages}
             >
               Next

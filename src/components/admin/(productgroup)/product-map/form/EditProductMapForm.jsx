@@ -106,7 +106,7 @@ export default function EditProductMapForm({ data, allProduct }) {
       setOpenBox(false);
       form.reset();
       toast.success("Updated Successfully !!!");
-      setTimeout(() => window.location.reload(), 500);
+      // setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
     } finally {
@@ -132,7 +132,10 @@ export default function EditProductMapForm({ data, allProduct }) {
           <PenTool className="text-white" /> Product Map
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[80%] overflow-y-auto ">
+      <DialogContent
+        className="sm:max-w-[500px] max-h-[80%] overflow-y-auto "
+        onInteractOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Product Map </DialogTitle>
         </DialogHeader>
