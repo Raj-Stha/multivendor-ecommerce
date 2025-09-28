@@ -1,5 +1,6 @@
 import VendorList from "../../../../../components/admin/(vendorgroup)/vendor/VendorList";
 import AddVendorForm from "../../../../../components/admin/(vendorgroup)/vendor/form/AddVendorForm";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const baseUrl =
   process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
@@ -35,20 +36,28 @@ export default async function Vendor({ searchParams }) {
   const categoryNotes = notesRes?.details || [];
 
   return (
-    <div className="container max-w-7xl mx-auto px-[2%] py-[2%]">
-      <div className="flex items-center justify-between mb-6 pb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Manage Vendor</h2>
-        <div className="flex gap-2">
-          <AddVendorForm />
+    <>
+      <header className="sticky top-0 z-50 w-full shadow py-5 px-3 bg-white">
+        <div className="flex items-center justify-between ">
+          <div className="flex space-x-2 items-center">
+            <SidebarTrigger />
+            <h2 className="lg:text-2xl md:text-xl text-base font-semibold text-gray-800">
+              Manage Vendor
+            </h2>
+          </div>
+          <div className="flex gap-2">
+            <AddVendorForm />
+          </div>
         </div>
+      </header>
+      <div className="container mx-auto px-[2%] py-[2%]">
+        <VendorList
+          data={data}
+          categoryNotes={categoryNotes}
+          meta={meta}
+          page={page}
+        />
       </div>
-
-      <VendorList
-        data={data}
-        categoryNotes={categoryNotes}
-        meta={meta}
-        page={page}
-      />
-    </div>
+    </>
   );
 }
