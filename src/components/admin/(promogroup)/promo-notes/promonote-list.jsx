@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function PromoNoteList({ data, page, setPage, meta }) {
   return (
-    <div>
+    <>
       {data && data.length > 0 ? (
         <>
           {data.map((d) => (
@@ -49,6 +49,6 @@ export default function PromoNoteList({ data, page, setPage, meta }) {
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 }
