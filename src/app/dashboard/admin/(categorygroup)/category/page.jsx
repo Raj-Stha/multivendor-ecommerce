@@ -50,7 +50,7 @@ export default async function CategoryAdmin({ searchParams }) {
         <div className="flex items-center justify-between ">
           <div className="flex space-x-2 items-center">
             <SidebarTrigger />
-            <h2 className="text-2xl font-semibold text-gray-800">
+            <h2 className="lg:text-2xl md:text-xl text-base font-semibold text-gray-800">
               Manage Categories
             </h2>
           </div>
