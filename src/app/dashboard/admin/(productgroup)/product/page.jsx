@@ -1,5 +1,6 @@
 import ProductList from "../../../../../components/admin/(productgroup)/product/ProductList";
 import AddProductForm from "../../../../../components/admin/(productgroup)/product/form/AddProductForm";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 async function getData(url, formData) {
   try {
@@ -41,26 +42,31 @@ export default async function ProductAdmin({ searchParams }) {
   const cat = catRes?.details || [];
 
   return (
-    <div className="container max-w-7xl mx-auto px-[2%] py-[2%]">
-      <div className="flex items-center justify-between mb-6 pb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          Manage Products
-        </h2>
-        <div className="flex gap-2">
-          {cat && manu && <AddProductForm category={cat} manu={manu} />}
+    <>
+      <header className="sticky top-0 z-50 w-full shadow py-5 px-3 bg-white">
+        <div className="flex items-center justify-between ">
+          <div className="flex space-x-2 items-center">
+            <SidebarTrigger />
+            <h2 className="lg:text-2xl md:text-xl text-base font-semibold text-gray-800">
+              Manage Products
+            </h2>
+          </div>
+          <div className="flex gap-2">
+            {cat && manu && <AddProductForm category={cat} manu={manu} />}
+          </div>
         </div>
+      </header>
+      <div className="container mx-auto px-[2%] py-[2%]">
+        <ProductList
+          data={data}
+          allProduct={allProduct}
+          productNotes={productNotes}
+          category={cat}
+          manu={manu}
+          meta={meta}
+          page={page}
+        />
       </div>
-
-      {/* Product List (client-side for interactivity) */}
-      <ProductList
-        data={data}
-        allProduct={allProduct}
-        productNotes={productNotes}
-        category={cat}
-        manu={manu}
-        meta={meta}
-        page={page}
-      />
-    </div>
+    </>
   );
 }

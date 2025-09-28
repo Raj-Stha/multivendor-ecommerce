@@ -1,4 +1,5 @@
 import ProductMapList from "@/components/admin/(productgroup)/product-map/ProductMapList";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const baseUrl =
   process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
@@ -47,19 +48,25 @@ export default async function ProductAdmin({ searchParams }) {
   const meta = productMapRes?.hint || { page_number: page, total_pages: 1 };
 
   return (
-    <div className="container max-w-7xl mx-auto px-[2%] py-[2%]">
-      <div className="flex items-center justify-between mb-6 pb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          Manage Product Map
-        </h2>
+    <>
+      <header className="sticky top-0 z-50 w-full shadow py-5 px-3 bg-white">
+        <div className="flex items-center justify-between ">
+          <div className="flex space-x-2 items-center">
+            <SidebarTrigger />
+            <h2 className="lg:text-2xl md:text-xl text-base font-semibold text-gray-800">
+              Manage Product Map
+            </h2>
+          </div>
+        </div>
+      </header>
+      <div className="container mx-auto px-[2%] py-[2%]">
+        <ProductMapList
+          data={data}
+          allProduct={allProduct}
+          meta={meta}
+          page={page}
+        />
       </div>
-
-      <ProductMapList
-        data={data}
-        allProduct={allProduct}
-        meta={meta}
-        page={page}
-      />
-    </div>
+    </>
   );
 }
