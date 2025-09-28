@@ -150,20 +150,7 @@ export default function VendorDashboardList({
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
         {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-blue-600" />
-                Users
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{user.total ?? 0}</p>
-              <p className="text-sm text-muted-foreground">Total Users</p>
-            </CardContent>
-          </Card>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -174,19 +161,6 @@ export default function VendorDashboardList({
             <CardContent>
               <p className="text-2xl font-bold">{order.total ?? 0}</p>
               <p className="text-sm text-muted-foreground">Total Orders</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Store className="h-5 w-5 text-purple-600" />
-                Vendors
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{vendor.total ?? 0}</p>
-              <p className="text-sm text-muted-foreground">Total Vendors</p>
             </CardContent>
           </Card>
 
@@ -206,34 +180,6 @@ export default function VendorDashboardList({
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Users Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-blue-600" />
-                User Activity
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={userChartData}
-                    dataKey="value"
-                    nameKey="name"
-                    outerRadius={100}
-                    label
-                  >
-                    {userChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-
           {/* Orders Chart */}
           <Card>
             <CardHeader>
@@ -251,34 +197,6 @@ export default function VendorDashboardList({
                   <Tooltip />
                   <Bar dataKey="value" fill="hsl(var(--chart-3))" />
                 </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-
-          {/* Vendors Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingDown className="h-5 w-5 text-purple-600" />
-                Vendors
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={vendorChartData}
-                    dataKey="value"
-                    nameKey="name"
-                    outerRadius={100}
-                    label
-                  >
-                    {vendorChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
