@@ -27,13 +27,24 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { useUser } from "@/app/(home)/_context/UserContext";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const SIDEBAR_ITEMS = [
   {
@@ -228,20 +239,56 @@ const SIDEBAR_ITEMS = [
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const { user, getUser, logoutUser } = useUser();
+  const router = useRouter();
+  const { toggleSidebar, open } = useSidebar();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        await getUser();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchUser();
+  }, [getUser]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const isActive = (path) => {
     return pathname === path || pathname.startsWith(`${path}/`);
   };
 
+  const handleLinkClick = () => {
+    if (isMobile && open) toggleSidebar();
+  };
+
   return (
     <Sidebar>
-      <SidebarHeader className="border-b">
-        <div className="flex items-center gap-2 px-4 py-2">
-          <ShoppingBag className="h-6 w-6" />
-          <span className="text-xl font-bold">E-Commerce</span>
+      <SidebarHeader className="border-b flex  px-4 py-6">
+        <div className="flex  w-full justify-between">
+          <div className="flex items-center gap-2">
+            <ShoppingBag className="h-6 w-6" />
+            <span className="text-xl font-bold">E-Commerce</span>
+          </div>
+          {isMobile && (
+            <button
+              onClick={toggleSidebar}
+              className="py-1 hover:bg-muted bg-gray-200 px-2   rounded-md"
+            >
+              ✕
+            </button>
+          )}
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="!gap-0">
         {SIDEBAR_ITEMS.map((section, index) => {
           if (section.type === "single") {
             return (
@@ -249,7 +296,11 @@ export function AdminSidebar() {
                 <SidebarMenu>
                   {section.items.map((item, i) => (
                     <SidebarMenuItem key={i}>
-                      <SidebarMenuButton asChild isActive={isActive(item.href)}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive(item.href)}
+                        onClick={handleLinkClick}
+                      >
                         <Link href={item.href}>
                           <item.icon />
                           <span>{item.label}</span>
@@ -273,6 +324,7 @@ export function AdminSidebar() {
                         <SidebarMenuButton
                           asChild
                           isActive={isActive(item.href)}
+                          onClick={handleLinkClick}
                         >
                           <Link href={item.href}>
                             <item.icon />
@@ -305,6 +357,7 @@ export function AdminSidebar() {
                             <SidebarMenuButton
                               asChild
                               isActive={isActive(item.href)}
+                              onClick={handleLinkClick}
                             >
                               <Link href={item.href}>
                                 <item.icon />
@@ -325,24 +378,45 @@ export function AdminSidebar() {
         })}
       </SidebarContent>
       <SidebarFooter className="border-t p-4">
-        <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarImage
-              src="/placeholder.svg?height=40&width=40"
-              alt="Admin"
-            />
-            <AvatarFallback>AD</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">Admin User</span>
-            <span className="text-xs text-muted-foreground">
-              admin@example.com
-            </span>
-          </div>
-          <button className="ml-auto rounded-full p-2 hover:bg-muted">
-            <LogOut className="h-4 w-4" />
-          </button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex items-center gap-3 cursor-pointer">
+              <Avatar>
+                <AvatarImage
+                  src="/placeholder.svg?height=40&width=40"
+                  alt="vendor"
+                />
+                <AvatarFallback>AD</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                {user && (
+                  <span className="text-sm font-medium">
+                    {user[0]?.user_login_name}
+                  </span>
+                )}
+                <span className="text-xs text-muted-foreground">
+                  vendor@example.com
+                </span>
+              </div>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() => router.push("/dashboard/admin/system-parameter")}
+            >
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={async () => {
+                const res = await logoutUser();
+                if (res) router.replace("/");
+              }}
+            >
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
