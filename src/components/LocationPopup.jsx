@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LocateFixed } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const defaultLocation = {
   name: "New York",
@@ -215,9 +216,41 @@ export default function LocationPopup({ status = false }) {
     );
   };
 
-  const confirmSelection = () => {
+  const confirmSelection = async () => {
     if (!selectedLocation) return;
+
+    // Save in localStorage
     localStorage.setItem("user_location", JSON.stringify(selectedLocation));
+
+    // Build payload like "lat,lon"
+    const payload = {
+      location: `${selectedLocation.lat},${selectedLocation.lon}`,
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/updatelocation`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update location");
+      }
+
+      const result = await response.json();
+      toast.success("Location updated successfully");
+      console.log("Location updated successfully:", result);
+    } catch (error) {
+      console.error("Error updating location:", error);
+    }
+
     setOpen(false);
   };
 
