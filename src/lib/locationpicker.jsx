@@ -205,7 +205,7 @@ export function LocationPicker({ onLocationSelect, initialLocation }) {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-5">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -213,10 +213,10 @@ export function LocationPicker({ onLocationSelect, initialLocation }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
+            <div className="">
+              {/* <p className="text-sm text-muted-foreground">
                 Click anywhere on the map to get coordinates
-              </p>
+              </p> */}
               <div
                 ref={mapRef}
                 className="w-full  rounded-lg border border-border"
@@ -230,7 +230,7 @@ export function LocationPicker({ onLocationSelect, initialLocation }) {
           </CardContent>
         </Card>
 
-        {coordinates && (
+        {/* {coordinates && (
           <Card>
             <CardHeader>
               <CardTitle>Selected Location</CardTitle>
@@ -266,7 +266,7 @@ export function LocationPicker({ onLocationSelect, initialLocation }) {
               )}
             </CardContent>
           </Card>
-        )}
+        )} */}
       </div>
     </div>
   );

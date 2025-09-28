@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,9 +9,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MapPin, Loader2 } from "lucide-react";
+import { LocateFixed } from "lucide-react";
 
-const defaultLocation = { name: "Kathmandu, Nepal", lat: 27.7172, lon: 85.324 };
+const defaultLocation = {
+  name: "New York",
+  lat: 40.7128,
+  lon: -74.006,
+};
 
 function getLocalStorageLocation() {
   try {
@@ -22,143 +26,208 @@ function getLocalStorageLocation() {
   }
 }
 
-export default function LocationPopup() {
-  const [open, setOpen] = useState(false);
+export default function LocationPopup({ status = false }) {
+  const [open, setOpen] = useState(status);
   const [query, setQuery] = useState("");
+  const [manualInput, setManualInput] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [locationError, setLocationError] = useState("");
-  const [showConfirm, setShowConfirm] = useState(false);
+
+  const mapRef = useRef(null);
+  const leafletMap = useRef(null);
+  const markerRef = useRef(null);
 
   useEffect(() => {
-    const storedLocation = getLocalStorageLocation();
+    setOpen(status);
+  }, [status]);
 
-    if (storedLocation) {
-      setSelectedLocation(storedLocation);
-      setQuery(storedLocation.name);
-    } else {
-      setSelectedLocation(defaultLocation);
-      setQuery(defaultLocation.name);
-      setOpen(true);
-    }
+  // Load stored location or default
+  useEffect(() => {
+    const storedLocation = getLocalStorageLocation();
+    const initialLocation = storedLocation || defaultLocation;
+    setSelectedLocation(initialLocation);
+    setQuery(initialLocation.name);
+    if (!storedLocation) setOpen(true);
   }, []);
 
-  const searchLocations = async (searchQuery) => {
-    if (searchQuery.length < 2) {
+  // Initialize Leaflet map
+  useEffect(() => {
+    if (!open || !selectedLocation || leafletMap.current) return;
+
+    const initializeMap = async () => {
+      const L = await import("leaflet");
+      delete L.Icon.Default.prototype._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+        iconUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+        shadowUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      });
+
+      const mapInstance = L.map(mapRef.current).setView(
+        [selectedLocation.lat, selectedLocation.lon],
+        13
+      );
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(mapInstance);
+
+      markerRef.current = L.marker([
+        selectedLocation.lat,
+        selectedLocation.lon,
+      ]).addTo(mapInstance);
+      mapInstance.invalidateSize();
+
+      mapInstance.on("click", async (e) => {
+        setManualInput(false);
+        setShowSuggestions(false);
+        const { lat, lng } = e.latlng;
+        if (markerRef.current) mapInstance.removeLayer(markerRef.current);
+        markerRef.current = L.marker([lat, lng]).addTo(mapInstance);
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`
+          );
+          const data = await response.json();
+          const name =
+            data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+          setSelectedLocation({ lat, lon: lng, name });
+          setQuery(name);
+        } catch {
+          setSelectedLocation({
+            lat,
+            lon: lng,
+            name: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+          });
+        }
+      });
+
+      leafletMap.current = mapInstance;
+    };
+
+    setTimeout(initializeMap, 100);
+  }, [open, selectedLocation]);
+
+  // Search
+  useEffect(() => {
+    if (!query.trim() || !manualInput) {
       setSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
 
-    setIsSearching(true);
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          searchQuery
-        )}&limit=5&addressdetails=1&dedupe=1`
-      );
-      const data = await response.json();
-
-      const results = data.map((item) => ({
-        name: item.display_name,
-        lat: Number(item.lat),
-        lon: Number(item.lon),
-      }));
-
-      setSuggestions(results);
-    } catch (error) {
-      console.error("Error searching locations:", error);
-      setSuggestions([]);
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (query.trim()) {
-        searchLocations(query);
-      } else {
+    const timeout = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            query
+          )}&limit=5&addressdetails=1`
+        );
+        const data = await response.json();
+        const results = data.map((item) => ({
+          name: item.display_name,
+          lat: Number(item.lat),
+          lon: Number(item.lon),
+        }));
+        setSuggestions(results);
+        setShowSuggestions(true);
+      } catch {
         setSuggestions([]);
+        setShowSuggestions(false);
+      } finally {
+        setIsSearching(false);
       }
     }, 300);
 
-    return () => clearTimeout(timeoutId);
-  }, [query]);
+    return () => clearTimeout(timeout);
+  }, [query, manualInput]);
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
+    setManualInput(true);
+    if (e.target.value.trim() === "") {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
   };
 
   const handleSelect = (loc) => {
     setSelectedLocation(loc);
     setQuery(loc.name);
     setSuggestions([]);
-    setShowConfirm(false); // confirm only for current location
-  };
+    setShowSuggestions(false);
+    setManualInput(false);
 
-  const confirmSelection = () => {
-    if (selectedLocation) {
-      localStorage.setItem("user_location", JSON.stringify(selectedLocation));
-      setOpen(false);
+    if (leafletMap.current && markerRef.current) {
+      import("leaflet").then((L) => {
+        leafletMap.current.setView([loc.lat, loc.lon], 15);
+        leafletMap.current.removeLayer(markerRef.current);
+        markerRef.current = L.marker([loc.lat, loc.lon]).addTo(
+          leafletMap.current
+        );
+      });
     }
   };
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by this browser.");
+      setLocationError("Geolocation not supported.");
       return;
     }
-
     setIsGettingLocation(true);
     setLocationError("");
 
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
         try {
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
           );
           const data = await response.json();
-
-          const currentLoc = {
-            name: data.display_name || `Current Location`,
+          const name =
+            data.display_name ||
+            `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+          handleSelect({ lat: latitude, lon: longitude, name });
+        } catch {
+          handleSelect({
             lat: latitude,
             lon: longitude,
-          };
-
-          setSelectedLocation(currentLoc);
-          setQuery(currentLoc.name);
-          setSuggestions([]);
-          setShowConfirm(true); // only now show confirm
-        } catch (error) {
-          console.error("Error reverse geocoding:", error);
-          setLocationError("Could not determine location name.");
+            name: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`,
+          });
         } finally {
           setIsGettingLocation(false);
         }
       },
-      (error) => {
+      () => {
         setIsGettingLocation(false);
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            setLocationError("Location access denied by user.");
-            break;
-          case error.POSITION_UNAVAILABLE:
-            setLocationError("Location information is unavailable.");
-            break;
-          case error.TIMEOUT:
-            setLocationError("Location request timed out.");
-            break;
-          default:
-            setLocationError("An unknown error occurred.");
-            break;
-        }
+        setLocationError("Unable to retrieve your location");
       }
     );
+  };
+
+  const confirmSelection = () => {
+    if (!selectedLocation) return;
+    localStorage.setItem("user_location", JSON.stringify(selectedLocation));
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    if (selectedLocation) {
+      localStorage.setItem("user_location", JSON.stringify(selectedLocation));
+    } else {
+      localStorage.setItem("user_location", JSON.stringify(defaultLocation));
+    }
+    setOpen(false);
   };
 
   return (
@@ -166,120 +235,69 @@ export default function LocationPopup() {
       {open && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
       )}
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-lg z-50 bg-white text-gray-900 border border-gray-200 shadow-xl jost-text">
+      <Dialog open={open} onOpenChange={handleClose}>
+        <DialogContent
+          className="max-w-lg z-50 bg-white text-gray-900 border border-gray-200 shadow-xl jost-text"
+          onInteractOutside={(event) => event.preventDefault()}
+        >
           <DialogHeader className="pb-4">
             <DialogTitle className="text-gray-900 text-xl font-semibold">
               Select Your Location
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="relative w-full">
-              <Input
-                value={query}
-                onChange={handleInputChange}
-                placeholder="Search for your location"
-                className="w-full bg-white text-gray-900 placeholder:text-gray-500 border-gray-300 focus:border-primary focus:ring-primary"
-              />
-              {isSearching && (
-                <div className="absolute bg-white border border-gray-200 w-full mt-1 rounded shadow-lg z-10 p-3 text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Searching locations...
-                  </div>
-                </div>
-              )}
-              {!isSearching && suggestions.length > 0 && (
-                <ul className="absolute bg-white border border-gray-200 w-full mt-1 rounded shadow-lg z-[1000] max-h-48 overflow-y-auto">
-                  {suggestions.map((loc, index) => (
-                    <li
-                      key={index}
-                      className="p-3 cursor-pointer hover:bg-primary/10 text-sm border-b border-gray-100 last:border-b-0 text-gray-900 transition-colors flex items-center gap-2"
-                      onClick={() => handleSelect(loc)}
-                    >
-                      <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
-                      <span className="truncate">{loc.name}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {locationError && (
-              <div className="text-sm text-red-800 bg-red-50 p-3 rounded-md border border-red-200 flex items-center gap-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
-                {locationError}
-              </div>
-            )}
-
-            {selectedLocation && (
-              <div className="bg-primary/10 border border-primary rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-4 w-4 text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-primary mb-1">
-                      Selected Location
-                    </p>
-                    <p className="text-sm text-primary break-words">
-                      {selectedLocation.name}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="w-full h-[280px] border-2 border-gray-200 rounded-xl overflow-hidden bg-gray-100 shadow-inner">
-            <iframe
-              src={`https://www.openstreetmap.org/export/embed.html?bbox=${
-                (selectedLocation?.lon || defaultLocation.lon) - 0.01
-              },${(selectedLocation?.lat || defaultLocation.lat) - 0.01},${
-                (selectedLocation?.lon || defaultLocation.lon) + 0.01
-              },${
-                (selectedLocation?.lat || defaultLocation.lat) + 0.01
-              }&layer=mapnik&marker=${
-                selectedLocation?.lat || defaultLocation.lat
-              },${selectedLocation?.lon || defaultLocation.lon}`}
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              title="Location Map"
+          <div className="relative mb-3 z-[1000]">
+            <Input
+              value={query}
+              onChange={handleInputChange}
+              placeholder="Search for your location"
             />
-          </div>
-
-          <div className="flex flex-col gap-3 pt-2">
-            <Button
-              onClick={getCurrentLocation}
-              disabled={isGettingLocation}
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2 bg-white hover:bg-primary/10 text-primary border-2 border-primary transition-all duration-200 py-3 font-medium"
-            >
-              {isGettingLocation ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                  <span className="text-primary">Getting your location...</span>
-                </>
-              ) : (
-                <>
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <span className="text-primary">Use my current location</span>
-                </>
-              )}
-            </Button>
-
-            {showConfirm && (
-              <Button
-                onClick={confirmSelection}
-                className="w-full bg-primary hover:bg-primary text-white font-semibold py-3 transition-all duration-200 shadow-lg hover:shadow-xl disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none"
-              >
-                Confirm Location
-              </Button>
+            {isSearching && (
+              <div className="absolute top-full left-0 right-0 bg-white border p-2 text-sm text-gray-600 z-50 shadow-md rounded-b">
+                Searching...
+              </div>
+            )}
+            {!isSearching && showSuggestions && suggestions.length > 0 && (
+              <ul className="absolute top-full left-0 right-0 bg-white border z-50 max-h-60 overflow-y-auto shadow-md rounded-b">
+                {suggestions.map((loc, idx) => (
+                  <li
+                    key={idx}
+                    className="p-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSelect(loc)}
+                  >
+                    {loc.name}
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
+
+          <div
+            ref={mapRef}
+            className="w-full h-[250px] border rounded-xl mb-3 z-0"
+          />
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          />
+
+          <Button
+            onClick={getCurrentLocation}
+            disabled={isGettingLocation}
+            variant="outline"
+            className="w-full mb-3 flex items-center justify-center gap-2"
+          >
+            <LocateFixed className="w-5 h-5" />
+            {isGettingLocation ? "Getting Location..." : "Use My Location"}
+          </Button>
+
+          {/* Always show confirm */}
+          <Button
+            onClick={confirmSelection}
+            className="w-full bg-primary text-white"
+          >
+            Confirm Location
+          </Button>
         </DialogContent>
       </Dialog>
     </>
