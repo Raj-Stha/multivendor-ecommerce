@@ -107,16 +107,16 @@ export default function AdminDashboardList({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header with Date Filter */}
-      <header className="border-b border-slate-200/60 bg-white/80 backdrop-blur-md shadow-sm">
+      <header className="border-b sticky z-30 top-0 border-slate-200/60 bg-white/80 backdrop-blur-md shadow-sm">
         <div className="container mx-auto px-6 ">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="sm:flex items-baseline justify-between">
+            <div className="flex items-baseline gap-4">
               <SidebarTrigger />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
                 Admin Dashboard
               </h1>
             </div>
-            <div className="flex items-center gap-4 bg-white/90 p-5 rounded-xl border border-slate-200/60 backdrop-blur-sm">
+            <div className="sm:flex items-ends gap-4 bg-white/90 space-y-4 sm-space-y-2 py-5 sm:pt-5 sm:pb-1 rounded-xl border border-slate-200/60 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <CalendarIcon className="h-5 w-5 text-blue-600" />
                 <Label htmlFor="date-from">From:</Label>
@@ -136,7 +136,12 @@ export default function AdminDashboardList({
                   onChange={(e) => setDateTo(e.target.value)}
                 />
               </div>
-              <Button onClick={handleDateFilter}>Apply Filter</Button>
+              <Button
+                onClick={handleDateFilter}
+                className="w-full sm:w-auto flex justify-center  sm:block  "
+              >
+                Apply Filter
+              </Button>
             </div>
           </div>
         </div>
