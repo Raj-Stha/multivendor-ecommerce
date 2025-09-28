@@ -38,7 +38,7 @@ export default function ParameterList({ data, meta, page, setPage }) {
                     <div className="font-mono text-sm">{d.parameter_value}</div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm text-muted-foreground max-w-md">
+                    <div className="text-sm text-muted-foreground break-all">
                       {d.parameter_description}
                     </div>
                   </TableCell>
