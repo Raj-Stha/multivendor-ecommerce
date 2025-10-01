@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LocateFixed } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useUser } from "@/app/(home)/_context/UserContext";
 
 const defaultLocation = {
   name: "New York",
@@ -28,6 +29,7 @@ function getLocalStorageLocation() {
 }
 
 export default function LocationPopup({ status = false }) {
+  const { user, getUser } = useUser();
   const [open, setOpen] = useState(status);
   const [query, setQuery] = useState("");
   const [manualInput, setManualInput] = useState(false);
@@ -46,14 +48,39 @@ export default function LocationPopup({ status = false }) {
     setOpen(status);
   }, [status]);
 
-  // Load stored location or default
   useEffect(() => {
     const storedLocation = getLocalStorageLocation();
-    const initialLocation = storedLocation || defaultLocation;
-    setSelectedLocation(initialLocation);
-    setQuery(initialLocation.name);
-    if (!storedLocation) setOpen(true);
-  }, []);
+    if (storedLocation) {
+      setSelectedLocation(storedLocation);
+      setQuery(storedLocation.name);
+      setOpen(false);
+      return;
+    }
+
+    if (user === null) return;
+
+    if (user.length > 0) {
+      const shippingAddress =
+        user[0].user_details.shipping_address ||
+        user[0].user_details.billing_address ||
+        "Nepal";
+
+      const [lat, lon] = user[0].delivery_location
+        .replace(/[()]/g, "")
+        .split(",")
+        .map(Number);
+
+      const apiLocation = { name: shippingAddress, lat, lon };
+      setSelectedLocation(apiLocation);
+      setQuery(apiLocation.name);
+      setOpen(true);
+      return;
+    }
+
+    setSelectedLocation(defaultLocation);
+    setQuery(defaultLocation.name);
+    setOpen(true);
+  }, [user]);
 
   // Initialize Leaflet map
   useEffect(() => {

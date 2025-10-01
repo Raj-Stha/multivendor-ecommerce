@@ -34,7 +34,6 @@ export const UserProvider = ({ children }) => {
       }
 
       const data = await res.json();
-      console.log("Fetched user:", data);
       setUser(data.details || null);
     } catch (err) {
       console.error("Error loading user:", err);
@@ -58,7 +57,6 @@ export const UserProvider = ({ children }) => {
       }
 
       const data = await res.json();
-      console.log("Logout response:", data);
 
       setUser(null); // clear user state
       getUser();
