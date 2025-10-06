@@ -5,6 +5,7 @@ import ProductGrid from "./_components/product-grid-section";
 import LocationPopup from "@/components/LocationPopup";
 import ProductSlider from "./_components/product-slider";
 import ProductGrid2 from "./_components/product-grid-2";
+import { FeaturesBar } from "./_components/features-bar";
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -87,6 +88,7 @@ export default async function Home() {
       <ProductSlider products={productData?.details} />
       <ProductGrid2 initialProducts={category21?.details} />
       {/* <ProductGrid initialProducts={productData2?.details} baseurl={baseurl} /> */}
+      <FeaturesBar />
     </div>
   );
 }
