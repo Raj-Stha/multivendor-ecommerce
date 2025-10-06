@@ -44,7 +44,7 @@ export default function MobileBottomNav() {
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg sm:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg sm:hidden jost-text">
       <nav className="flex h-16 items-center justify-around px-2 relative">
         {mobileNavItems.map((item) => {
           const isActive = pathname === item.href;
@@ -54,7 +54,7 @@ export default function MobileBottomNav() {
           return (
             <div
               key={item.name}
-              className="relative source-serif-text"
+              className="relative "
               onMouseEnter={() => isAccount && setShowAccountDropdown(true)}
               onMouseLeave={() => isAccount && setShowAccountDropdown(false)}
             >
@@ -85,7 +85,7 @@ export default function MobileBottomNav() {
                       >
                         <Link
                           href={subItem.href}
-                          className="cursor-pointer source-serif-text"
+                          className="cursor-pointer "
                         >
                           {subItem.name}
                         </Link>
