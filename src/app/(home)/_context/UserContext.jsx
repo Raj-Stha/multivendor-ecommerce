@@ -16,6 +16,14 @@ export const UserProvider = ({ children }) => {
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
+  // Update localStorage whenever user state changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isLogged = user && (Array.isArray(user) ? user.length > 0 : true);
+      localStorage.setItem("userLogged", isLogged ? "true" : "false");
+    }
+  }, [user]);
+
   const getUser = useCallback(async () => {
     try {
       const url = `${baseUrl}/getuserdetails`;
@@ -34,7 +42,14 @@ export const UserProvider = ({ children }) => {
       }
 
       const data = await res.json();
-      setUser(data.details || null);
+
+      let userDetails = null;
+      if (Array.isArray(data.details) && data.details.length > 0) {
+        userDetails = data.details[0]; // first user object
+      } else if (data.details && typeof data.details === "object") {
+        userDetails = data.details; // direct object
+      }
+      setUser(data.details);
     } catch (err) {
       console.error("Error loading user:", err);
       setUser(null);
