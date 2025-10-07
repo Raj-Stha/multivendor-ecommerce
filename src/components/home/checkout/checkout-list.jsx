@@ -30,24 +30,45 @@ const guestSchema = z.object({
   useremail: z.string().email("Invalid email address"),
 });
 
+// ✅ Helper to read cookie value
+const getCookie = (name) => {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? match[2] : null;
+};
+
 export function CheckoutList() {
   const router = useRouter();
   const { cart, getCart } = useCart();
   const { user, getUser } = useUser();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [locationCoordinates, setLocationCoordinates] = useState({
     lat: "",
     lon: "",
     name: "",
   });
 
-  // Fetch cart & user
+  const form = useForm({
+    resolver: zodResolver(guestSchema),
+    defaultValues: { user_login_name: "", useremail: "" },
+  });
+
+  // ✅ On mount, check cookie & fetch accordingly
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
       await getCart();
-      await getUser();
+
+      const cookieValue = getCookie("userLogged");
+      const loggedIn = cookieValue === "true";
+      setIsLoggedIn(loggedIn);
+
+      if (loggedIn) {
+        await getUser();
+      }
+
       setIsLoading(false);
     };
     loadData();
@@ -76,24 +97,18 @@ export function CheckoutList() {
   const handleLocationSelect = (lat, lon, name) => {
     const loc = { lat, lon, name };
     setLocationCoordinates(loc);
-    if (!user) localStorage.setItem("user_location", JSON.stringify(loc));
+    if (!isLoggedIn) localStorage.setItem("user_location", JSON.stringify(loc));
   };
-
-  // Guest form
-  const form = useForm({
-    resolver: zodResolver(guestSchema),
-    defaultValues: { user_login_name: "", useremail: "" },
-  });
 
   // Complete order
   const handleCompleteOrder = async () => {
     setIsLoading(true);
     try {
-      const payload = user
+      const payload = isLoggedIn
         ? {
-            user_login_name: user[0]?.user_login_name, // ignored for logged-in
-            user_email: user[0]?.user_email,
-            delivery_location: locationCoordinates.name, // ignored for logged-in
+            user_login_name: user?.[0]?.user_login_name,
+            user_email: user?.[0]?.user_email,
+            delivery_location: locationCoordinates.name,
           }
         : {
             user_login_name: form.getValues("user_login_name"),
@@ -129,6 +144,7 @@ export function CheckoutList() {
         <p>Loading...</p>
       </div>
     );
+
   if (cart.length === 0) return null;
 
   return (
@@ -144,7 +160,7 @@ export function CheckoutList() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {user ? (
+              {isLoggedIn && user ? (
                 <div className="space-y-2">
                   <div>
                     <Label>Username</Label>
