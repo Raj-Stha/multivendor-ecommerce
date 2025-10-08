@@ -28,7 +28,7 @@ function getLocalStorageLocation() {
   }
 }
 
-export default function LocationPopup({ status = false }) {
+export default function LocationPopup({ status = false, onClose }) {
   const { user, getUser } = useUser();
   const [open, setOpen] = useState(status);
   const [query, setQuery] = useState("");
@@ -45,15 +45,11 @@ export default function LocationPopup({ status = false }) {
   const markerRef = useRef(null);
 
   useEffect(() => {
-    setOpen(status);
-  }, [status]);
-
-  useEffect(() => {
     const storedLocation = getLocalStorageLocation();
     if (storedLocation) {
       setSelectedLocation(storedLocation);
       setQuery(storedLocation.name);
-      setOpen(false);
+      // setOpen(false);
       return;
     }
 
@@ -279,6 +275,7 @@ export default function LocationPopup({ status = false }) {
     }
 
     setOpen(false);
+    if (onClose) onClose();
   };
 
   const handleClose = () => {
@@ -288,6 +285,7 @@ export default function LocationPopup({ status = false }) {
       localStorage.setItem("user_location", JSON.stringify(defaultLocation));
     }
     setOpen(false);
+    if (onClose) onClose();
   };
 
   return (
