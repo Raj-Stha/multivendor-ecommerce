@@ -21,7 +21,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LocationPicker from "@/lib/locationpicker";
 import { OrderSummary } from "./order-summary";
 
 // Guest validation schema
@@ -67,6 +66,10 @@ export function CheckoutList() {
 
       if (loggedIn) {
         await getUser();
+      } else {
+        // For guests, read location from localStorage
+        const stored = localStorage.getItem("user_location");
+        if (stored) setLocationCoordinates(JSON.parse(stored));
       }
 
       setIsLoading(false);
@@ -79,26 +82,15 @@ export function CheckoutList() {
     if (!isLoading && cart.length === 0) router.push("/cart");
   }, [isLoading, cart, router]);
 
-  // Set initial location
+  // Set initial location for logged in user
   useEffect(() => {
     if (user && user[0]?.delivery_location) {
-      setLocationCoordinates({
-        lat: "",
-        lon: "",
+      setLocationCoordinates((prev) => ({
+        ...prev,
         name: user[0].delivery_location,
-      });
-    } else {
-      const stored = localStorage.getItem("user_location");
-      if (stored) setLocationCoordinates(JSON.parse(stored));
+      }));
     }
   }, [user]);
-
-  // Guest location select
-  const handleLocationSelect = (lat, lon, name) => {
-    const loc = { lat, lon, name };
-    setLocationCoordinates(loc);
-    if (!isLoggedIn) localStorage.setItem("user_location", JSON.stringify(loc));
-  };
 
   // Complete order
   const handleCompleteOrder = async () => {
@@ -113,7 +105,7 @@ export function CheckoutList() {
         : {
             user_login_name: form.getValues("user_login_name"),
             user_email: form.getValues("useremail"),
-            delivery_location: `(${locationCoordinates.lat},${locationCoordinates.lon})`,
+            delivery_location: locationCoordinates.name,
           };
 
       const res = await fetch(
@@ -207,15 +199,12 @@ export function CheckoutList() {
                       </FormItem>
                     )}
                   />
-                  <div className="space-y-4">
-                    <Label>Select Delivery Location</Label>
-                    <LocationPicker
-                      onLocationSelect={handleLocationSelect}
-                      initialLocation={
-                        locationCoordinates.lat && locationCoordinates.lon
-                          ? `(${locationCoordinates.lat},${locationCoordinates.lon})`
-                          : "(26.6522709,87.8886493)"
-                      }
+                  <div>
+                    <Label>Delivery Location</Label>
+                    <Input
+                      value={locationCoordinates.name || ""}
+                      readOnly
+                      placeholder="Location not set"
                     />
                   </div>
                 </>
