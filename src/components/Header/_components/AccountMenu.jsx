@@ -1,23 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import {
-  ChevronDown,
-  User,
-  LogOut,
-  LogIn,
-  Mail,
-  Info,
-  FileText,
-  ShieldCheck,
-  MessageSquarePlus,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronDown, User, LogOut, LogIn } from "lucide-react";
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
+import { useUser } from "@/app/(home)/_context/UserContext";
 
-// Config array for dropdown items
 const accountMenuItems = [
   {
     id: "login",
@@ -27,9 +16,16 @@ const accountMenuItems = [
     guestOnly: true,
   },
   {
+    id: "register",
+    label: "Register",
+    href: "/auth/register",
+    icon: LogIn,
+    guestOnly: true,
+  },
+  {
     id: "profile",
     label: "My Profile",
-    href: "/dashboard/user/profile",
+    href: "/dashboard/user",
     icon: User,
     authOnly: true,
   },
@@ -40,103 +36,71 @@ const accountMenuItems = [
     action: "logout",
     authOnly: true,
   },
-  {
-    id: "contact",
-    label: "Contact Us",
-    href: "/contact",
-    icon: Mail,
-  },
-  {
-    id: "about",
-    label: "About Us",
-    href: "/about",
-    icon: Info,
-  },
-  {
-    id: "terms",
-    label: "Terms & Conditions",
-    href: "/terms",
-    icon: FileText,
-  },
-  {
-    id: "policies",
-    label: "Policies",
-    href: "/policies",
-    icon: ShieldCheck,
-  },
-  {
-    id: "feedback",
-    label: "Feedback",
-    href: "/feedback",
-    icon: MessageSquarePlus,
-  },
 ];
 
 export default function AccountMenu() {
-  const { data: session } = useSession();
+  const { user, logoutUser } = useUser();
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
 
-  const handleLogout = () => {
-    toast.success("Logged out successfully");
-    signOut({ callbackUrl: "/" });
+  // ✅ Read cookie
+  const getCookie = (name) => {
+    if (typeof document === "undefined") return null;
+    const match = document.cookie.match(
+      new RegExp("(^| )" + name + "=([^;]+)")
+    );
+    return match ? match[2] : null;
+  };
+
+  // ✅ Watch for context or cookie
+  useEffect(() => {
+    const cookieLoggedIn = getCookie("userLogged") === "true";
+    const contextLoggedIn =
+      !!user && (Array.isArray(user) ? user.length > 0 : true);
+
+    setIsLogged(cookieLoggedIn || contextLoggedIn);
+  }, [user]);
+
+  const handleLogout = async () => {
+    const success = await logoutUser();
+    if (success) {
+      toast.success("Logged out successfully");
+      setIsLogged(false);
+      window.location.href = "/"; // redirect to homepage
+    } else {
+      toast.error("Logout failed. Try again.");
+    }
   };
 
   return (
     <div
-      className="flex items-center cursor-pointer relative   nunito-text"
+      className="flex items-center cursor-pointer relative nunito-text"
       onMouseEnter={() => setAccountMenuOpen(true)}
       onMouseLeave={() => setAccountMenuOpen(false)}
     >
-      <div className="text-xs mr-1">
-        <div className="flex lg:gap-3 items-center">
-          {/* {session?.user?.image ? (
-            <div className="h-7 w-7 rounded-full overflow-hidden">
-              <Image
-                src={session.user.image}
-                alt={session.user.name || "User"}
-                width={28}
-                height={28}
-                className="object-cover"
-              />
-            </div>
-          ) : (
-            <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-medium">
-              {session?.user?.name ? (
-                session.user.name.charAt(0).toUpperCase()
-              ) : (
-                <User className="h-5 w-5" />
-              )}
-            </div>
-          )} */}
-          <div>
-            {/* {session?.user ? (
-              <span className="hidden md:block text-gray-500">
-                Hi, {firstName}
-              </span>
-            ) : (
-              <span className="hidden md:block text-gray-500">Hello User</span>
-            )} */}
-            <div className="flex items-center">
-              <span
-                className={` font-medium  transition-colors ${
-                  accountMenuOpen
-                    ? "text-primary text-sm"
-                    : "hover:text-primary text-sm"
-                }`}
-              >
-                My Account
-              </span>
-              <ChevronDown
-                className={`h-3 w-3 ml-1 transition-colors ${
-                  accountMenuOpen ? "text-primary" : "hover:text-primary"
-                }`}
-              />
-            </div>
+      <div className="flex items-center">
+        {isLogged && user?.avatar ? (
+          <div className="h-7 w-7 rounded-full overflow-hidden">
+            <Image
+              src={user.avatar}
+              alt={user.name || "User"}
+              width={28}
+              height={28}
+              className="object-cover"
+            />
           </div>
-        </div>
+        ) : (
+          <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-medium">
+            <User className="h-5 w-5" />
+          </div>
+        )}
+        <ChevronDown
+          className={`h-3 w-3 ml-1 transition-colors ${
+            accountMenuOpen ? "text-primary" : "hover:text-primary"
+          }`}
+        />
       </div>
 
-      {/* Dropdown Menu */}
       <div
         className={`absolute top-full right-0 lg:left-[-64px] mt-2 w-48 bg-white shadow-lg rounded-none border border-gray-100 transition-all duration-200 transform z-50 origin-top-right text-sm text-gray-600 ${
           accountMenuOpen
@@ -146,8 +110,8 @@ export default function AccountMenu() {
       >
         <div>
           {accountMenuItems.map((item) => {
-            if (item.authOnly && !session) return null;
-            if (item.guestOnly && session) return null;
+            if (item.authOnly && !isLogged) return null;
+            if (item.guestOnly && isLogged) return null;
 
             const Icon = item.icon;
 

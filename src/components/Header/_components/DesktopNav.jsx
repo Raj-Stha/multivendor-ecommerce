@@ -4,6 +4,7 @@ import Link from "next/link";
 import SearchBar from "./SearchBar";
 import CartIcon from "./CartIcon";
 import NotificationIcon from "./NotificationIcon";
+import AccountMenu from "./AccountMenu";
 
 export default function DesktopNav() {
   return (
@@ -29,6 +30,7 @@ export default function DesktopNav() {
         <div className="flex items-center space-x-5 flex-shrink-0">
           <CartIcon />
           <NotificationIcon />
+          <AccountMenu />
         </div>
       </div>
     </nav>

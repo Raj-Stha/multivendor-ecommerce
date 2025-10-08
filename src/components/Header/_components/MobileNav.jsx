@@ -30,8 +30,9 @@ export default function MobileNav() {
 
         <div className="flex gap-4">
           <CartIcon />
-          <div className="hidden sm:block">
+          <div className="hidden  sm:flex gap-4">
             <NotificationIcon />
+            <AccountMenu />
           </div>
         </div>
       </div>
