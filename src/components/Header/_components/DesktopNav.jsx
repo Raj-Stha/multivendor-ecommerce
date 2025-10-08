@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import LocationPopup from "../../LocationPopup";
 import { MapPin } from "lucide-react";
 
-
 export default function DesktopNav() {
   const [showPopup, setShowPopup] = useState(false);
   const [locationName, setLocationName] = useState("");
