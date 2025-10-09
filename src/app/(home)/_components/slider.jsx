@@ -98,8 +98,6 @@
 //   );
 // }
 
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -181,10 +179,8 @@ export default function Hero({ banners = [] }) {
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60 z-[1]" />
 
       {/* 🔹 Text Content with Frosted Background */}
-      <div className="relative z-[2] container mx-auto px-6 h-[90vh] flex items-center">
-        <div
-          className="max-w-2xl text-white space-y-5  "
-        >
+      <div className="relative z-[2] container mx-auto   px-[3%] xl:px-[5%] h-[90vh] flex items-center">
+        <div className="max-w-2xl text-white bg-black/40 rounded-xl px-5 py-5 xl:px-10 xl:py-10 space-y-6  ">
           <AnimatePresence mode="wait">
             <motion.div
               key={`text-${activeSlide}`}
@@ -196,7 +192,7 @@ export default function Hero({ banners = [] }) {
                 <motion.h4
                   variants={textVariants}
                   custom={0}
-                  className="text-sm sm:text-lg md:text-xl tracking-widest text-primary font-semibold uppercase mb-2"
+                  className="text-sm sm:text-lg  tracking-widest  font-semibold uppercase mb-2"
                 >
                   {currentSlide.primaryTitle}
                 </motion.h4>
@@ -228,10 +224,11 @@ export default function Hero({ banners = [] }) {
                       <Link
                         key={index}
                         href={btn.link || "#"}
-                        className={`px-5 !py-4 text-sm  sm:text-base shadow-md transition-transform hover:translate-y-[-3px] ${index === 0
-                          ? "bg-primary hover:bg-primary/90 text-white"
-                          : "bg-white text-primary hover:text-white border border-primary hover:bg-primary"
-                          }`}
+                        className={`px-5 !py-4 text-sm  sm:text-base shadow-md rounded-sm transition-transform hover:translate-y-[-3px] ${
+                          index === 0
+                            ? "bg-primary hover:bg-primary/90 text-white"
+                            : "bg-white text-primary hover:text-white border border-secondary hover:bg-secondary"
+                        }`}
                       >
                         {btn.text}
                       </Link>
@@ -249,10 +246,11 @@ export default function Hero({ banners = [] }) {
           <button
             key={index}
             onClick={() => handleSlideChange(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${activeSlide === index
-              ? "bg-primary scale-125"
-              : "bg-white/70 hover:bg-white/90"
-              }`}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              activeSlide === index
+                ? "bg-primary scale-125"
+                : "bg-white/70 hover:bg-white/90"
+            }`}
           />
         ))}
       </div>
@@ -264,14 +262,14 @@ export default function Hero({ banners = [] }) {
             activeSlide === 0 ? banners.length - 1 : activeSlide - 1
           )
         }
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
+        className="absolute left-5 xl:left-15 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
       >
         <ChevronLeft className="h-6 w-6" />
       </button>
 
       <button
         onClick={() => handleSlideChange((activeSlide + 1) % banners.length)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
+        className="absolute right-5 xl:right-15 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
       >
         <ChevronRight className="h-6 w-6" />
       </button>
