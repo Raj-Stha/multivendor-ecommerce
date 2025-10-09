@@ -159,7 +159,7 @@ export default function ImprovedSearchBar({
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-sm shadow-lg z-50 max-h-96 overflow-hidden">
           {error ? (
             <div className="p-4 text-center">
               <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-2" />
