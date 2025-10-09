@@ -137,7 +137,7 @@ export default function ImprovedSearchBar({
 
   return (
     <div ref={searchRef} className={`relative w-full ${className}`}>
-      <div className="relative flex w-full sm:min-w-[350px] sm:max-w-[5500px] sm:mx-auto  overflow-hidden   rounded-none  bg-white text-black noto-sans-text">
+      <div className="relative flex w-full sm:min-w-[350px] sm:max-w-[5500px] sm:mx-auto  overflow-hidden   rounded-sm  bg-primary/5 text-black noto-sans-text">
         <input
           ref={inputRef}
           type="text"
@@ -145,13 +145,13 @@ export default function ImprovedSearchBar({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="flex-1 px-4 py-2 text-sm focus:outline-none transition-all duration-200"
+          className="flex-1 px-4 py-2 text-sm focus:outline-none transition-all text-black duration-200"
           autoComplete="off"
         />
 
         <button
           onClick={handleSearchButtonClick}
-          className="bg-secondary  text-white px-5  h-auto flex cursor-pointer  justify-center items-center  hover:bg-secondary/90 transition-colors"
+          className="bg-primary  text-white px-5  h-auto flex cursor-pointer  justify-center items-center  hover:bg-secondary/90 transition-colors"
           aria-label="Search"
         >
           <Search className="h-5 w-5" />

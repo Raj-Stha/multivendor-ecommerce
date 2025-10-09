@@ -49,11 +49,10 @@ export default function MobileNavSheet() {
     <Sheet open={open} onOpenChange={setOpen}>
       {/* White Menu Button */}
       <SheetTrigger asChild>
-        <button className="flex items-center justify-center cursor-pointer">
+        <button className="flex items-center text-primary justify-center cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            fill="white"
-            className="text-white"
+            fill="#1455ac"
             viewBox="0 0 120 60"
             width="26"
             height="26"
@@ -70,7 +69,7 @@ export default function MobileNavSheet() {
         className="p-0 w-full max-w-[70%] sm:max-w-md flex flex-col h-full overflow-hidden jost-text"
       >
         {/* Header */}
-        <SheetHeader className="bg-primary border-b p-4 flex flex-row items-center justify-between shrink-0">
+        <SheetHeader className="bg-white border-b p-4 flex flex-row items-center justify-between shrink-0">
           <div className="flex justify-between ">
             <Link href="/" className="transition-opacity hover:opacity-80">
               {/* <img
@@ -78,7 +77,7 @@ export default function MobileNavSheet() {
                 alt="KinMel Mandu Logo"
                 className="h-9 w-auto"
               /> */}
-              <h1 className="text-white font-semibold shadow-2xl text-2xl">
+              <h1 className="text-primary font-semibold shadow-2xl text-2xl">
                 E-COM
               </h1>
             </Link>

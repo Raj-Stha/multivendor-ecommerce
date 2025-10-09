@@ -74,7 +74,7 @@ export default function AccountMenu() {
 
   return (
     <div
-      className="flex items-center cursor-pointer relative nunito-text"
+      className="flex items-center group cursor-pointer relative nunito-text"
       onMouseEnter={() => setAccountMenuOpen(true)}
       onMouseLeave={() => setAccountMenuOpen(false)}
     >
@@ -90,7 +90,7 @@ export default function AccountMenu() {
             />
           </div>
         ) : (
-          <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-medium">
+          <div className="h-6 w-6 group-hover:bg-secondary rounded-full bg-primary flex items-center justify-center text-white text-xs font-medium">
             <User className="h-5 w-5" />
           </div>
         )}
@@ -120,7 +120,7 @@ export default function AccountMenu() {
                 <button
                   key={item.id}
                   onClick={handleLogout}
-                  className="flex items-center px-4 py-2 w-full text-left hover:bg-secondary hover:text-white transition-colors"
+                  className="flex items-center px-4 py-2 w-full text-left hover:bg-primary hover:text-white transition-colors"
                 >
                   <Icon className="w-5 h-5 mr-3" />
                   <span>{item.label}</span>
@@ -132,7 +132,7 @@ export default function AccountMenu() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="flex items-center px-4 py-2 hover:bg-secondary hover:text-white transition-colors"
+                className="flex items-center px-4 py-2 hover:bg-primary hover:text-white cursor-pointer transition-colors"
               >
                 <Icon className="w-5 h-5 mr-3" />
                 <span>{item.label}</span>
