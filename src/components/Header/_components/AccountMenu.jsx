@@ -95,14 +95,14 @@ export default function AccountMenu() {
           </div>
         )}
         <ChevronDown
-          className={`h-3 w-3 ml-1 transition-colors ${
-            accountMenuOpen ? "text-primary" : "hover:text-primary"
+          className={`h-4  w-4 ml-1 text-white transition-colors ${
+            accountMenuOpen ? "text-white" : "hover:text-white"
           }`}
         />
       </div>
 
       <div
-        className={`absolute top-full right-0 lg:left-[-64px] mt-2 w-48 bg-white shadow-lg rounded-none border border-gray-100 transition-all duration-200 transform z-50 origin-top-right text-sm text-gray-600 ${
+        className={`absolute top-full right-0 lg:left-[-64px] mt-5 w-48 bg-white shadow-lg rounded-sm border-none  transition-all duration-200 transform z-50 origin-top-right text-sm text-gray-600 ${
           accountMenuOpen
             ? "opacity-100 visible translate-y-0"
             : "opacity-0 invisible -translate-y-2"
@@ -120,7 +120,7 @@ export default function AccountMenu() {
                 <button
                   key={item.id}
                   onClick={handleLogout}
-                  className="flex items-center px-4 py-2 w-full text-left hover:bg-primary hover:text-white transition-colors"
+                  className="flex items-center px-4 py-2 w-full text-left hover:bg-secondary hover:text-white transition-colors"
                 >
                   <Icon className="w-5 h-5 mr-3" />
                   <span>{item.label}</span>
@@ -132,7 +132,7 @@ export default function AccountMenu() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="flex items-center px-4 py-2 hover:bg-primary hover:text-white transition-colors"
+                className="flex items-center px-4 py-2 hover:bg-secondary hover:text-white transition-colors"
               >
                 <Icon className="w-5 h-5 mr-3" />
                 <span>{item.label}</span>
