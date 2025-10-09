@@ -7,6 +7,7 @@ import { useUser } from "@/app/(home)/_context/UserContext";
 export default function UserDetails({
   userInfo,
   userLoginName,
+  userEmail,          // <-- added
   deliveryLocation,
 }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -94,6 +95,11 @@ export default function UserDetails({
         <div className="flex justify-between">
           <span className="font-semibold">Login Name:</span>
           <span>{userLoginName}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="font-semibold">Email:</span>
+          <span>{userEmail}</span> {/* <-- email displayed, not editable */}
         </div>
 
         {userFields.map((field) => (
