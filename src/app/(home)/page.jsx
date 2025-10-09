@@ -68,45 +68,55 @@ export default async function Home() {
   const banners = [
     {
       id: "1",
-      primaryTitle: "WELCOME TO DARAZ",
-      title: "You Name It, We Make It",
+      primaryTitle: "Shop Freely",
+      title: "Redefine Your Style",
+      description:
+        "<h3>Discover trendy designs and premium collections crafted for modern elegance and comfort.</h3>",
+      image: "/banner/banner-1.jpg",
+      buttons: [
+        { text: "Explore Collection", link: "/collection" },
+        { text: "Order Product", link: "/order" },
+      ],
+    },
+
+    {
+      id: "2",
+      primaryTitle: "WELCOME TO Ecom",
+      title: "Your Choice, Our Store",
       description:
         "<h3>We believe in turning imagination into innovation. Whether it's fashion, lifestyle, or custom solutions — we bring your vision to life.</h3>",
-      image:
-        "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=1880",
+      image: "/banner/banner-2.jpg",
       buttons: [
         { text: "Shop Now", link: "/shop" },
         { text: "Order Product", link: "/order" },
       ],
     },
     {
-      id: "2",
-      primaryTitle: "WELCOME TO DARAZ",
-      title: "Redefine Your Style",
-      description:
-        "<h3>Discover trendy designs and premium collections crafted for modern elegance and comfort.</h3>",
-      image:
-        "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1880",
-      buttons: [
-        { text: "Explore Collection", link: "/collection" },
-        { text: "Order Product", link: "/order" },
-      ],
-    },
-    {
       id: "3",
-      primaryTitle: "WELCOME TO DARAZ",
+      primaryTitle: "WELCOME TO Our Store",
       title: "Luxury Meets Comfort",
       description:
         "<h3>Experience timeless beauty with our carefully curated fashion pieces.</h3>",
-      image:
-        "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=1880",
+      image: "/banner/banner-3.jpg",
       buttons: [
         { text: "Discover Now", link: "/discover" },
         { text: "Order Product", link: "/order" },
       ],
     },
-  ];
 
+    {
+      id: "4",
+      primaryTitle: "Shop Now",
+      title: "Redefine Your Style",
+      description:
+        "<h3>Discover trendy designs and premium collections crafted for modern elegance and comfort.</h3>",
+      image: "/banner/banner-4.jpg",
+      buttons: [
+        { text: "Explore Collection", link: "/collection" },
+        { text: "Order Product", link: "/order" },
+      ],
+    },
+  ];
 
   return (
     <div className="bg-[#f5f5f5]">
