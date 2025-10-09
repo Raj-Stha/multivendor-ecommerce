@@ -73,11 +73,14 @@ export default function MobileNavSheet() {
         <SheetHeader className="bg-primary border-b p-4 flex flex-row items-center justify-between shrink-0">
           <div className="flex justify-between ">
             <Link href="/" className="transition-opacity hover:opacity-80">
-              <img
+              {/* <img
                 src="/logo/logo.png?height=24&width=auto"
                 alt="KinMel Mandu Logo"
                 className="h-9 w-auto"
-              />
+              /> */}
+              <h1 className="text-white font-semibold shadow-2xl text-2xl">
+                E-COM
+              </h1>
             </Link>
           </div>
         </SheetHeader>

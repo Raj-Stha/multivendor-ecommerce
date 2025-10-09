@@ -10,17 +10,20 @@ import NotificationIcon from "./NotificationIcon";
 
 export default function MobileNav() {
   return (
-    <div className="px-4 py-2 flex flex-col gap-2 jost-text bg-primary">
+    <div className="px-4 py-4 flex flex-col gap-2 jost-text bg-primary">
       <div className="flex justify-between items-center">
         <MobileNavSheet />
         <div className="flex gap-4">
           <Link href="/" className="transition-opacity hover:opacity-80">
             <div>
-              <img
+              {/* <img
                 src="/logo/logo.png?height=24&width=auto"
                 alt="KinMel Mandu Logo"
                 className="h-10 w-auto"
-              />
+              /> */}
+              <h1 className="text-white font-semibold shadow-2xl text-2xl">
+                E-COM
+              </h1>
             </div>
           </Link>
         </div>

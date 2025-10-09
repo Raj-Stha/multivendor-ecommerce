@@ -34,26 +34,16 @@ export default function DesktopNav() {
         {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/" className="transition-opacity hover:opacity-80">
-            <img
+            {/* <img
               src="/logo/logo.png"
               alt="KinMel Mandu Logo"
               className="h-12 w-auto"
-            />
+            /> */}
+            <h1 className="text-white font-semibold shadow-2xl text-2xl">
+              E-COM
+            </h1>
           </Link>
         </div>
-
-        <button
-          onClick={() => setShowPopup(true)}
-          className="flex items-center gap-2 px-4 py-2 cursor-pointer rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white flex-shrink-0"
-        >
-          <MapPin className="w-4 h-4" />
-          <div className="flex flex-col items-start">
-            <span className="text-xs opacity-80">Deliver to</span>
-            <span className="text-sm font-semibold truncate max-w-[120px]">
-              {locationName}
-            </span>
-          </div>
-        </button>
 
         {showPopup && (
           <LocationPopup
@@ -63,15 +53,29 @@ export default function DesktopNav() {
           />
         )}
 
+        <button
+          onClick={() => setShowPopup(true)}
+          className="flex items-center gap-2 px-5 py-2 cursor-pointer rounded-lg bg-black/10 hover:bg-black/20 transition-colors text-white flex-shrink-0"
+        >
+          <MapPin className="w-4 h-4" />
+          <div className="flex flex-col items-start">
+            <span className="text-xs opacity-80">Deliver to</span>
+            <span className="text-sm font-semibold truncate max-w-[120px]">
+              {locationName.substring(0, 10)} ..
+            </span>
+          </div>
+        </button>
+
         {/* Search Bar */}
         <div className="hidden sm:flex flex-1 max-w-xl justify-center">
           <SearchBar />
         </div>
 
         {/* Right icons */}
-        <div className="flex items-center space-x-5 flex-shrink-0">
-          <CartIcon />
+        <div className="flex items-center space-x-4 flex-shrink-0">
           <NotificationIcon />
+          <CartIcon />
+
           <AccountMenu />
         </div>
       </div>
