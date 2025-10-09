@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useUser } from "@/app/(home)/_context/UserContext";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -16,6 +17,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { getUser } = useUser();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -51,8 +53,7 @@ function Login() {
       }
 
       const result = await res.json();
-
-      console.log(result);
+      getUser();
 
       const redirectPath =
         redirect && redirect.startsWith("/")
