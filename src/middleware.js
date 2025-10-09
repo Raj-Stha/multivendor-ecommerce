@@ -23,9 +23,7 @@ export async function middleware(req) {
     if (token) {
       try {
         const { payload } = await verifyJWT(token);
-
-        const url = new URL(req.url);
-        const redirectPath = url.searchParams.get("redirect");
+        const redirectPath = req.nextUrl.searchParams.get("redirect");
 
         switch (payload.role) {
           case ROLES.VENDOR:
@@ -38,7 +36,6 @@ export async function middleware(req) {
             );
           case ROLES.CUSTOMER:
             return NextResponse.redirect(new URL(redirectPath || "/", req.url));
-          case ROLES.GUEST:
           default:
             return NextResponse.next();
         }
@@ -46,7 +43,6 @@ export async function middleware(req) {
         return NextResponse.next();
       }
     }
-
     return NextResponse.next();
   }
 
@@ -66,6 +62,19 @@ export async function middleware(req) {
         );
       }
 
+      if (pathname === "/dashboard") {
+        switch (payload.role) {
+          case ROLES.ADMIN:
+            return NextResponse.redirect(new URL("/dashboard/admin", req.url));
+          case ROLES.VENDOR:
+            return NextResponse.redirect(new URL("/dashboard/vendor", req.url));
+          case ROLES.CUSTOMER:
+            return NextResponse.redirect(new URL("/dashboard/user", req.url));
+          default:
+            return NextResponse.redirect(new URL("/", req.url));
+        }
+      }
+
       if (
         pathname.startsWith("/dashboard/vendor") &&
         payload.role !== ROLES.VENDOR
@@ -80,6 +89,15 @@ export async function middleware(req) {
         return NextResponse.redirect(new URL("/", req.url));
       }
 
+      if (pathname === "/dashboard/user" && payload.role !== ROLES.CUSTOMER) {
+        if (payload.role === ROLES.ADMIN) {
+          return NextResponse.redirect(new URL("/dashboard/admin", req.url));
+        }
+        if (payload.role === ROLES.VENDOR) {
+          return NextResponse.redirect(new URL("/dashboard/vendor", req.url));
+        }
+      }
+
       return NextResponse.next();
     } catch {
       return NextResponse.redirect(
@@ -88,9 +106,34 @@ export async function middleware(req) {
     }
   }
 
+  if (!pathname.startsWith("/dashboard") && !pathname.startsWith("/auth")) {
+    if (token) {
+      try {
+        const { payload } = await verifyJWT(token);
+
+        if (payload.role === ROLES.ADMIN) {
+          return NextResponse.redirect(new URL("/dashboard/admin", req.url));
+        }
+
+        if (payload.role === ROLES.VENDOR) {
+          return NextResponse.redirect(new URL("/dashboard/vendor", req.url));
+        }
+
+        return NextResponse.next();
+      } catch {
+        return NextResponse.next();
+      }
+    }
+    return NextResponse.next();
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/auth/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/auth/:path*",
+    "/((?!_next|favicon.ico|api).*)", // exclude Next.js internals and API routes
+  ],
 };
