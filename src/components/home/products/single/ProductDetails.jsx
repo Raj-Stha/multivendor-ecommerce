@@ -76,7 +76,7 @@ export default function ProductDetails({ product }) {
           <span className="text-foreground">{firstProduct.product_name}</span>
         </nav>
 
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-8 sm:gap-10">
           <h1 className="inline-block md:hidden text-3xl font-bold text-foreground  text-balance">
             {firstProduct.product_name}
           </h1>
@@ -90,11 +90,14 @@ export default function ProductDetails({ product }) {
           <div className="space-y-4">
             {/* Product Header */}
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="secondary" className="text-xs">
+              <div className="flex gap-0 mb-3">
+                <Badge
+                  variant="outline"
+                  className="text-sm bg-primary/90 rounded-none text-white"
+                >
                   {firstProduct.category_name}
                 </Badge>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-sm rounded-none">
                   By {firstProduct.vendor_name}
                 </Badge>
               </div>
@@ -113,10 +116,10 @@ export default function ProductDetails({ product }) {
               </span>
               {selectedVariant.product_discount > 0 && (
                 <>
-                  <span className="text-lg line-through text-muted-foreground">
+                  <span className="text-lg line-through  text-red-600">
                     Rs. {selectedVariant.product_price}
                   </span>
-                  <span className="bg-accent text-accent-foreground text-xs px-2 py-1 rounded">
+                  <span className="bg-gray-100 text-green-600 text-sm px-2 py-1 rounded">
                     -{selectedVariant.product_discount}% OFF
                   </span>
                 </>
@@ -126,7 +129,7 @@ export default function ProductDetails({ product }) {
             {/* Variants */}
             {firstProduct.variants.length > 1 && (
               <div>
-                <h3 className="font-semibold text-lg mb-2">
+                <h3 className="font-semibold text-lg pt-2 mb-2">
                   Available Options:
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -135,8 +138,8 @@ export default function ProductDetails({ product }) {
                       key={variant.variant_id}
                       className={`cursor-pointer px-3 py-2 border rounded-md transition-all ${
                         selectedVariantIndex === index
-                          ? "border-primary bg-primary/10"
-                          : "border-gray-300 hover:border-gray-400"
+                          ? "border-none bg-gray-500 text-white"
+                          : "hover:bg-gray-400 hover:text-white"
                       }`}
                       onClick={() => handleVariantChange(index)}
                     >
@@ -149,15 +152,14 @@ export default function ProductDetails({ product }) {
 
             {/* Quantity */}
             <div>
-              <h3 className="font-semibold text-lg mb-2">Quantity:</h3>
+              <h3 className="font-semibold text-lg pt-2 mb-2">Quantity:</h3>
               <div className="flex items-center gap-4">
                 <div className="flex items-center border border-border rounded-lg">
                   <Button
-                    variant="ghost"
                     size="icon"
                     onClick={handleQuantityDecrement}
                     disabled={quantity <= 1}
-                    className="h-10 w-10"
+                    className="h-10 w-10 rounded-none cursor-pointer bg-gray-500 hover:bg-secondary"
                   >
                     <Minus className="h-4 w-4" />
                   </Button>
@@ -165,26 +167,25 @@ export default function ProductDetails({ product }) {
                     {quantity}
                   </span>
                   <Button
-                    variant="ghost"
                     size="icon"
                     onClick={handleQuantityIncrement}
                     disabled={quantity >= selectedVariant.available_count}
-                    className="h-10 w-10"
+                    className="h-10 w-10  cursor-pointer rounded-none bg-gray-500 hover:bg-secondary"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-green-900">
                   (Max: {selectedVariant.available_count})
                 </span>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3">
+            <div className="pt-4 mb-8 flex gap-3">
               <Button
                 size="lg"
-                className="flex items-center gap-2"
+                className="flex items-center hover:bg-secondary cursor-pointer gap-2"
                 disabled={selectedVariant.available_count === 0}
                 onClick={handleAddToCart} // ✅ add to cart handler
               >
