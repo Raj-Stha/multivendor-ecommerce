@@ -53,9 +53,10 @@ export function FilterSidebar({
           variant="outline"
           size="sm"
           onClick={onClearFilters}
+          className="text-primary hover:text-secondary cursor-pointer"
           disabled={isLoading}
         >
-          <RotateCcw className="h-4 w-4 mr-2" /> Clear
+          <RotateCcw className="h-4 w-4 mr-2 " /> Clear
         </Button>
       </div>
 

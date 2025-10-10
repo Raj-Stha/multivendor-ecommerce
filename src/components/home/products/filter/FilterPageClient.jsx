@@ -258,7 +258,7 @@ export function ProductFilterClient({
             />
             <button
               type="button"
-              className="absolute right-0 top-0 h-full px-4 bg-primary text-white rounded-r-lg hover:bg-primary transition-colors"
+              className="absolute right-0 top-0 h-full px-4 bg-primary text-white rounded-r-lg hover:bg-secondary transition-colors"
             >
               <Search className="h-4 w-4" />
             </button>
@@ -288,7 +288,7 @@ export function ProductFilterClient({
                 />
                 <button
                   type="button"
-                  className="absolute right-0 top-0 h-full px-4 bg-primary text-white rounded-r-lg hover:bg-primary transition-colors"
+                  className="absolute right-0 top-0 h-full px-4 bg-primary text-white rounded-r-lg hover:bg-secondary cursor-pointer transition-colors"
                 >
                   <Search className="h-4 w-4" />
                 </button>
@@ -335,7 +335,7 @@ export function ProductFilterClient({
                           setIsOpen(false);
                           handleSortChange(option.value);
                         }}
-                        className="flex items-center justify-between gap-2 px-3 py-2 hover:bg-gray-50 cursor-pointer transition-colors"
+                        className="flex items-center justify-between gap-2 px-3 py-2 hover:bg-primary/20 cursor-pointer transition-colors"
                       >
                         <span className="text-gray-700 font-medium text-sm">
                           {option.name}
@@ -367,7 +367,7 @@ export function ProductFilterClient({
             <ProductSkeletonGrid count={8} />
           ) : products?.length > 0 ? (
             <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-3">
+              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-2 gap-3 sm:p-0 sm:gap-4">
                 {products.map((product, i) => (
                   <motion.div
                     key={`${product.product_id}-${product.vendor_id}`}
