@@ -35,7 +35,10 @@ export default function Cart() {
             <p className="text-muted-foreground mb-6">
               Add some items to get started
             </p>
-            <Button onClick={() => router.replace("/")}>
+            <Button
+              className="text-white hover:text-white hover:bg-secondary bg-primary"
+              onClick={() => router.replace("/")}
+            >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Continue Shopping
             </Button>

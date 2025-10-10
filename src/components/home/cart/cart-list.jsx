@@ -28,7 +28,7 @@ export function CartList({ cart }) {
           <h2 className="text-2xl font-semibold text-balance">
             Your Cart ({cart.length} {cart.length === 1 ? "item" : "items"})
           </h2>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="cursor-pointer">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Continue Shopping
           </Button>

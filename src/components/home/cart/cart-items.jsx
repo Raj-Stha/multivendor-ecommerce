@@ -55,7 +55,7 @@ export function CartItem({ item }) {
               variant="ghost"
               size="sm"
               onClick={() => handleQuantityChange(0)}
-              className="text-muted-foreground hover:text-destructive"
+              className="text-red-500 cursor-pointer hover:text-destructive"
               disabled={isUpdating}
             >
               <Trash2 className="h-4 w-4" />

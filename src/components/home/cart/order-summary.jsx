@@ -52,11 +52,7 @@ export function OrderSummary({ items }) {
           <div className="flex justify-between text-sm">
             <div className="flex items-center gap-1">
               <span>Shipping</span>
-              {shipping === 0 && (
-                <Badge variant="secondary" className="text-xs">
-                  FREE
-                </Badge>
-              )}
+              {shipping === 0 && <Badge className="text-xs">FREE</Badge>}
             </div>
             <span>${shipping.toFixed(2)}</span>
           </div>
@@ -71,7 +67,7 @@ export function OrderSummary({ items }) {
 
         <div className="space-y-3">
           <Button
-            className="w-full"
+            className="w-full hover:text-white hover:bg-secondary cursor-pointer"
             size="lg"
             onClick={() => router.push("/checkout")}
           >
