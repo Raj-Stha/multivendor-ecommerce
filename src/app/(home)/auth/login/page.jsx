@@ -10,10 +10,10 @@ export const metadata = {
     keywords:
       "login, user login, sign in, account access, customer login, vendor login",
     image: "/seo/login-banner.jpg",
-    url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/login`,
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/login`,
   }),
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
 };
 

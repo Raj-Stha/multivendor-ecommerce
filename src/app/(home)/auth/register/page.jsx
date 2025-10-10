@@ -9,10 +9,10 @@ export const metadata = {
     keywords:
       "register, sign up, create account, online shopping, cosmetics store, beauty products, join marketplace, vendor account, customer account",
     image: "/seo/register-banner.jpg",
-    url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/register`,
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/register`,
   }),
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
 };
 
