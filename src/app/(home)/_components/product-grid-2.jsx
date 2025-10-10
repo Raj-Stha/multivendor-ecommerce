@@ -116,11 +116,19 @@ export default function ProductCarousel({ initialProducts }) {
       <div className="container max-w-7xl mx-auto px-4">
         <div className="bg-white shadow-sm p-4 sm:p-6 relative">
           {/* Header */}
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl md:text-2xl text-primary">Vegetables</h2>
+          <div className="flex justify-between items-center mb-8">
+            <div className="text-left ">
+              <h2 className="relative inline-block   text-2xl font-semibold text-primary pb-3">
+                Vegetables
+                <span
+                  className="absolute left-0 bottom-0 h-[3px] w-full 
+                       bg-gradient-to-r from-primary to-secondary rounded-full"
+                ></span>
+              </h2>
+            </div>
             <Link
               href="/products?category=21"
-              className="flex text-sm gap-1 sm:gap-2 items-center font-medium text-primary"
+              className="flex text-sm gap-1 sm:gap-2 items-center font-medium text-primary hover:text-secondary"
             >
               <span>View All</span>
               <ArrowRightIcon className="w-4 h-4" />
@@ -137,7 +145,7 @@ export default function ProductCarousel({ initialProducts }) {
                 transition={{ duration: 0.4 }}
                 className="px-2"
               >
-                <ProductCard product={product} border={false} />
+                <ProductCard product={product} border={true} />
               </motion.div>
             ))}
           </Slider>
