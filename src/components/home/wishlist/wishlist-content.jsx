@@ -22,7 +22,7 @@ export function WishlistContent() {
           </p>
           <Link
             href="/products"
-            className="bg-primary w-fit flex items-center justify-center gap-2 text-white px-3 py-2 rounded-md mx-auto"
+            className="bg-primary hover:bg-secondary w-fit flex items-center justify-center gap-2 text-white px-3 py-2 rounded-md mx-auto"
           >
             <ShoppingBag className="h-5 w-5" />
             Continue Shopping
@@ -56,7 +56,6 @@ export function WishlistContent() {
             />
           ))}
         </div>
-
       </div>
     </div>
   );

@@ -35,13 +35,13 @@ export function WishlistItem({ item }) {
   };
 
   return (
-    <Card className="flex flex-col gap-4 rounded-none p-4 hover:shadow-lg transition-shadow relative">
+    <Card className="flex flex-col gap-4 rounded-sm p-4 hover:shadow-lg transition-shadow relative">
       {/* Image */}
-      <div className="relative w-full aspect-square">
+      <div className="relative w-full aspect-square rounded-sm">
         <img
           src={item.product_image || "/placeholder.svg"}
           alt={item.product_name}
-          className="w-full h-full object-cover rounded-none"
+          className="w-full h-full object-cover rounded-sm"
         />
 
         {/* Heart Button on top-right */}
@@ -51,7 +51,7 @@ export function WishlistItem({ item }) {
           onClick={handleWishlistToggle}
           className={`absolute top-2 right-2 p-2 rounded-full transition-colors z-10 ${
             isWishlisted
-              ? "bg-red-500 text-white border-red-500 hover:bg-red-600"
+              ? "bg-red-500 text-white border-none cursor-pointer"
               : "bg-white text-red-500 border-red-300 hover:bg-red-50"
           }`}
         >
@@ -76,7 +76,11 @@ export function WishlistItem({ item }) {
 
       {/* Actions */}
       <div className="flex gap-2 mt-4">
-        <Button variant="outline" className="flex-1" onClick={handleAddToCart}>
+        <Button
+          variant="outline"
+          className="w-full bg-primary text-white py-2 px-2 hover:bg-secondary hover:text-white cursor-pointer"
+          onClick={handleAddToCart}
+        >
           <ShoppingCart size={16} /> Add to Cart
         </Button>
       </div>
