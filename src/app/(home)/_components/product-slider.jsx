@@ -126,7 +126,7 @@ function NextArrow(props) {
   const { style, onClick } = props;
   return (
     <button
-      className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 
+      className={`absolute right-0 top-[50%] translate-y-[-50%] z-10 
         bg-white border border-gray-300 shadow-md rounded-full p-2
         transition duration-300
         hover:bg-primary hover:text-white
@@ -143,7 +143,7 @@ function PrevArrow(props) {
   const { style, onClick } = props;
   return (
     <button
-      className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 
+      className={`absolute left-0 top-[50%] translate-y-[-50%] z-10 
         bg-white border border-gray-300 shadow-md rounded-full p-2
         transition duration-300
         hover:bg-primary hover:text-white
@@ -160,7 +160,7 @@ export default function ProductSlider({ products }) {
   if (!products || products.length === 0) return null;
 
   // Determine max slides to show based on breakpoints
-  const maxSlides = 6;
+  const maxSlides = 5;
 
   const sliderSettings = {
     dots: false,
@@ -254,18 +254,26 @@ export default function ProductSlider({ products }) {
   }
 
   return (
-    <section className="my-2 noto-sans-text">
+    <section className="noto-sans-text">
       <div className="container max-w-7xl mx-auto px-4 py-4 relative">
         <div className="bg-white">
           {/* Header */}
           <div className="flex justify-between p-3 items-baseline">
-            <div className="text-xl md:text-2xl text-primary">Flash Sale</div>
+            <div className="text-left ">
+              <h2 className="relative inline-block   text-2xl font-semibold text-primary pb-3">
+                Flash Sale
+                <span
+                  className="absolute left-0 bottom-0 h-[3px] w-full 
+                       bg-gradient-to-r from-primary to-secondary rounded-full"
+                ></span>
+              </h2>
+            </div>
             <Link
               href="/products"
               className="w-fit relative flex items-center justify-center
              text-[10px] md:text-xs font-normal
-             text-white border border-white hover:border-primary
-             p-2 md:px-4 md:py-2
+             text-white border hover:border-primary
+             p-2 px-5 py-3 rounded-sm overflow-hidden
              transition-colors duration-300 ease-in-out
              bg-primary
              before:absolute before:inset-0 before:w-0 before:bg-white before:z-0
@@ -278,7 +286,7 @@ export default function ProductSlider({ products }) {
           <hr className="border-gray-200 " />
 
           {/* Slider */}
-          <div className="p-1 md:p-3 relative">
+          <div className=" py-4 md:py-5 relative">
             <Slider {...sliderSettings}>
               {products.map((product) => (
                 <motion.div
@@ -286,7 +294,7 @@ export default function ProductSlider({ products }) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
-                  className="px-1"
+                  className="px-3"
                 >
                   <ProductCard product={product} />
                 </motion.div>

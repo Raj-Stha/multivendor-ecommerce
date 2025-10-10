@@ -14,22 +14,27 @@ export default function ProductSliderSection({ products }) {
     <section className="my-2 noto-sans-text">
       <div className="container max-w-7xl mx-auto px-4 xl:pt-10 sm:pt-4 pt-5 relative">
         {/* Header */}
-        <div className="flex justify-between items-center ">
-          <div className="text-2xl text-black">Flash Sale</div>
+        <div className="text-left w-full">
+          <h2 className="relative inline-block   text-2xl font-semibold text-primary pb-1">
+            Flash Sale
+            {/* Stylish underline */}
+            <span
+              className="absolute left-0 bottom-0 h-[3px] w-full 
+                       bg-gradient-to-r from-primary to-secondary rounded-full"
+            ></span>
+          </h2>
         </div>
 
         <div className="bg-white  ">
           <div className="flex justify-between  items-baseline">
-            <div className="text-md text-primary font-normal mb-4">
-              On Sale Now
-            </div>
+            <div className="text-md font-semibold mt-4 mb-6">On Sale Now</div>
             <Link
               href="/products"
               className=" w-fit
               relative flex items-center justify-center
               text-xs uppercase font-normal
               text-primary border border-primary
-              px-4 py-2
+              px-4 py-3 rounded-sm
               bg-transparent
               overflow-hidden
               transition-colors duration-300 ease-in-out
