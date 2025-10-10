@@ -72,7 +72,7 @@ export function ProductCard({ product, border = false }) {
     >
       {/* Product Card */}
       <div
-        className={`w-full jost-text cursor-pointer flex flex-col h-full transition-all duration-300 hover:shadow-xl bg-white group overflow-hidden relative ${
+        className={`w-full jost-text cursor-pointer flex flex-col h-full rounded-sm md:hover:scale-105 transition-all duration-300 hover:shadow-xl bg-white group overflow-hidden relative ${
           border ? "border border-gray-300 rounded-none" : ""
         }`}
       >
@@ -90,7 +90,7 @@ export function ProductCard({ product, border = false }) {
           <DialogTrigger asChild>
             <button
               className="absolute top-2 right-2 z-10 p-2 rounded-full shadow-md flex items-center justify-center
-               bg-gray-800 text-white hover:bg-gray-700 transition-all duration-300
+               bg-primary text-white hover:bg-secondary transition-all duration-300
                opacity-100 scale-100 
                md:opacity-0 md:scale-75 md:group-hover:opacity-100 md:group-hover:scale-100"
             >

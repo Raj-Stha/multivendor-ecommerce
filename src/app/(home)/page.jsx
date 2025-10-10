@@ -119,7 +119,7 @@ export default async function Home() {
   ];
 
   return (
-    <div className="bg-[#f5f5f5]">
+    <div className="">
       <LocationPopup />
       {/* ✅ Pass banners here */}
       <Hero banners={banners} />
