@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Trash2, ShoppingCart, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -36,24 +37,25 @@ export function WishlistItem({ item }) {
 
   return (
     <Card className="flex flex-col gap-4 rounded-sm p-4 hover:shadow-lg transition-shadow relative">
-      {/* Image */}
-      <div className="relative w-full aspect-square rounded-sm">
-        <img
-          src={item.product_image || "/placeholder.svg"}
-          alt={item.product_name}
-          className="w-full h-full object-cover rounded-sm"
-        />
+      {/* Image with Link */}
+      <div className="relative w-full aspect-square rounded-sm overflow-hidden">
+        <Link href={`/products/${item.vendor_id}/${item.product_id}`}>
+          <img
+            src={item.product_image || "/placeholder.svg"}
+            alt={item.product_name}
+            className="w-full h-full object-cover rounded-sm hover:scale-105 transition-transform duration-300"
+          />
+        </Link>
 
         {/* Heart Button on top-right */}
         <Button
           variant="outline"
           size="sm"
           onClick={handleWishlistToggle}
-          className={`absolute top-2 right-2 p-2 rounded-full transition-colors z-10 ${
-            isWishlisted
-              ? "bg-red-500 text-white border-none cursor-pointer"
-              : "bg-white text-red-500 border-red-300 hover:bg-red-50"
-          }`}
+          className={`absolute top-2 right-2 p-2 rounded-full transition-colors z-10 ${isWishlisted
+            ? "bg-red-500 text-white border-none cursor-pointer"
+            : "bg-white text-red-500 border-red-300 hover:bg-red-50"
+            }`}
         >
           <Heart
             size={12}
@@ -64,11 +66,13 @@ export function WishlistItem({ item }) {
         </Button>
       </div>
 
-      {/* Info */}
+      {/* Info with Link */}
       <div className="flex-1 flex flex-col gap-2">
-        <h3 className="font-semibold text-lg text-foreground">
-          {item.product_name}
-        </h3>
+        <Link href={`/products/${item.vendor_id}/${item.product_id}`}>
+          <h3 className="font-semibold text-lg text-foreground hover:text-primary transition-colors">
+            {item.product_name}
+          </h3>
+        </Link>
         <p className="text-sm text-muted-foreground">
           {item.variant_description}
         </p>
