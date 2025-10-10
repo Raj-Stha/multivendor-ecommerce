@@ -78,7 +78,7 @@ export function OrderSummary({ cartData, isLoading, onCompleteOrder }) {
                           <span className="text-xs text-muted-foreground line-through">
                             ${item.product_price.toFixed(2)}
                           </span>
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge className="text-xs">
                             {item.product_discount}% off
                           </Badge>
                         </>
@@ -114,11 +114,7 @@ export function OrderSummary({ cartData, isLoading, onCompleteOrder }) {
             <div className="flex justify-between text-sm">
               <div className="flex items-center gap-1">
                 <span>Shipping</span>
-                {shipping === 0 && (
-                  <Badge variant="secondary" className="text-xs">
-                    FREE
-                  </Badge>
-                )}
+                {shipping === 0 && <Badge className="text-xs">FREE</Badge>}
               </div>
               <span>${shipping.toFixed(2)}</span>
             </div>
@@ -135,7 +131,7 @@ export function OrderSummary({ cartData, isLoading, onCompleteOrder }) {
 
           <Button
             type="button"
-            className="w-full h-12 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90"
+            className="w-full h-12 text-base font-medium bg-primary text-primary-foreground cursor-pointer  hover:bg-secondary"
             onClick={onCompleteOrder}
             disabled={isLoading}
           >
