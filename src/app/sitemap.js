@@ -1,5 +1,3 @@
-import type { MetadataRoute } from "next";
-
 const apiBaseUrl =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "https://ecom.kalpabrikshya.com.np/api";
@@ -7,7 +5,7 @@ const apiBaseUrl =
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://ecom.kalpabrikshya.com.np";
 
-async function safeFetch(url: string, options: any = {}) {
+async function safeFetch(url, options) {
   try {
     const res = await fetch(url, {
       method: options.method || "GET",
@@ -26,7 +24,7 @@ async function safeFetch(url: string, options: any = {}) {
   }
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap() {
   // Fetch product data from backend API
   const productData = await safeFetch(`${apiBaseUrl}/getproducts`, {
     method: "POST",
@@ -43,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const products = productData?.data || [];
 
   // Static pages (frontend URLs)
-  const staticPages: MetadataRoute.Sitemap = [
+  const staticPages = [
     {
       url: `${siteUrl}`,
       lastModified: new Date(),
@@ -77,7 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic product URLs (frontend routes)
-  const productUrls: MetadataRoute.Sitemap = products.map((product: any) => ({
+  const productUrls = products.map((product) => ({
     url: `${siteUrl}/products/${product.slug || product.id}`,
     lastModified: new Date(
       product.updatedAt || product.updated_at || new Date()
