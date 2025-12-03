@@ -7,12 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
-// import { PasswordField } from "../../password-field"; // PasswordField commented out
+import { PasswordField } from "../../password-field"; // PasswordField commented out
 
 function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState(""); // commented out
+  const [password, setPassword] = useState(""); // commented out
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isFormLoading, setIsFormLoading] = useState(false);
@@ -26,12 +26,13 @@ function SignUp() {
     setError("");
     setIsFormLoading(true);
 
-    if (!name || !email) {
-      setError("Please fill in all fields.");
+    if (!name || !email || !password) {
+      const msg = "All fields are required.";
+      setError(msg);
+      toast.error(msg);
       setIsFormLoading(false);
       return;
     }
-
     try {
       const response = await fetch(`${baseUrl}/createuser`, {
         method: "POST",
@@ -39,33 +40,25 @@ function SignUp() {
         body: JSON.stringify({
           user_login_name: name,
           user_email: email,
-          // password, // if password is disabled
+          user_password: password,
         }),
       });
 
       const data = await response.json();
-      console.log("API response:", data);
 
-      if (response.ok && data.code === "00000") {
-        // Show details or message from API
-        const messageToShow =
-          data.details?.[0] ||
-          data.message?.status ||
-          "Account created successfully!";
-        toast.success(messageToShow);
+      console.log(data);
 
-        router.push("/auth/login");
-      } else {
-        // Handle errors from API
-        const errorMessage =
-          data.message?.status === "nosession"
-            ? "You are not authenticated. Please try again."
-            : data.details?.[0] ||
-              data.message?.status ||
-              "Failed to create account.";
-        setError(errorMessage);
-        toast.error(errorMessage);
+      if (response.ok) {
+        const successMessage =
+          data.details[0] || "Account created successfully!";
+        toast.success(successMessage);
+        router.replace("/auth/login");
+        return;
       }
+
+      const errorMessage = data.message || "Account creation failed.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } catch (err) {
       const errorMessage = "An error occurred. Please try again.";
       setError(errorMessage);
@@ -134,7 +127,7 @@ function SignUp() {
                     )}
 
                     <h3 className="text-3xl font-semibold text-primary">
-                      Sign Up{" "}
+                      Sign Up
                     </h3>
 
                     <form onSubmit={handleSubmit} className="space-y-5">
@@ -177,7 +170,6 @@ function SignUp() {
                       </div>
 
                       {/* Password Section commented out */}
-                      {/*
                       <div className="space-y-2">
                         <Label
                           htmlFor="password"
@@ -202,7 +194,6 @@ function SignUp() {
                           }}
                         />
                       </div>
-                      */}
 
                       <Button
                         type="submit"
