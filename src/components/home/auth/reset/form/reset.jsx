@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { toast } from "react-toastify";
 
 function Reset() {
@@ -21,6 +21,18 @@ function Reset() {
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
+  // PostgreSQL error code handler
+  const getErrorMessage = (errorData) => {
+    if (typeof errorData?.message === "string") return errorData.message;
+    if (errorData?.message?.status === "error")
+      return errorData.message.role || "Something went wrong";
+    if (Array.isArray(errorData?.details) && errorData.details.length > 0)
+      return errorData.details[0];
+    if (typeof errorData?.hint === "string") return errorData.hint;
+
+    return "An error occurred. Please try again.";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -32,26 +44,53 @@ function Reset() {
       return;
     }
 
-    console.log(email);
-    console.log(redirect);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      // const res = await fetch(`${baseUrl}/loginuser`, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     user_email: email,
-      //   }),
-      // });
-      // if (!res.ok) {
-      //   const errorData = await res.json().catch(() => null);
-      //   return toast.error(errorData?.message || "Something went wrong!");
-      // }
-      // const result = await res.json();
+      const res = await fetch(`${baseUrl}/forgotpassword`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_email: email }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        const errorMsg = getErrorMessage(result);
+        setError(errorMsg);
+        toast.error(errorMsg);
+        setIsLoading(false);
+        return;
+      }
+
+      // SUCCESS RESPONSE HAS TOKEN → EXTRACT IT
+      const token =
+        result?.details?.[0]?.["password reset initiated successfully "] || "";
+
+      if (!token) {
+        toast.error("Token not received from server.");
+        setIsLoading(false);
+        return;
+      }
+
+      toast.success("Reset token sent successfully!");
+
+      // REDIRECT WITH EMAIL + TOKEN
+      setTimeout(() => {
+        router.push(
+          `/auth/reset/update?email=${encodeURIComponent(
+            email
+          )}&token=${encodeURIComponent(token)}`
+        );
+      }, 500);
     } catch (err) {
       console.error("Reset error:", err);
-      setError("An error occurred. Please try again.");
-      toast.error("An error occurred. Please try again.");
+      toast.error("Network error. Try again.");
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +115,7 @@ function Reset() {
                     No Worries !!
                   </h1>
                   <p className="text-lg text-white/90 leading-relaxed">
-                    Provide the right credentials to access it
+                    Enter your email to reset your password. We'll send you a secure token.
                   </p>
                 </div>
               </div>
@@ -89,24 +128,28 @@ function Reset() {
                       variant="destructive"
                       className="border-red-200 bg-red-50"
                     >
+                      <AlertCircle className="h-4 w-4" />
                       <AlertDescription className="text-red-800">
                         {error}
                       </AlertDescription>
                     </Alert>
                   )}
 
-                  <h3 className="text-3xl pb-1  text-primary">
-                    Reset Password{" "}
+                  <h3 className="text-3xl pb-1 text-primary">
+                    Reset Password
                   </h3>
+                  <p className="text-sm text-gray-600">
+                    Enter your email address and we'll send you a reset token.
+                  </p>
 
-                  {/* Login Form */}
+                  {/* Reset Form */}
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
                       <Label
                         htmlFor="email"
                         className="text-gray-700 font-medium"
                       >
-                        Email
+                        Email Address
                       </Label>
                       <Input
                         id="email"
@@ -129,10 +172,10 @@ function Reset() {
                       {isLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Signing in...
+                          Sending Reset Link...
                         </>
                       ) : (
-                        "Sign In"
+                        "Send Reset Link"
                       )}
                     </Button>
                   </form>
