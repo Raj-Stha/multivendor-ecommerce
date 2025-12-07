@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useUser } from "@/app/(home)/_context/UserContext";
+import Link from "next/link";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -59,8 +60,8 @@ function Login() {
         redirect && redirect.startsWith("/")
           ? redirect
           : redirect
-          ? `/${redirect}`
-          : "";
+            ? `/${redirect}`
+            : "";
 
       if (result?.details) {
         if (redirectPath) {
@@ -180,7 +181,18 @@ function Login() {
                           )}
                         </Button>
                       </div>
+
+                      {/* Forgot Password Link */}
+                      <div className="text-right ">
+                        <Link
+                          href="/auth/reset"  // Replace with your route
+                          className="text-sm text-primary hover:underline"
+                        >
+                          Forgot your password?
+                        </Link>
+                      </div>
                     </div>
+
 
                     <Button
                       type="submit"
