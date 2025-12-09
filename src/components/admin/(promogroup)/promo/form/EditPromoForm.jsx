@@ -37,7 +37,7 @@ const formSchema = z.object({
 export default function EditPromoForm({ data }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
-  const [imagePreview, setImagePreview] = useState(data?.featured_image ?? "");
+  const [imagePreview, setImagePreview] = useState(data?.image_url ?? "");
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
@@ -117,9 +117,9 @@ export default function EditPromoForm({ data }) {
     }
   };
 
-  const updateVariantImage = async (values) => {
+  const updatePromoImage = async (values) => {
     try {
-      const response = await fetch(`${baseUrl}/updateproductimage`, {
+      const response = await fetch(`${baseUrl}/updatepromosimage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -154,13 +154,12 @@ export default function EditPromoForm({ data }) {
 
       const result = await uploadImage(uploadImageData);
       if (result) {
-        let updateVariantImageData = {
+        let updatePromoImageData = {
           image_id: result?.details[0]?.image_id,
-          variant_id: data?.variant_id,
-          featured: true,
+          promo_id: data?.promo_id,
         };
 
-        await updateVariantImage(updateVariantImageData);
+        await updatePromoImage(updatePromoImageData);
       }
     }
     await updateData(payload);
