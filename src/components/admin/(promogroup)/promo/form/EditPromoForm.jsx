@@ -146,7 +146,7 @@ export default function EditPromoForm({ data }) {
       active: values.active ? "true" : "false",
     };
 
-    if (data?.featured_image !== imagePreview) {
+    if (data?.image_url !== imagePreview) {
       let uploadImageData = {
         image64: imagePreview ? imagePreview.split(",")[1] : null,
         active: true,

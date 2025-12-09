@@ -36,7 +36,7 @@ const formSchema = z.object({
 export default function EditCategoryForm({ data }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
-  const [imagePreview, setImagePreview] = useState(data?.featured_image ?? "");
+  const [imagePreview, setImagePreview] = useState(data?.category_image ?? "");
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
@@ -115,9 +115,9 @@ export default function EditCategoryForm({ data }) {
     }
   };
 
-  const updateVariantImage = async (values) => {
+  const updateCategoryImage = async (values) => {
     try {
-      const response = await fetch(`${baseUrl}/updateproductimage`, {
+      const response = await fetch(`${baseUrl}/updatecategoryimage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,23 +137,22 @@ export default function EditCategoryForm({ data }) {
     values.category_name = data?.category_name;
     setIsLoading(true);
 
-    // if (data?.featured_image !== imagePreview) {
-    //   let uploadImageData = {
-    //     image64: imagePreview ? imagePreview.split(",")[1] : null,
-    //     active: true,
-    //   };
+    if (data?.category_image !== imagePreview) {
+      let uploadImageData = {
+        image64: imagePreview ? imagePreview.split(",")[1] : null,
+        active: true,
+      };
 
-    //   const result = await uploadImage(uploadImageData);
-    //   if (result) {
-    //     let updateVariantImageData = {
-    //       image_id: result?.details[0]?.image_id,
-    //       variant_id: data?.variant_id,
-    //       featured: true,
-    //     };
+      const result = await uploadImage(uploadImageData);
+      if (result) {
+        let updateCategoryImageData = {
+          image_id: result?.details[0]?.image_id,
+          category_id: data?.category_id,
+        };
 
-    //     await updateVariantImage(updateVariantImageData);
-    //   }
-    // }
+        await updateCategoryImage(updateCategoryImageData);
+      }
+    }
     await updateData(values);
   };
 
