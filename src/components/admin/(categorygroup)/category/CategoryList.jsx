@@ -8,7 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Image from "next/image";
 import EditCategoryForm from "./form/EditCategoryForm";
 import EditCategoryDetailsForm from "./form/EditCategoryDetailsForm";
 
@@ -32,12 +31,10 @@ export default function CategoryList({ data, categoryNotes, meta, page }) {
               >
                 <div className="flex items-center justify-between w-full px-4 py-2 ">
                   <AccordionTrigger className="flex items-center gap-4 flex-grow text-left hover:no-underline ">
-                    <Image
+                    <img
                       className="w-12 h-12 object-cover rounded border"
                       src={d?.category_image || "/placeholder.svg"}
                       alt={d.category_name}
-                      width={48}
-                      height={48}
                     />
                     <h3 className="text-lg font-bold text-gray-800">
                       {d.category_name}

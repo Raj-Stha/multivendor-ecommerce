@@ -19,6 +19,16 @@ export async function middleware(req) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("token")?.value;
 
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon.ico") ||
+    pathname.match(
+      /\.(png|jpg|jpeg|gif|svg|webp|ico|css|js|json|woff|woff2|ttf|eot|mp4|webm|ogg|pdf)$/
+    )
+  ) {
+    return NextResponse.next();
+  }
+
   if (AUTH_ROUTES.some((route) => pathname.startsWith(route))) {
     if (token) {
       try {
@@ -134,6 +144,6 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/auth/:path*",
-    "/((?!_next|favicon.ico|api).*)", // exclude Next.js internals and API routes
+    "/((?!_next|favicon.ico|api).*)",
   ],
 };

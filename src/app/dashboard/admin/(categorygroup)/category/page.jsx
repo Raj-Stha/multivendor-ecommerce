@@ -11,7 +11,7 @@ async function getData(url, formData) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      cache: "no-store", // always fresh SSR
+      cache: "no-store",
     });
 
     if (!res.ok) {
