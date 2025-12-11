@@ -17,7 +17,6 @@ async function safeFetch(url, options = {}) {
         ...options.headers,
       },
       body: options.body ? JSON.stringify(options.body) : undefined,
-      cache: "no-store",
     });
 
     if (!res.ok) {
