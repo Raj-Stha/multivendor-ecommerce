@@ -60,7 +60,6 @@ export default async function ProductPage({ params }) {
           product_id: Number(product_id),
           vendor_id: Number(vendor_id),
         }),
-        cache: "no-store",
       }
     );
 

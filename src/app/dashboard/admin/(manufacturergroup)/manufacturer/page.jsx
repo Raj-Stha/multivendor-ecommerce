@@ -13,7 +13,7 @@ async function getData(url, formData) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
-      cache: "no-store", // ✅ always fresh data
+      cache: "no-store",
     });
 
     if (!res.ok) return null;

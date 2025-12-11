@@ -12,7 +12,7 @@ async function getData(url, formData) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
-      cache: "no-store", // disable caching (always fresh)
+      cache: "no-store",
     });
 
     if (!res.ok) {

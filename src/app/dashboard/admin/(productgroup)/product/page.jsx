@@ -8,7 +8,7 @@ async function getData(url, formData) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      cache: "no-store", // ✅ always fresh SSR data
+      cache: "no-store",
     });
 
     if (!res.ok) return null;

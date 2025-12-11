@@ -9,7 +9,7 @@ async function getAllManufacturerNotes(page = 1, limit = 10) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ page_number: page, limit }),
-      cache: "no-store", // SSR fetch
+      cache: "no-store",
     });
 
     if (!res.ok) throw new Error("Failed to fetch manufacturer notes");

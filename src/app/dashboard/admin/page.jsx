@@ -6,7 +6,7 @@ async function getDetails(url, data) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
-      cache: "no-store", // always fresh
+      cache: "no-store"
     });
     if (!res.ok) throw new Error("Failed to fetch");
     return await res.json();
