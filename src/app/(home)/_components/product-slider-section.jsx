@@ -10,6 +10,8 @@ export default function ProductSliderSection({ products }) {
     return null;
   }
 
+  console.log(products);
+
   return (
     <section className="my-2 noto-sans-text">
       <div className="container max-w-7xl mx-auto px-4 xl:pt-10 sm:pt-4 pt-5 relative">
@@ -17,7 +19,6 @@ export default function ProductSliderSection({ products }) {
         <div className="text-left w-full">
           <h2 className="relative inline-block   text-2xl font-semibold text-primary pb-1">
             Flash Sale
-            {/* Stylish underline */}
             <span
               className="absolute left-0 bottom-0 h-[3px] w-full 
                        bg-gradient-to-r from-primary to-secondary rounded-full"
@@ -49,19 +50,22 @@ export default function ProductSliderSection({ products }) {
           <hr className="border-gray-200   " />
           {/* Product Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5  gap-5 pt-5 ">
-            {products.slice(0, 5).map((product) => (
-              <motion.div
-                key={`${product.product_id}-${product.vendor_id}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-              >
-                <ProductCard
-                  product={product}
+            {products
+              .filter((p) => p?.variants?.length > 0)
+              .slice(0, 5)
+              .map((product) => (
+                <motion.div
                   key={`${product.product_id}-${product.vendor_id}`}
-                />
-              </motion.div>
-            ))}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <ProductCard
+                    product={product}
+                    key={`${product.product_id}-${product.vendor_id}`}
+                  />
+                </motion.div>
+              ))}
           </div>
         </div>
       </div>

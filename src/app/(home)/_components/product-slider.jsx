@@ -288,17 +288,19 @@ export default function ProductSlider({ products }) {
           {/* Slider */}
           <div className=" py-4 md:py-5 relative">
             <Slider {...sliderSettings}>
-              {products.map((product) => (
-                <motion.div
-                  key={`${product.product_id}-${product.vendor_id}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="px-3"
-                >
-                  <ProductCard product={product} />
-                </motion.div>
-              ))}
+              {products
+                .filter((p) => p?.variants?.some((v) => v.available_count > 0))
+                .map((product) => (
+                  <motion.div
+                    key={`${product.product_id}-${product.vendor_id}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="px-3"
+                  >
+                    <ProductCard product={product} />
+                  </motion.div>
+                ))}
             </Slider>
           </div>
         </div>
