@@ -153,11 +153,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-// --- ignore invalid SSL in development ---
-if (process.env.NODE_ENV === "development") {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-}
-
 const AUTH_ROUTES = ["/auth/login", "/auth/register"];
 const ROLES = {
   VENDOR: "invent_vendor",
