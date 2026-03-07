@@ -10,8 +10,6 @@ export default function ProductSliderSection({ products }) {
     return null;
   }
 
-  console.log(products);
-
   return (
     <section className="my-2 noto-sans-text">
       <div className="container max-w-7xl mx-auto px-4 xl:pt-10 sm:pt-4 pt-5 relative">

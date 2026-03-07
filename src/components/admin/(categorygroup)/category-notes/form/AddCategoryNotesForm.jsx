@@ -73,7 +73,6 @@ export default function AddCatgeoryNotesForm({ setIsOpen }) {
   const onSubmit = async (values) => {
     setIsLoading(true);
 
-    console.log(values);
     try {
       await uploadData(values);
     } catch (error) {
