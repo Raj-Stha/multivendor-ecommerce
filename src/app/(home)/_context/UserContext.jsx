@@ -237,6 +237,8 @@ export const UserProvider = ({ children }) => {
 
       const data = await res.json();
 
+      console.log(data);
+
       let userDetails = null;
       if (Array.isArray(data.details) && data.details.length > 0) {
         userDetails = data.details[0];
@@ -270,6 +272,10 @@ export const UserProvider = ({ children }) => {
 
       setUser(null);
       deleteCookie("userLogged");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("popStatus");
+        // localStorage.removeItem("user_location");
+      }
       return true;
     } catch (err) {
       console.error("Error logging out:", err);

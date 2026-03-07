@@ -46,8 +46,6 @@ function SignUp() {
 
       const data = await response.json();
 
-      console.log(data);
-
       if (response.ok) {
         const successMessage =
           data.details[0] || "Account created successfully!";

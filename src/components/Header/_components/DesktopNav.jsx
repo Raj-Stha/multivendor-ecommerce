@@ -4,30 +4,54 @@ import Link from "next/link";
 import SearchBar from "./SearchBar";
 import CartIcon from "./CartIcon";
 import NotificationIcon from "./NotificationIcon";
-
+import { parseLatLon, getLocationAddress } from "@/lib/getLocationAddress";
 import AccountMenu from "./AccountMenu";
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import LocationPopup from "../../LocationPopup";
 import { MapPin } from "lucide-react";
+import { useUser } from "@/app/(home)/_context/UserContext";
 
 export default function DesktopNav() {
   const [showPopup, setShowPopup] = useState(false);
+
+  const { user, getUser } = useUser();
   const [locationName, setLocationName] = useState("");
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("user_location");
-      if (stored) {
-        const location = JSON.parse(stored);
-        setLocationName(location.name);
-      }
-    } catch (error) {
-      console.error("Error loading location:", error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const stored = localStorage.getItem("user_location");
+  //     if (stored) {
+  //       const location = JSON.parse(stored);
+  //       setLocationName(location.name);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error loading location:", error);
+  //   }
+  // }, []);
 
+  useEffect(() => {
+    if (!user || !Array.isArray(user) || user.length === 0) return;
+
+    const loadLocation = async () => {
+      const locationString = user[0]?.delivery_location;
+
+      if (!locationString) return;
+
+      const coords = parseLatLon(locationString);
+
+      if (!coords) return;
+
+      const address = await getLocationAddress(coords.lat, coords.lon);
+
+      if (address) {
+        setLocationName(address);
+      }
+    };
+
+    loadLocation();
+  }, [user]);
   return (
     <nav className="bg-white  shadow-sm w-full sticky-nav jost-text ">
       <div className="container max-w-7xl mx-auto py-3 px-4 md:px-6 flex items-center justify-between gap-4">
@@ -45,10 +69,25 @@ export default function DesktopNav() {
           </Link>
         </div>
 
-        {showPopup && (
+        {/* {showPopup && (
           <LocationPopup
             status={showPopup}
             // when popup closes, also reset state
+            onClose={() => setShowPopup(false)}
+          />
+        )} */}
+
+        {showPopup && (
+          <LocationPopup
+            status={showPopup}
+            initialLocation={
+              locationName && user?.[0]?.delivery_location
+                ? {
+                    name: locationName,
+                    ...parseLatLon(user[0].delivery_location),
+                  }
+                : null
+            }
             onClose={() => setShowPopup(false)}
           />
         )}
@@ -58,10 +97,12 @@ export default function DesktopNav() {
           className="flex items-center gap-2 px-5 py-2 cursor-pointer rounded-lg bg-primary/5 hover:bg-primary/20 transition-colors text-black flex-shrink-0"
         >
           <MapPin className="w-4 h-4" />
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start  w-[120px]">
             <span className="text-xs opacity-80">Deliver to</span>
-            <span className="text-sm font-semibold truncate max-w-[120px]">
-              {locationName.substring(0, 10)} ..
+            <span className="text-sm font-semibold truncate">
+              {locationName
+                ? locationName.substring(0, 20) + "..."
+                : ".........."}
             </span>
           </div>
         </button>

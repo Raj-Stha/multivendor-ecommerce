@@ -1,17 +1,3 @@
-// import type { NextConfig } from "next";
-
-// const nextConfig: NextConfig = {
-//   /* config options here */
-//   images: {
-//     domains: ["kalpabrikshya.com.np", "images.unsplash.com", "45.117.153.186"],
-//   },
-// };
-
-// export default nextConfig;
-
-// Next Js 16
-
-// next.config.ts
 import { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -27,6 +13,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
         port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "45.117.153.186",
+        port: "3008",
         pathname: "/**",
       },
     ],
