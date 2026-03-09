@@ -171,6 +171,23 @@ const SIDEBAR_ITEMS = [
   },
 
   {
+    type: "collapsible",
+    label: "Banner Management",
+    items: [
+      {
+        label: "Banner",
+        href: "/dashboard/admin/banner",
+        icon: Package,
+      },
+      {
+        label: "Banner Notes",
+        href: "/dashboard/admin/banner-notes",
+        icon: Box,
+      },
+    ],
+  },
+
+  {
     type: "group",
     label: "System Paramters",
     items: [
