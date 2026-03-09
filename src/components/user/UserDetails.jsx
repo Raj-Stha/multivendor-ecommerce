@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useUser } from "@/app/(home)/_context/UserContext";
+import { MapPin } from "lucide-react";
 
 export default function UserDetails({
   userInfo,
   userLoginName,
-  userEmail,          // <-- added
+  userEmail, // <-- added
   deliveryLocation,
+  shippingAddress,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
@@ -48,7 +50,7 @@ export default function UserDetails({
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify(updatedFields),
-        }
+        },
       );
 
       if (!res.ok) throw new Error("Failed to update user details");
@@ -96,12 +98,10 @@ export default function UserDetails({
           <span className="font-semibold">Login Name:</span>
           <span>{userLoginName}</span>
         </div>
-
         <div className="flex justify-between">
           <span className="font-semibold">Email:</span>
           <span>{userEmail}</span> {/* <-- email displayed, not editable */}
         </div>
-
         {userFields.map((field) => (
           <div className="flex justify-between" key={field}>
             <span className="font-semibold">{formatLabel(field)}:</span>
@@ -118,11 +118,25 @@ export default function UserDetails({
             )}
           </div>
         ))}
-
-        <div className="flex justify-between">
+        <div className="bg-white shadow-sm  rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <span className="font-semibold text-gray-700 flex items-center gap-1">
+            <MapPin className="w-4 h-4 text-primary" /> Shipping Address:
+          </span>
+          <span className="text-gray-600 break-words sm:text-right sm:w-2/3 flex items-center gap-4">
+            {shippingAddress || "-"}
+            <button
+              onClick={() => navigator.clipboard.writeText(shippingAddress)}
+              className="text-gray-400 bg-primary/15 shadow-2xl rounded-md p-1 cursor-pointer hover:text-gray-700"
+              title="Copy address"
+            >
+              📋
+            </button>
+          </span>
+        </div>
+        {/* <div className="flex justify-between">
           <span className="font-semibold">Delivery Location:</span>
           <span>{deliveryLocation}</span>
-        </div>
+        </div> */}
       </div>
     </>
   );

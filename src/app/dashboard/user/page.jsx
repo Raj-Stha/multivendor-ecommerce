@@ -67,10 +67,11 @@ function UserDashboard() {
               <li key={tab.id}>
                 <button
                   onClick={() => handleTabChange(tab.id)}
-                  className={`w-full text-left px-3 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${activeTab === tab.id
-                    ? "bg-primary text-white font-medium shadow-sm"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    }`}
+                  className={`w-full text-left px-3 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
+                    activeTab === tab.id
+                      ? "bg-primary text-white font-medium shadow-sm"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
                 >
                   <Icon className="h-5 w-5" />
                   {tab.label}
@@ -108,6 +109,7 @@ function UserDashboard() {
   const userLoginName = user?.[0]?.user_login_name || "-";
   const deliveryLocation = user?.[0]?.delivery_location || "-";
   const userEmail = user?.[0]?.user_email || "-";
+  const shippingAddress = user?.[0]?.delivery_address || "-";
 
   return (
     <>
@@ -145,6 +147,7 @@ function UserDashboard() {
                     userLoginName={userLoginName}
                     deliveryLocation={deliveryLocation}
                     userEmail={userEmail}
+                    shippingAddress={shippingAddress}
                   />
                 )}
                 {activeTab === "orders" && <UserOrders />}
