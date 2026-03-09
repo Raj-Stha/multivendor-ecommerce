@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChevronDown, User, LogOut, LogIn } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -41,32 +41,16 @@ const accountMenuItems = [
 export default function AccountMenu() {
   const { user, logoutUser } = useUser();
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
 
-  // ✅ Read cookie
-  const getCookie = (name) => {
-    if (typeof document === "undefined") return null;
-    const match = document.cookie.match(
-      new RegExp("(^| )" + name + "=([^;]+)")
-    );
-    return match ? match[2] : null;
-  };
-
-  // ✅ Watch for context or cookie
-  useEffect(() => {
-    const cookieLoggedIn = getCookie("userLogged") === "true";
-    const contextLoggedIn =
-      !!user && (Array.isArray(user) ? user.length > 0 : true);
-
-    setIsLogged(cookieLoggedIn || contextLoggedIn);
-  }, [user]);
+  // ✅ Login check directly from user data
+  const isLogged = !!user?.[0]?.user_login_name;
 
   const handleLogout = async () => {
     const success = await logoutUser();
+
     if (success) {
       toast.success("Logged out successfully");
-      setIsLogged(false);
-      window.location.href = "/"; // redirect to homepage
+      window.location.href = "/";
     } else {
       toast.error("Logout failed. Try again.");
     }
@@ -79,11 +63,11 @@ export default function AccountMenu() {
       onMouseLeave={() => setAccountMenuOpen(false)}
     >
       <div className="flex items-center">
-        {isLogged && user?.avatar ? (
+        {isLogged && user?.[0]?.avatar ? (
           <div className="h-7 w-7 rounded-full overflow-hidden">
             <Image
-              src={user.avatar}
-              alt={user.name || "User"}
+              src={user[0].avatar}
+              alt={user?.[0]?.user_login_name || "User"}
               width={28}
               height={28}
               className="object-cover"
@@ -94,15 +78,12 @@ export default function AccountMenu() {
             <User className="h-5 w-5" />
           </div>
         )}
-        <ChevronDown
-          className={`h-4  w-4 ml-1 text-white transition-colors ${
-            accountMenuOpen ? "text-white" : "hover:text-white"
-          }`}
-        />
+
+        <ChevronDown className="h-4 w-4 ml-1 text-white" />
       </div>
 
       <div
-        className={`absolute top-full right-0 lg:left-[-64px] mt-5 w-48 bg-white shadow-lg rounded-sm border-none  transition-all duration-200 transform z-50 origin-top-right text-sm text-gray-600 ${
+        className={`absolute top-full right-0 lg:left-[-64px] mt-5 w-48 bg-white shadow-lg rounded-sm transition-all duration-200 transform z-50 origin-top-right text-sm text-gray-600 ${
           accountMenuOpen
             ? "opacity-100 visible translate-y-0"
             : "opacity-0 invisible -translate-y-2"
@@ -132,7 +113,7 @@ export default function AccountMenu() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="flex items-center px-4 py-2 hover:bg-primary hover:text-white cursor-pointer transition-colors"
+                className="flex items-center px-4 py-2 hover:bg-primary hover:text-white transition-colors"
               >
                 <Icon className="w-5 h-5 mr-3" />
                 <span>{item.label}</span>
