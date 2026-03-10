@@ -97,7 +97,7 @@ export default function PromoList({ data, promoNotes, meta, page }) {
                             <EditBannerDetailsForm
                               data={d}
                               manufacturer={data}
-                              promoNotes={promoNotes}
+                              bannerNotes={promoNotes}
                             />
                           </div>
                         </div>

@@ -36,24 +36,24 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  promo_id: z.string().min(1, "Promo is required"),
+  banner_id: z.string().min(1, "Banner is required"),
 });
 
-export default function EditPromoDetailsForm({
+export default function EditBannerDetailsForm({
   data,
-  promoNotes = [],
+  bannerNotes = [],
   manufacturer,
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
   const router = useRouter();
 
-  const [selectedPromoId, setSelectedPromoId] = useState(
-    String(data?.promo_id || "")
+  const [selectedBannerId, setSelectedBannerId] = useState(
+    String(data?.banner_id || ""),
   );
 
   const [noteKeyValues, setNoteKeyValues] = useState(() => {
-    const detail = data?.promo_details || {};
+    const detail = data?.banner_details || {};
     return Object.entries(detail)
       .filter(([key, value]) => value !== null && value !== undefined)
       .map(([key, value]) => ({
@@ -68,7 +68,7 @@ export default function EditPromoDetailsForm({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      promo_id: String(data?.promo_id || ""),
+      banner_id: String(data?.banner_id || ""),
     },
   });
 
@@ -87,14 +87,14 @@ export default function EditPromoDetailsForm({
   // Update note value when user types
   function handleNoteValueChange(detailName, value) {
     setNoteKeyValues((prev) =>
-      prev.map((n) => (n.key === detailName ? { key: detailName, value } : n))
+      prev.map((n) => (n.key === detailName ? { key: detailName, value } : n)),
     );
   }
 
   // Submit payload to backend
   const uploadData = async (payload) => {
     try {
-      const response = await fetch(`${baseUrl}/updatepromosdetails`, {
+      const response = await fetch(`${baseUrl}/updatebannersdetails`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -123,14 +123,14 @@ export default function EditPromoDetailsForm({
     setIsLoading(true);
 
     const payload = {
-      promo_id: parseInt(values.promo_id),
+      banner_id: parseInt(values.banner_id),
     };
 
     noteKeyValues.forEach(({ key, value }) => {
       if (value) payload[key] = value;
     });
 
-    const previousKeys = Object.keys(data?.promo_details || {});
+    const previousKeys = Object.keys(data?.banner_details || {});
     previousKeys.forEach((prevKey) => {
       const stillSelected = noteKeyValues.find((n) => n.key === prevKey);
       if (!stillSelected) {
@@ -141,7 +141,7 @@ export default function EditPromoDetailsForm({
     try {
       await uploadData(payload);
     } catch (error) {
-      console.error("Failed to update manufacturer:", error);
+      console.error("Failed to update banner:", error);
     } finally {
       setIsLoading(false);
     }
@@ -162,7 +162,7 @@ export default function EditPromoDetailsForm({
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Edit Promo</DialogTitle>
+          <DialogTitle>Edit Banner</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -170,13 +170,13 @@ export default function EditPromoDetailsForm({
             {/* manufacturer select */}
 
             {/* Notes Section */}
-            {selectedPromoId && (
+            {selectedBannerId && (
               <div className="space-y-4 py-4">
-                <Label>Select Promo Notes</Label>
+                <Label>Select Banner Notes</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {promoNotes.map((note, index) => {
+                  {bannerNotes.map((note, index) => {
                     const isSelected = noteKeyValues.some(
-                      (n) => n.key === note.detail_name
+                      (n) => n.key === note.detail_name,
                     );
                     const noteValue =
                       noteKeyValues.find((n) => n.key === note.detail_name)
@@ -194,7 +194,7 @@ export default function EditPromoDetailsForm({
                             onChange={(e) =>
                               handleNoteSelection(
                                 note.detail_name,
-                                e.target.checked
+                                e.target.checked,
                               )
                             }
                             className="rounded"
@@ -221,7 +221,7 @@ export default function EditPromoDetailsForm({
                             onChange={(e) =>
                               handleNoteValueChange(
                                 note.detail_name,
-                                e.target.value
+                                e.target.value,
                               )
                             }
                             required
