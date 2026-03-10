@@ -1,7 +1,7 @@
 "use client";
 
-import EditPromoForm from "./form/EditPromoForm";
-import EditPromoDetailsForm from "./form/EditPromoDetailsForm";
+import EditBannerForm from "./form/EditBannerForm";
+import EditBannerDetailsForm from "./form/EditBannerDetailsForm";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -18,16 +18,6 @@ export default function PromoList({ data, promoNotes, meta, page }) {
     router.push(`?page=${newPage}`);
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   return (
     <>
       {data && data.length > 0 ? (
@@ -35,8 +25,8 @@ export default function PromoList({ data, promoNotes, meta, page }) {
           <Accordion type="single" collapsible className="w-full">
             {data.map((d) => (
               <AccordionItem
-                key={d.promo_id}
-                value={`item-${d.promo_id}`}
+                key={d.banner_id}
+                value={`item-${d.banner_id}`}
                 className="mb-4 border rounded-lg shadow-sm bg-white hover:shadow-md transition-all"
               >
                 <div className="flex items-center justify-between w-full px-4 py-2">
@@ -45,24 +35,16 @@ export default function PromoList({ data, promoNotes, meta, page }) {
                       <div className="w-16 h-16 flex-shrink-0">
                         <img
                           src={d?.image_url || "/placeholder.svg"}
-                          alt={d.promo_name}
+                          alt={d.banner_name}
                           className="w-full h-full object-cover rounded-md border"
                         />
                       </div>
 
                       <div className="flex flex-col">
                         <h3 className="text-lg font-bold text-gray-800 mb-2">
-                          {d.promo_name}
+                          {d.banner_name}
                         </h3>
                         <div className="flex gap-4 text-gray-600 mt-1">
-                          <span className="px-2 text-sm bg-gray-50">
-                            <span className="font-medium">From:</span>{" "}
-                            {formatDate(d.valid_from)}
-                          </span>
-                          <span className="px-2 text-sm bg-gray-50">
-                            <span className="font-medium">To:</span>{" "}
-                            {formatDate(d.valid_to)}
-                          </span>
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-medium ${
                               d.active
@@ -78,40 +60,41 @@ export default function PromoList({ data, promoNotes, meta, page }) {
                   </AccordionTrigger>
 
                   <div className="ml-4">
-                    <EditPromoForm data={d} />
+                    <EditBannerForm data={d} />
                   </div>
                 </div>
 
                 <AccordionContent>
                   <div className="p-4 border-t bg-gray-50">
                     <h4 className="font-semibold text-md mb-3 text-gray-700">
-                      Promo Specifics:
+                      Banner Specifics:
                     </h4>
 
-                    {d.promo_details &&
-                    Object.keys(d.promo_details).length > 0 ? (
+                    {d.banner_details &&
+                    Object.keys(d.banner_details).length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="bg-white p-3 rounded-md shadow-sm border">
-                          {Object.entries(d.promo_details).map(([key, value]) =>
-                            value !== null &&
-                            key !== "promo_image" &&
-                            key !== "promo_id" ? (
-                              <div
-                                key={key}
-                                className="flex justify-between items-center py-1 border-b last:border-b-0"
-                              >
-                                <span className="font-medium text-gray-600 capitalize">
-                                  {key.replace(/_/g, " ")}:
-                                </span>
-                                <span className="text-gray-800 font-semibold">
-                                  {String(value)}
-                                </span>
-                              </div>
-                            ) : null
+                          {Object.entries(d.banner_details).map(
+                            ([key, value]) =>
+                              value !== null &&
+                              key !== "banner_image" &&
+                              key !== "banner_id" ? (
+                                <div
+                                  key={key}
+                                  className="flex justify-between items-center py-1 border-b last:border-b-0"
+                                >
+                                  <span className="font-medium text-gray-600 capitalize">
+                                    {key.replace(/_/g, " ")}:
+                                  </span>
+                                  <span className="text-gray-800 font-semibold">
+                                    {String(value)}
+                                  </span>
+                                </div>
+                              ) : null,
                           )}
 
                           <div className="mt-4 flex justify-end">
-                            <EditPromoDetailsForm
+                            <EditBannerDetailsForm
                               data={d}
                               manufacturer={data}
                               promoNotes={promoNotes}
@@ -121,7 +104,7 @@ export default function PromoList({ data, promoNotes, meta, page }) {
                       </div>
                     ) : (
                       <p className="text-sm text-gray-500">
-                        No additional details available for this promo.
+                        No additional details available for this banner.
                       </p>
                     )}
                   </div>
@@ -156,7 +139,7 @@ export default function PromoList({ data, promoNotes, meta, page }) {
       ) : (
         <div className="w-full text-center py-8">
           <p className="text-gray-500">
-            No promo found. Add a new promo to get started.
+            No Banner found. Add a new banner to get started.
           </p>
         </div>
       )}

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -28,13 +28,11 @@ import {
 import { toast } from "react-toastify";
 
 const formSchema = z.object({
-  new_promo_name: z.string().min(1, "Promo Name is required"),
-  valid_from: z.string().min(1, "Valid From date is required"),
-  valid_to: z.string().min(1, "Valid To date is required"),
+  new_banner_name: z.string().min(1, "Banner Name is required"),
   active: z.boolean(),
 });
 
-export default function EditPromoForm({ data }) {
+export default function EditBannerForm({ data }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
   const [imagePreview, setImagePreview] = useState(data?.image_url ?? "");
@@ -46,12 +44,21 @@ export default function EditPromoForm({ data }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      new_promo_name: data?.promo_name ?? "",
-      valid_from: data?.valid_from ? data.valid_from.split("T")[0] : "",
-      valid_to: data?.valid_to ? data.valid_to.split("T")[0] : "",
+      new_banner_name: data?.banner_name ?? "",
       active: data?.active ?? true,
     },
   });
+
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        new_banner_name: data?.banner_name ?? "",
+        active: data?.active ?? true,
+      });
+
+      setImagePreview(data?.image_url ?? "");
+    }
+  }, [data, form]);
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -76,7 +83,7 @@ export default function EditPromoForm({ data }) {
 
   const updateData = async (values) => {
     try {
-      const response = await fetch(`${baseUrl}/updatepromos`, {
+      const response = await fetch(`${baseUrl}/updatebanners`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -117,9 +124,9 @@ export default function EditPromoForm({ data }) {
     }
   };
 
-  const updatePromoImage = async (values) => {
+  const updateBannerImage = async (values) => {
     try {
-      const response = await fetch(`${baseUrl}/updatepromosimage`, {
+      const response = await fetch(`${baseUrl}/updatebannersimage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -139,10 +146,8 @@ export default function EditPromoForm({ data }) {
     setIsLoading(true);
 
     const payload = {
-      promo_name: data?.promo_name,
-      new_promo_name: values.new_promo_name,
-      valid_from: values.valid_from.split("T")[0],
-      valid_to: values.valid_to.split("T")[0],
+      banner_name: data?.banner_name,
+      new_banner_name: values.new_banner_name,
       active: values.active ? "true" : "false",
     };
 
@@ -154,12 +159,12 @@ export default function EditPromoForm({ data }) {
 
       const result = await uploadImage(uploadImageData);
       if (result) {
-        let updatePromoImageData = {
+        let updateBannerImageData = {
           image_id: result?.details[0]?.image_id,
-          promo_id: data?.promo_id,
+          banner_id: data?.banner_id,
         };
 
-        await updatePromoImage(updatePromoImageData);
+        await updateBannerImage(updateBannerImageData);
       }
     }
     await updateData(payload);
@@ -180,19 +185,19 @@ export default function EditPromoForm({ data }) {
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Edit Promo</DialogTitle>
+          <DialogTitle>Edit Banner</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid space-y-4 pt-4 pb-2">
               <FormField
                 control={form.control}
-                name="new_promo_name"
+                name="new_banner_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="pb-2">Promo Name</FormLabel>
+                    <FormLabel className="pb-2">Banner Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Promo Name" {...field} />
+                      <Input placeholder="Banner Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -202,7 +207,7 @@ export default function EditPromoForm({ data }) {
 
             <div className="space-y-2">
               <Label htmlFor="image-input" className="pb-2">
-                Promo Image
+                Banner Image
               </Label>
               <Input
                 id="image-input"
@@ -224,7 +229,7 @@ export default function EditPromoForm({ data }) {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 pb-2 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 pb-2 gap-4">
               <FormField
                 control={form.control}
                 name="valid_from"
@@ -252,7 +257,7 @@ export default function EditPromoForm({ data }) {
                   </FormItem>
                 )}
               />
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField

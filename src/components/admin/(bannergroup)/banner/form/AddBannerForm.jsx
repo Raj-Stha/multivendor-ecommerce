@@ -28,13 +28,11 @@ import {
 import { PlusIcon } from "lucide-react";
 
 const formSchema = z.object({
-  promo_name: z.string().min(1, "Promo Name is required"),
-  valid_from: z.string().min(1, "Valid From date is required"),
-  valid_to: z.string().min(1, "Valid To date is required"),
+  banner_name: z.string().min(1, "Banner Name is required"),
   active: z.boolean(),
 });
 
-export default function AddPromoForm() {
+export default function AddBannerForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setIsOpen] = useState(false);
 
@@ -45,16 +43,14 @@ export default function AddPromoForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      promo_name: "",
-      valid_from: "",
-      valid_to: "",
+      banner_name: "",
       active: true,
     },
   });
 
   const uploadData = async (values) => {
     try {
-      const response = await fetch(`${baseUrl}/updatepromos`, {
+      const response = await fetch(`${baseUrl}/updatebanners`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,8 +81,6 @@ export default function AddPromoForm() {
     setIsLoading(true);
     const payload = {
       ...values,
-      valid_from: values.valid_from.split("T")[0], // always YYYY-MM-DD
-      valid_to: values.valid_to.split("T")[0], // always YYYY-MM-DD
       active: values.active ? "true" : "false", // convert boolean to string
     };
     try {
@@ -102,7 +96,7 @@ export default function AddPromoForm() {
         <DialogTrigger asChild>
           <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
             <PlusIcon className="w-5 h-5" />
-            <span className="hidden md:inline">Add Promo</span>
+            <span className="hidden md:inline">Add Banner</span>
           </Button>
         </DialogTrigger>
         <DialogContent
@@ -110,49 +104,19 @@ export default function AddPromoForm() {
           onInteractOutside={(event) => event.preventDefault()}
         >
           <DialogHeader>
-            <DialogTitle>Add New Promo</DialogTitle>
+            <DialogTitle>Add New Banner</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid space-y-4 pt-4 pb-2">
                 <FormField
                   control={form.control}
-                  name="promo_name"
+                  name="banner_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="pb-2">Promo Name</FormLabel>
+                      <FormLabel className="pb-2">Banner Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Promo Name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 pb-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="valid_from"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="pb-2">Valid From</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="valid_to"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="pb-2">Valid To</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
+                        <Input placeholder="Banner Name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

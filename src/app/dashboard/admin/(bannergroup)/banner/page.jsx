@@ -1,5 +1,5 @@
-import PromoList from "../../../../../components/admin/(promogroup)/promo/PromoList";
-import AddPromoForm from "../../../../../components/admin/(promogroup)/promo/form/AddPromoForm";
+import BannerList from "../../../../../components/admin/(bannergroup)/banner/BannerList";
+import AddBannerForm from "../../../../../components/admin/(bannergroup)/banner/form/AddBannerForm";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 export const dynamic = "force-dynamic"; // ensures fresh data on each request
 
@@ -27,7 +27,7 @@ export default async function Promo({ searchParams }) {
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
   // Fetch promos
-  const promoRes = await getData(`${baseUrl}/getpromos`, {
+  const promoRes = await getData(`${baseUrl}/getbanners`, {
     page_number: page,
     limit,
   });
@@ -35,7 +35,7 @@ export default async function Promo({ searchParams }) {
   const meta = promoRes?.hint || { page_number: page, total_pages: 1 };
 
   // Fetch promo notes
-  const notesRes = await getData(`${baseUrl}/getpromosnotes`, {
+  const notesRes = await getData(`${baseUrl}/getbannersnotes`, {
     page_number: page,
     limit,
   });
@@ -48,16 +48,16 @@ export default async function Promo({ searchParams }) {
           <div className="flex space-x-2 items-center">
             <SidebarTrigger />
             <h2 className="lg:text-2xl md:text-xl text-base font-semibold text-gray-800">
-              Manage Promos
+              Manage Banners
             </h2>
           </div>
           <div className="flex gap-2">
-            <AddPromoForm />
+            <AddBannerForm />
           </div>
         </div>
       </header>
       <div className="container mx-auto px-[2%] py-[2%]">
-        <PromoList
+        <BannerList
           data={data}
           promoNotes={promoNotes}
           meta={meta}
