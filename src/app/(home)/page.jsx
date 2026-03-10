@@ -32,37 +32,46 @@ async function safeFetch(url, options = {}) {
 }
 
 export default async function Home() {
-  const [productData, categoryData, category21] = await Promise.all([
-    safeFetch(`${baseurl}/getproducts`, {
-      method: "POST",
-      body: {
-        limit: 12,
-        page_number: 1,
-        price_from: 0,
-        price_to: 100000,
-        product_name: "",
-        order_by: "price_desc",
-      },
-    }),
-    safeFetch(`${baseurl}/getcategory`, {
-      method: "POST",
-      body: {
-        page_number: 1,
-        limit: 16,
-      },
-    }),
-    safeFetch(`${baseurl}/getproducts`, {
-      method: "POST",
-      body: {
-        limit: 8,
-        page_number: 1,
-        price_from: 0,
-        price_to: 100000,
-        product_name: "",
-        order_by: "price_desc",
-      },
-    }),
-  ]);
+  const [bannerData, productData, categoryData, category21] = await Promise.all(
+    [
+      safeFetch(`${baseurl}/getbanners`, {
+        method: "POST",
+        body: {
+          limit: 8,
+          page_number: 1,
+        },
+      }),
+      safeFetch(`${baseurl}/getproducts`, {
+        method: "POST",
+        body: {
+          limit: 12,
+          page_number: 1,
+          price_from: 0,
+          price_to: 100000,
+          product_name: "",
+          order_by: "price_desc",
+        },
+      }),
+      safeFetch(`${baseurl}/getcategory`, {
+        method: "POST",
+        body: {
+          page_number: 1,
+          limit: 16,
+        },
+      }),
+      safeFetch(`${baseurl}/getproducts`, {
+        method: "POST",
+        body: {
+          limit: 8,
+          page_number: 1,
+          price_from: 0,
+          price_to: 100000,
+          product_name: "",
+          order_by: "price_desc",
+        },
+      }),
+    ],
+  );
 
   const banners = [
     {
@@ -121,7 +130,7 @@ export default async function Home() {
     <div className="">
       <LocationPopup />
       {/* ✅ Pass banners here */}
-      <Hero banners={banners} />
+      <Hero banners={bannerData?.details} />
       <ProductSliderSection products={productData?.details} />
       <CategoriesSection categories={categoryData?.details} />
       <ProductSlider products={productData?.details} />

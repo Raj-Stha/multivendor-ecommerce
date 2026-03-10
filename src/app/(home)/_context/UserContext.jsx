@@ -114,8 +114,6 @@ export const UserProvider = ({ children }) => {
       }
 
       setUser(users);
-
-      console.log(users);
     } catch (err) {
       console.error("Error loading user:", err);
       setUser(null);

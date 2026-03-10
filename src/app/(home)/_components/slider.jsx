@@ -1,106 +1,6 @@
-// "use client";
-
-// import { useRef } from "react";
-// import Slider from "react-slick";
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
-// import { ChevronLeft, ChevronRight } from "lucide-react";
-
-// // Banner images
-// const banners = [
-//   {
-//     image:
-//       "https://qualitycomputer.com.np/web/image/252137-09549ef2/iPhone%2016series%20web%20banner%202025.jpg",
-//   },
-//   {
-//     image:
-//       "https://qualitycomputer.com.np/web/image/252138-a28c1638/Lenovo%20Laptop%20Deals%20web.jpg",
-//   },
-// ];
-
-// // Custom arrow components
-// function NextArrow({ onClick }) {
-//   return (
-//     <div
-//       className="absolute top-1/2 right-2 sm:right-4 z-10 transform -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-md cursor-pointer transition"
-//       onClick={onClick}
-//     >
-//       <ChevronRight size={20} />
-//     </div>
-//   );
-// }
-
-// function PrevArrow({ onClick }) {
-//   return (
-//     <div
-//       className="absolute top-1/2 left-2 sm:left-4 z-10 transform -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-md cursor-pointer transition"
-//       onClick={onClick}
-//     >
-//       <ChevronLeft size={20} />
-//     </div>
-//   );
-// }
-
-// export default function Hero() {
-//   const sliderRef = useRef(null);
-
-//   const settings = {
-//     dots: true,
-//     infinite: true,
-//     speed: 600,
-//     slidesToShow: 1,
-//     slidesToScroll: 1,
-//     autoplay: true,
-//     autoplaySpeed: 5000,
-//     cssEase: "ease-in-out",
-//     arrows: true,
-//     nextArrow: <NextArrow />,
-//     prevArrow: <PrevArrow />,
-//     responsive: [
-//       {
-//         breakpoint: 1024,
-//         settings: {
-//           arrows: true,
-//         },
-//       },
-//       {
-//         breakpoint: 768,
-//         settings: {
-//           arrows: true,
-//         },
-//       },
-//       {
-//         breakpoint: 480,
-//         settings: {
-//           arrows: true,
-//         },
-//       },
-//     ],
-//   };
-
-//   return (
-//     <section className="relative overflow-hidden">
-//       <Slider ref={sliderRef} {...settings} className="w-full h-full">
-//         {banners.map((slide, index) => (
-//           <div
-//             key={index}
-//             className="relative w-full h-[40vh] sm:h-[50vh] md:h-[60vh]"
-//           >
-//             <div
-//               className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
-//               style={{ backgroundImage: `url(${slide.image})` }}
-//             />
-//             <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
-//           </div>
-//         ))}
-//       </Slider>
-//     </section>
-//   );
-// }
-
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -111,27 +11,53 @@ export default function Hero({ banners = [] }) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  // ✅ Transform API response to UI format
+  const formattedBanners = useMemo(() => {
+    return banners.map((banner) => ({
+      image: banner.image_url,
+      primaryTitle: banner.banner_details?.sub_heading || "",
+      title: banner.banner_name || "",
+      description: banner.banner_details?.description || "",
+      buttons: [
+        {
+          text: banner.banner_details?.bttn1_label,
+          link: banner.banner_details?.bttn1_link,
+        },
+        {
+          text: banner.banner_details?.bttn2_label,
+          link: banner.banner_details?.bttn2_link,
+        },
+      ].filter((btn) => btn.text),
+    }));
+  }, [banners]);
+
   useEffect(() => {
-    if (isHovered || banners.length === 0) return;
+    if (isHovered || formattedBanners.length === 0) return;
+
     const timer = setInterval(() => {
-      handleSlideChange((activeSlide + 1) % banners.length);
+      handleSlideChange((activeSlide + 1) % formattedBanners.length);
     }, 6000);
+
     return () => clearInterval(timer);
-  }, [activeSlide, banners.length, isHovered]);
+  }, [activeSlide, formattedBanners.length, isHovered]);
 
   const handleSlideChange = (index) => {
-    if (isAnimating || banners.length === 0) return;
+    if (isAnimating || formattedBanners.length === 0) return;
+
     setPrevSlide(activeSlide);
     setIsAnimating(true);
     setActiveSlide(index);
+
     setTimeout(() => setIsAnimating(false), 700);
   };
 
-  if (!banners.length) return null;
+  if (!formattedBanners.length) return null;
 
-  const currentSlide = banners[activeSlide];
+  const currentSlide = formattedBanners[activeSlide];
   const previousSlide =
-    prevSlide !== null ? banners[prevSlide] : banners[activeSlide];
+    prevSlide !== null
+      ? formattedBanners[prevSlide]
+      : formattedBanners[activeSlide];
 
   const textVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -149,7 +75,7 @@ export default function Hero({ banners = [] }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* 🔹 Previous Slide (blurred background) */}
+      {/* 🔹 Previous Slide */}
       {previousSlide && (
         <motion.div
           key={`prev-${prevSlide}`}
@@ -178,9 +104,9 @@ export default function Hero({ banners = [] }) {
       {/* 🔹 Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60 z-[1]" />
 
-      {/* 🔹 Text Content with Frosted Background */}
-      <div className="relative z-[2] container mx-auto   px-[3%] xl:px-[5%] h-[90vh] flex items-center">
-        <div className="max-w-2xl text-white bg-black/40 rounded-xl px-5 py-5 xl:px-10 xl:py-10 space-y-6  ">
+      {/* 🔹 Text Content */}
+      <div className="relative z-[2] container mx-auto px-[3%] xl:px-[5%] h-[90vh] flex items-center">
+        <div className="max-w-2xl text-white bg-black/40 rounded-xl px-5 py-5 xl:px-10 xl:py-10 space-y-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={`text-${activeSlide}`}
@@ -192,7 +118,7 @@ export default function Hero({ banners = [] }) {
                 <motion.h4
                   variants={textVariants}
                   custom={0}
-                  className="text-sm sm:text-lg  tracking-widest  font-semibold uppercase mb-2"
+                  className="text-sm sm:text-lg tracking-widest font-semibold uppercase mb-2"
                 >
                   {currentSlide.primaryTitle}
                 </motion.h4>
@@ -210,7 +136,9 @@ export default function Hero({ banners = [] }) {
                 variants={textVariants}
                 custom={2}
                 className="text-sm sm:text-base md:text-lg mb-8 text-white leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: currentSlide.description }}
+                dangerouslySetInnerHTML={{
+                  __html: currentSlide.description,
+                }}
               />
 
               {Array.isArray(currentSlide.buttons) &&
@@ -224,7 +152,7 @@ export default function Hero({ banners = [] }) {
                       <Link
                         key={index}
                         href={btn.link || "#"}
-                        className={`px-5 !py-4 text-sm  sm:text-base shadow-md rounded-sm transition-transform hover:translate-y-[-3px] ${
+                        className={`px-5 !py-4 text-sm sm:text-base shadow-md rounded-sm transition-transform hover:translate-y-[-3px] ${
                           index === 0
                             ? "bg-primary hover:bg-primary/90 text-white"
                             : "bg-white text-primary hover:text-white border border-secondary hover:bg-secondary"
@@ -242,7 +170,7 @@ export default function Hero({ banners = [] }) {
 
       {/* 🔹 Navigation Dots */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-[3]">
-        {banners.map((_, index) => (
+        {formattedBanners.map((_, index) => (
           <button
             key={index}
             onClick={() => handleSlideChange(index)}
@@ -259,7 +187,7 @@ export default function Hero({ banners = [] }) {
       <button
         onClick={() =>
           handleSlideChange(
-            activeSlide === 0 ? banners.length - 1 : activeSlide - 1
+            activeSlide === 0 ? formattedBanners.length - 1 : activeSlide - 1,
           )
         }
         className="absolute left-5 xl:left-15 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
@@ -268,7 +196,9 @@ export default function Hero({ banners = [] }) {
       </button>
 
       <button
-        onClick={() => handleSlideChange((activeSlide + 1) % banners.length)}
+        onClick={() =>
+          handleSlideChange((activeSlide + 1) % formattedBanners.length)
+        }
         className="absolute right-5 xl:right-15 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
       >
         <ChevronRight className="h-6 w-6" />
