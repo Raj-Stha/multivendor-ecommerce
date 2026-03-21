@@ -236,7 +236,7 @@ export default function ProductSlider({ products }) {
             </div>
             <hr className="border-gray-200" />
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 p-3">
-              {products.map((product) => (
+              {products?.map((product) => (
                 <motion.div
                   key={`${product.product_id}-${product.vendor_id}`}
                   initial={{ opacity: 0, y: 20 }}

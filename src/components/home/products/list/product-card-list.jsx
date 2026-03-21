@@ -19,11 +19,11 @@ import ProductGallery from "./ProductGallery";
 export function ProductCardList({ products, border = false }) {
   // Manage selected variant and quantity per product
   const [state, setState] = useState(
-    products.map(() => ({
+    products?.map(() => ({
       selectedVariantIndex: 0,
       quantity: 1,
       isWishlisted: false,
-    }))
+    })),
   );
 
   if (!Array.isArray(products) || products.length === 0) return null;
@@ -33,8 +33,8 @@ export function ProductCardList({ products, border = false }) {
       prev.map((item, idx) =>
         idx === productIndex
           ? { ...item, selectedVariantIndex: variantIndex, quantity: 1 }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
@@ -47,7 +47,7 @@ export function ProductCardList({ products, border = false }) {
         const newQty = item.quantity + increment;
         if (newQty < 1 || newQty > selectedVariant.available_count) return item;
         return { ...item, quantity: newQty };
-      })
+      }),
     );
   };
 
@@ -56,14 +56,14 @@ export function ProductCardList({ products, border = false }) {
       prev.map((item, idx) =>
         idx === productIndex
           ? { ...item, isWishlisted: !item.isWishlisted }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-3">
-      {products.map((product, productIndex) => {
+      {products?.map((product, productIndex) => {
         if (!product.variants?.length) return null;
 
         const { selectedVariantIndex, quantity, isWishlisted } =

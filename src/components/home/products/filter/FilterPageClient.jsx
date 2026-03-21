@@ -368,7 +368,7 @@ export function ProductFilterClient({
           ) : products?.length > 0 ? (
             <>
               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-2 gap-3 sm:p-0 sm:gap-4">
-                {products.map((product, i) => (
+                {products?.map((product, i) => (
                   <motion.div
                     key={`${product.product_id}-${product.vendor_id}`}
                     initial={{ opacity: 0, y: 10 }}

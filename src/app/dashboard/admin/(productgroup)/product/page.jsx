@@ -70,3 +70,5 @@ export default async function ProductAdmin({ searchParams }) {
     </>
   );
 }
+
+export const dynamic = "force-dynamic";

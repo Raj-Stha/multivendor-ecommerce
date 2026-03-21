@@ -74,7 +74,7 @@ export default async function sitemap() {
   ];
 
   // Dynamic product URLs (frontend routes)
-  const productUrls = products.map((product) => ({
+  const productUrls = products?.map((product) => ({
     url: `${siteUrl}/products/${product.slug || product.id}`,
     lastModified: new Date(
       product.updatedAt || product.updated_at || new Date()
