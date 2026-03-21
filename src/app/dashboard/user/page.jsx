@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Menu, User, Package, LogOut } from "lucide-react";
 import Header from "@/components/Header/Header";
-import { TopBar } from "@/components/Header/top-bar";
 import MobileBottomNav from "@/components/Header/mobile-bottom-nav";
 import Footer from "@/components/Footer";
 import { useUser } from "@/app/(home)/_context/UserContext";
