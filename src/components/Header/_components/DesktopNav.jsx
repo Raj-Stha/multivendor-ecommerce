@@ -9,25 +9,10 @@ import AccountMenu from "./AccountMenu";
 import { useState, useEffect } from "react";
 import LocationPopup from "../../LocationPopup";
 import { MapPin } from "lucide-react";
-import { useUser } from "@/app/(home)/_context/UserContext";
 import { parseLatLon } from "@/lib/getLocationAddress";
 
-export default function DesktopNav() {
+export default function DesktopNav({ user, locationName }) {
   const [showPopup, setShowPopup] = useState(false);
-  const [locationName, setLocationName] = useState("");
-
-  const { user } = useUser();
-
-  // ✅ get address directly from UserContext
-  useEffect(() => {
-    if (!user || !Array.isArray(user) || user.length === 0) return;
-
-    const address = user[0]?.delivery_address;
-
-    if (address) {
-      setLocationName(address);
-    }
-  }, [user]);
 
   return (
     <nav className="bg-white shadow-sm w-full sticky-nav jost-text">
@@ -42,7 +27,7 @@ export default function DesktopNav() {
         </div>
 
         {/* Location Popup */}
-        {showPopup && (
+        {showPopup && user[0]?.delivery_location && (
           <LocationPopup
             status={showPopup}
             initialLocation={

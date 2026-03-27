@@ -34,29 +34,35 @@ export default function LocationPopup({
   const leafletMap = useRef(null);
   const markerRef = useRef(null);
 
-  const defaultLocation = {
-    name: "New York",
-    lat: 40.7128,
-    lon: -74.006,
-  };
-
   // Initialize popup with initialLocation or fallback
+  // useEffect(() => {
+  //   const popStatus = localStorage.getItem("popStatus");
+
+  //   if (initialLocation) {
+  //     setSelectedLocation(initialLocation);
+  //     setQuery(initialLocation.name);
+
+  //     if (!popStatus) setOpen(true);
+  //     return;
+  //   }
+
+  //   // fallback
+  //   setSelectedLocation(defaultLocation);
+  //   setQuery(defaultLocation.name);
+
+  //   if (!popStatus) setOpen(true);
+  // }, [initialLocation]);
+
   useEffect(() => {
     const popStatus = localStorage.getItem("popStatus");
 
+    // wait until initialLocation resolves
     if (initialLocation) {
       setSelectedLocation(initialLocation);
       setQuery(initialLocation.name);
 
       if (!popStatus) setOpen(true);
-      return;
     }
-
-    // fallback
-    setSelectedLocation(defaultLocation);
-    setQuery(defaultLocation.name);
-
-    if (!popStatus) setOpen(true);
   }, [initialLocation]);
 
   // Initialize Leaflet map

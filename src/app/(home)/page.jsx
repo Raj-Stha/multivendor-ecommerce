@@ -2,7 +2,7 @@ import Hero from "./_components/slider";
 import ProductSliderSection from "./_components/product-slider-section";
 import CategoriesSection from "./_components/categories-section";
 import ProductGrid2 from "./_components/product-grid-2";
-import LocationPopup from "@/components/LocationPopup";
+
 import ProductSlider from "./_components/product-slider";
 import { FeaturesBar } from "./_components/features-bar";
 
@@ -128,7 +128,6 @@ export default async function Home() {
 
   return (
     <div className="">
-      <LocationPopup />
       {/* ✅ Pass banners here */}
       <Hero banners={bannerData?.details} />
       <ProductSliderSection products={productData?.details} />
