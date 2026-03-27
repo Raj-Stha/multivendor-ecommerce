@@ -106,11 +106,13 @@ export default function UserOrders() {
       const data = await res.json();
 
       console.log(data);
+      if (
+        (data.code === "00000" || data?.message === "success") &&
+        data?.details?.[0]?.payment_url
+      ) {
+        const paymentUrl = data.details[0].payment_url;
 
-      if (data.code === "00000") {
-        alert("Payment successful 🎉");
-
-        fetchOrders(); // refresh list
+        window.location.href = paymentUrl;
       } else {
         alert(data.message || "Payment failed");
       }
