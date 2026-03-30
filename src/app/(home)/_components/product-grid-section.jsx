@@ -66,7 +66,7 @@ export default function ProductGrid({ initialProducts, baseurl }) {
           <button
             onClick={loadMore}
             disabled={loading}
-            className="bg-transparent text-primary px-12 md:px-24 py-2 rounded-none border-primary border-1 cursor-pointer  transition"
+            className="bg-transparent  text-primary px-12 md:px-24 py-2 rounded-none border-primary border-1 cursor-pointer  transition"
           >
             {loading ? "Loading..." : "Load More"}
           </button>

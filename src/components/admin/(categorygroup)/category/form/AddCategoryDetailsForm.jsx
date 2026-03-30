@@ -38,7 +38,7 @@ export default function AddCatgeoryForm({
   const [isLoading, setIsLoading] = useState(false);
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(
-    category?.[0]?.category_id || ""
+    category?.[0]?.category_id || "",
   );
 
   const [noteKeyValues, setNoteKeyValues] = useState([]);
@@ -68,7 +68,7 @@ export default function AddCatgeoryForm({
   // Update note value
   function handleNoteValueChange(detailName, value) {
     setNoteKeyValues((prev) =>
-      prev.map((n) => (n.key === detailName ? { key: detailName, value } : n))
+      prev.map((n) => (n.key === detailName ? { key: detailName, value } : n)),
     );
   }
 
@@ -164,7 +164,7 @@ export default function AddCatgeoryForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {categoryNotes.map((note) => {
                 const isSelected = noteKeyValues.some(
-                  (n) => n.key === note.detail_name
+                  (n) => n.key === note.detail_name,
                 );
                 const noteValue =
                   noteKeyValues.find((n) => n.key === note.detail_name)
@@ -185,7 +185,7 @@ export default function AddCatgeoryForm({
                         onChange={(e) =>
                           handleNoteSelection(
                             note.detail_name,
-                            e.target.checked
+                            e.target.checked,
                           )
                         }
                         className="rounded"
@@ -210,7 +210,7 @@ export default function AddCatgeoryForm({
                         onChange={(e) =>
                           handleNoteValueChange(
                             note.detail_name,
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         required
@@ -225,7 +225,11 @@ export default function AddCatgeoryForm({
 
         {/* Submit Button */}
         <DialogFooter className="flex justify-end mt-4">
-          <Button type="submit" className="px-6" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="px-6 cursor-pointer"
+            disabled={isLoading}
+          >
             {isLoading ? "Submitting..." : "Submit"}
           </Button>
         </DialogFooter>

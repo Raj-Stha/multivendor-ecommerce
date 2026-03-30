@@ -66,7 +66,7 @@ function UserDashboard() {
               <li key={tab.id}>
                 <button
                   onClick={() => handleTabChange(tab.id)}
-                  className={`w-full text-left px-3 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
+                  className={`w-full cursor-pointer text-left px-3 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
                     activeTab === tab.id
                       ? "bg-primary text-white font-medium shadow-sm"
                       : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -85,7 +85,7 @@ function UserDashboard() {
         <Button
           onClick={handleLogout}
           variant="destructive"
-          className="w-full flex items-center gap-2"
+          className="w-full cursor-pointer flex items-center gap-2"
         >
           <LogOut className="h-4 w-4" />
           Logout

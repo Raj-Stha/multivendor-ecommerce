@@ -174,7 +174,7 @@ export default function Hero({ banners = [] }) {
           <button
             key={index}
             onClick={() => handleSlideChange(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+            className={`w-3 h-3  cursor-pointer rounded-full transition-all duration-300 ${
               activeSlide === index
                 ? "bg-primary scale-125"
                 : "bg-white/70 hover:bg-white/90"
@@ -199,7 +199,7 @@ export default function Hero({ banners = [] }) {
         onClick={() =>
           handleSlideChange((activeSlide + 1) % formattedBanners.length)
         }
-        className="absolute right-5 xl:right-15 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
+        className="absolute right-5 xl:right-15 top-1/2 cursor-pointer -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
       >
         <ChevronRight className="h-6 w-6" />
       </button>

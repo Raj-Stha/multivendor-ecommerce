@@ -49,7 +49,7 @@ export default function EditCategoryDetailsForm({
   const router = useRouter();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(
-    String(data?.category_id || "")
+    String(data?.category_id || ""),
   );
 
   const [noteKeyValues, setNoteKeyValues] = useState(() => {
@@ -87,7 +87,7 @@ export default function EditCategoryDetailsForm({
   // Update note value when user types
   function handleNoteValueChange(detailName, value) {
     setNoteKeyValues((prev) =>
-      prev.map((n) => (n.key === detailName ? { key: detailName, value } : n))
+      prev.map((n) => (n.key === detailName ? { key: detailName, value } : n)),
     );
   }
 
@@ -217,7 +217,7 @@ export default function EditCategoryDetailsForm({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {categoryNotes.map((note, index) => {
                     const isSelected = noteKeyValues.some(
-                      (n) => n.key === note.detail_name
+                      (n) => n.key === note.detail_name,
                     );
                     const noteValue =
                       noteKeyValues.find((n) => n.key === note.detail_name)
@@ -235,7 +235,7 @@ export default function EditCategoryDetailsForm({
                             onChange={(e) =>
                               handleNoteSelection(
                                 note.detail_name,
-                                e.target.checked
+                                e.target.checked,
                               )
                             }
                             className="rounded"
@@ -262,7 +262,7 @@ export default function EditCategoryDetailsForm({
                             onChange={(e) =>
                               handleNoteValueChange(
                                 note.detail_name,
-                                e.target.value
+                                e.target.value,
                               )
                             }
                             required
@@ -277,7 +277,11 @@ export default function EditCategoryDetailsForm({
 
             {/* Submit button */}
             <DialogFooter className="flex justify-end sm:justify-end mt-4">
-              <Button type="submit" className="px-6" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="px-6 cursor-pointer"
+                disabled={isLoading}
+              >
                 {isLoading ? "Submitting..." : "Submit"}
               </Button>
             </DialogFooter>

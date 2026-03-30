@@ -1,11 +1,12 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { Switch } from "@/components/ui/switch";
 import { PenTool } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -14,9 +15,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import {
   Form,
   FormControl,
@@ -25,19 +28,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { toast } from "react-toastify";
 
 const formSchema = z.object({
   new_variant_description: z.string().min(1, "Variant Description is required"),
 });
 
-export default function EditVariantsForm({ data, productID }) {
+export default function EditVariantsForm({ data, productID, images }) {
   const [isLoading, setIsLoading] = useState(false);
   const [openBox, setOpenBox] = useState(false);
+
   const [imagePreview, setImagePreview] = useState(data?.featured_image);
+
+  const [selectedImageId, setSelectedImageId] = useState(null);
+
+  const [uploadMode, setUploadMode] = useState("existing"); // existing | upload
 
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
+
   const router = useRouter();
 
   const form = useForm({
@@ -52,12 +62,17 @@ export default function EditVariantsForm({ data, productID }) {
       form.reset({
         new_variant_description: data.variant_description ?? "",
       });
+
       setImagePreview(data?.featured_image);
+      setSelectedImageId(null);
+      setUploadMode("existing");
     }
   }, [data, form]);
 
+  /* Upload image handler */
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
+
     if (file) {
       if (file.size > 200 * 1024) {
         toast.error("Image too large. Max 200KB allowed.");
@@ -70,13 +85,25 @@ export default function EditVariantsForm({ data, productID }) {
       }
 
       const reader = new FileReader();
+
       reader.onloadend = () => {
         setImagePreview(reader.result);
+        setUploadMode("upload");
+        setSelectedImageId(null);
       };
+
       reader.readAsDataURL(file);
     }
   };
 
+  /* Select existing image */
+  const handleExistingSelect = (img) => {
+    setImagePreview(img.image_url);
+    setSelectedImageId(img.image_id);
+    setUploadMode("existing");
+  };
+
+  /* Update text data */
   const updateData = async (values) => {
     try {
       const response = await fetch(`${baseUrl}/updatevariants`, {
@@ -86,6 +113,7 @@ export default function EditVariantsForm({ data, productID }) {
         },
         body: JSON.stringify(values),
       });
+
       const result = await response.json();
 
       if (!response.ok)
@@ -94,6 +122,7 @@ export default function EditVariantsForm({ data, productID }) {
       router.refresh();
       setOpenBox(false);
       form.reset();
+
       toast.success("Updated Successfully !!!");
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
@@ -102,6 +131,7 @@ export default function EditVariantsForm({ data, productID }) {
     }
   };
 
+  /* Upload new image */
   const uploadImage = async (values) => {
     try {
       const response = await fetch(`${baseUrl}/updateimages`, {
@@ -111,7 +141,9 @@ export default function EditVariantsForm({ data, productID }) {
         },
         body: JSON.stringify(values),
       });
+
       if (!response.ok) throw new Error("Something went wrong!");
+
       return await response.json();
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
@@ -120,6 +152,7 @@ export default function EditVariantsForm({ data, productID }) {
     }
   };
 
+  /* Attach image to variant */
   const updateVariantImage = async (values) => {
     try {
       const response = await fetch(`${baseUrl}/updateproductimage`, {
@@ -129,7 +162,9 @@ export default function EditVariantsForm({ data, productID }) {
         },
         body: JSON.stringify(values),
       });
+
       if (!response.ok) throw new Error("Something went wrong!");
+
       return await response.json();
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
@@ -138,18 +173,24 @@ export default function EditVariantsForm({ data, productID }) {
     }
   };
 
+  /* Submit */
   const onSubmit = async (values) => {
     setIsLoading(true);
+
     values.variant_description = data?.variant_description;
+
     values.product_id = productID;
 
-    if (data?.featured_image !== imagePreview) {
+    /* Image Logic */
+
+    if (uploadMode === "upload" && imagePreview) {
       let uploadImageData = {
-        image64: imagePreview ? imagePreview.split(",")[1] : null,
+        image64: imagePreview.split(",")[1],
         active: true,
       };
 
       const result = await uploadImage(uploadImageData);
+
       if (result) {
         let updateVariantImageData = {
           image_id: result?.details[0]?.image_id,
@@ -159,6 +200,14 @@ export default function EditVariantsForm({ data, productID }) {
 
         await updateVariantImage(updateVariantImageData);
       }
+    } else if (uploadMode === "existing" && selectedImageId) {
+      let updateVariantImageData = {
+        image_id: selectedImageId,
+        variant_id: data?.variant_id,
+        featured: true,
+      };
+
+      await updateVariantImage(updateVariantImageData);
     }
 
     await updateData(values);
@@ -169,24 +218,51 @@ export default function EditVariantsForm({ data, productID }) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className=" bg-gray-100 hover:bg-gray-200 hover:opacity-90 cursor-pointer  px-3 py-3"
+          className="bg-gray-100 hover:bg-gray-200 px-3 py-3"
         >
-          <PenTool className="" /> Edit
+          <PenTool /> Edit
         </Button>
       </DialogTrigger>
+
       <DialogContent
         className="sm:max-w-[500px] max-h-[80%] overflow-y-auto"
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Edit Variant </DialogTitle>
+          <DialogTitle>Edit Variant</DialogTitle>
         </DialogHeader>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Existing Images */}
             <div className="space-y-2">
-              <Label htmlFor="image-input" className="pb-2">
-                Variant Image
-              </Label>
+              <Label>Select Existing Image</Label>
+
+              <div className="grid cursor-pointer grid-cols-4 gap-2 max-h-48 overflow-y-auto border p-2 rounded-md">
+                {images
+                  ?.sort((a, b) => b.image_id - a.image_id)
+                  ?.map((img) => (
+                    <img
+                      key={img.image_id}
+                      src={img.thumbnail_url}
+                      alt="variant"
+                      loading="lazy"
+                      onClick={() => handleExistingSelect(img)}
+                      className={`cursor-pointer w-full h-20 object-cover rounded border-2 
+                        ${
+                          selectedImageId === img.image_id
+                            ? "border-blue-500 border-3"
+                            : "border-gray-200"
+                        }`}
+                    />
+                  ))}
+              </div>
+            </div>
+
+            {/* Upload New */}
+            <div className="space-y-2 mt-4">
+              <Label htmlFor="image-input">Or Upload New Image</Label>
+
               <Input
                 id="image-input"
                 type="file"
@@ -196,9 +272,11 @@ export default function EditVariantsForm({ data, productID }) {
               />
             </div>
 
+            {/* Preview */}
             {imagePreview && (
               <div className="mt-4 space-y-2">
                 <Label className="text-sm text-gray-600">Preview</Label>
+
                 <img
                   src={imagePreview || "/placeholder.svg"}
                   alt="Preview"
@@ -206,24 +284,28 @@ export default function EditVariantsForm({ data, productID }) {
                 />
               </div>
             )}
+
+            {/* Description */}
             <div className="grid space-y-4 py-4">
               <FormField
                 control={form.control}
                 name="new_variant_description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="pb-2">Variant Description</FormLabel>
+                    <FormLabel>Variant Description</FormLabel>
+
                     <FormControl>
                       <Input placeholder="Variant Description" {...field} />
                     </FormControl>
+
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <DialogFooter className="flex justify-end sm:justify-end mt-4">
-              <Button type="submit" className="px-6" disabled={isLoading}>
+            <DialogFooter>
+              <Button type="submit" disabled={isLoading}>
                 {isLoading ? "Submitting..." : "Submit"}
               </Button>
             </DialogFooter>

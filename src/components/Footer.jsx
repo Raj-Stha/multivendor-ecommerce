@@ -146,7 +146,7 @@ export default function Footer() {
             />
             <Button
               type="submit"
-              className="text-white bg-primary hover:bg-secondary"
+              className="text-white cursor-pointer bg-primary hover:bg-secondary"
             >
               Subscribe
             </Button>

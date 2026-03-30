@@ -116,7 +116,7 @@ export default function PromoList({ data, promoNotes, meta, page }) {
           {/* Pagination */}
           <div className="flex justify-center gap-[2%] mt-6">
             <Button
-              className="bg-primary text-white hover:bg-primary/90"
+              className="bg-primary cursor-pointer text-white hover:bg-primary/90"
               onClick={() => goToPage(page - 1)}
               disabled={meta.page_number <= 1}
             >
@@ -128,7 +128,7 @@ export default function PromoList({ data, promoNotes, meta, page }) {
             </span>
 
             <Button
-              className="bg-primary text-white hover:bg-primary/90"
+              className="bg-primary cursor-pointer text-white hover:bg-primary/90"
               onClick={() => goToPage(page + 1)}
               disabled={meta.page_number >= meta.total_pages}
             >

@@ -127,7 +127,7 @@ function NextArrow(props) {
   return (
     <button
       className={`absolute right-0 top-[50%] translate-y-[-50%] z-10 
-        bg-white border border-gray-300 shadow-md rounded-full p-2
+        bg-white border cursor-pointer border-gray-300 shadow-md rounded-full p-2
         transition duration-300
         hover:bg-primary hover:text-white
         opacity-100`}
@@ -144,7 +144,7 @@ function PrevArrow(props) {
   return (
     <button
       className={`absolute left-0 top-[50%] translate-y-[-50%] z-10 
-        bg-white border border-gray-300 shadow-md rounded-full p-2
+        bg-white border cursor-pointer border-gray-300 shadow-md rounded-full p-2
         transition duration-300
         hover:bg-primary hover:text-white
         opacity-100`}

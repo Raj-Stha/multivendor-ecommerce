@@ -36,7 +36,7 @@ export default function Cart() {
               Add some items to get started
             </p>
             <Button
-              className="text-white hover:text-white hover:bg-secondary bg-primary"
+              className="text-white cursor-pointer hover:text-white hover:bg-secondary bg-primary"
               onClick={() => router.replace("/")}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />

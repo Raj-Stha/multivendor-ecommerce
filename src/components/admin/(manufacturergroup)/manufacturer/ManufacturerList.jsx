@@ -65,7 +65,7 @@ export default function ManufacturerList({ data, categoryNotes, meta, page }) {
                                     {String(value)}
                                   </span>
                                 </div>
-                              ) : null
+                              ) : null,
                           )}
 
                           <div className="mt-4 flex justify-end">
@@ -93,6 +93,7 @@ export default function ManufacturerList({ data, categoryNotes, meta, page }) {
             <Button
               onClick={() => goToPage(page - 1)}
               disabled={meta.page_number <= 1}
+              className="cursor-pointer"
             >
               Previous
             </Button>
@@ -102,6 +103,7 @@ export default function ManufacturerList({ data, categoryNotes, meta, page }) {
             <Button
               onClick={() => goToPage(page + 1)}
               disabled={meta.page_number >= meta.total_pages}
+              className="cursor-pointer"
             >
               Next
             </Button>

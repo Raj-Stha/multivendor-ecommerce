@@ -28,15 +28,17 @@ export default function PromoNoteList({ data, page, setPage, meta }) {
             <Button
               onClick={() => setPage(page - 1)}
               disabled={meta.page_number <= 1}
+              className="cursor-pointer"
             >
               Previous
             </Button>
-            <span className="text-sm text-gray-600 self-center">
+            <span className="text-sm  text-gray-600 self-center">
               Page {meta.page_number} of {meta.total_pages}
             </span>
             <Button
               onClick={() => setPage(page + 1)}
               disabled={meta.page_number >= meta.total_pages}
+              className="cursor-pointer"
             >
               Next
             </Button>

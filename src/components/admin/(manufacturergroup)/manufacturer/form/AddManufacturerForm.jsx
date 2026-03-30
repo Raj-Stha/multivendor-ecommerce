@@ -95,7 +95,7 @@ export default function AddManufacturerForm() {
     <>
       <Dialog open={open} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button className="flex items-center gap-2 bg-primary text-white px-4 py-4 hover:bg-primary hover:opacity-90">
+          <Button className="flex items-center gap-2 bg-primary cursor-pointer text-white px-4 py-4 hover:bg-primary hover:opacity-90">
             <PlusIcon className="w-5 h-5" />
             <span className="hidden md:inline">Add Manufacturer</span>
           </Button>
@@ -162,7 +162,11 @@ export default function AddManufacturerForm() {
               </div>
 
               <DialogFooter className="flex justify-end sm:justify-end mt-4">
-                <Button type="submit" className="px-6" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  className="px-6 cursor-pointer"
+                  disabled={isLoading}
+                >
                   {isLoading ? "Submitting..." : "Submit"}
                 </Button>
               </DialogFooter>

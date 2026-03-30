@@ -19,6 +19,7 @@ export default function ProductList({
   category,
   manu,
   meta,
+  images,
   page,
 }) {
   const router = useRouter();
@@ -106,7 +107,7 @@ export default function ProductList({
                                     {value}
                                   </span>
                                 </div>
-                              )
+                              ),
                           )}
                           <div className="mt-4 flex justify-end">
                             <EditProductDetailsForm
@@ -164,6 +165,7 @@ export default function ProductList({
                                         </p>
                                       </div>
                                       <EditVariantsForm
+                                        images={images}
                                         data={variant}
                                         productID={d.product_id}
                                       />

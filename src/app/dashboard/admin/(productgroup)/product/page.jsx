@@ -25,13 +25,14 @@ export default async function ProductAdmin({ searchParams }) {
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
 
-  const [productRes, allProductRes, notesRes, manuRes, catRes] =
+  const [productRes, allProductRes, notesRes, manuRes, catRes, getImages] =
     await Promise.all([
       getData(`${baseUrl}/getadminproducts`, { page_number: page, limit }),
       getData(`${baseUrl}/getadminproducts`, { page_number: page, limit: 0 }),
       getData(`${baseUrl}/getproductnotes`, { page_number: page, limit: 0 }),
       getData(`${baseUrl}/getmanufacturer`, { page_number: page, limit: 0 }),
       getData(`${baseUrl}/getcategory`, { page_number: page, limit: 0 }),
+      getData(`${baseUrl}/getimages`, { page_number: page, limit: 0 }),
     ]);
 
   const data = productRes?.details || [];
@@ -40,6 +41,7 @@ export default async function ProductAdmin({ searchParams }) {
   const productNotes = notesRes?.details || [];
   const manu = manuRes?.details || [];
   const cat = catRes?.details || [];
+  const images = getImages?.details || [];
 
   return (
     <>
@@ -63,6 +65,7 @@ export default async function ProductAdmin({ searchParams }) {
           productNotes={productNotes}
           category={cat}
           manu={manu}
+          images={images}
           meta={meta}
           page={page}
         />

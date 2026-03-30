@@ -279,7 +279,11 @@ export default function EditBannerForm({ data }) {
             </div>
 
             <DialogFooter className="flex justify-end sm:justify-end mt-4">
-              <Button type="submit" className="px-6" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="px-6 cursor-pointer"
+                disabled={isLoading}
+              >
                 {isLoading ? "Submitting..." : "Submit"}
               </Button>
             </DialogFooter>

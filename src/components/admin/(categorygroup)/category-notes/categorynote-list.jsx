@@ -26,6 +26,7 @@ export default function CategoryNoteList({ data, page, setPage, meta }) {
             <Button
               onClick={() => setPage(page - 1)}
               disabled={meta.page_number <= 1}
+              className="cursor-pointer"
             >
               Previous
             </Button>
@@ -34,6 +35,7 @@ export default function CategoryNoteList({ data, page, setPage, meta }) {
             </span>
             <Button
               onClick={() => setPage(page + 1)}
+              className="cursor-pointer"
               disabled={meta.page_number >= meta.total_pages}
             >
               Next
