@@ -41,14 +41,14 @@ export function ProductCard({ product, border = false }) {
   const isWishlisted = wishlist.some(
     (item) =>
       item.product_id === product.product_id &&
-      item.variant_id === selectedVariant.variant_id
+      item.variant_id === selectedVariant.variant_id,
   );
 
   const handleWishlistToggle = () => {
     toggleWishlistItem(
       product.product_id,
       selectedVariant.variant_id,
-      product.vendor_id
+      product.vendor_id,
     );
   };
 
@@ -147,8 +147,9 @@ export function ProductCard({ product, border = false }) {
           <div className="overflow-y-auto flex-1">
             <div className="grid sm:grid-cols-2 gap-6 p-6">
               <ProductGallery
-                variants={product.variants}
-                selectedVariantIndex={selectedVariantIndex}
+                // variants={product.variants}
+                // selectedVariantIndex={selectedVariantIndex}
+                variant={selectedVariant}
               />
 
               <div className="space-y-6">

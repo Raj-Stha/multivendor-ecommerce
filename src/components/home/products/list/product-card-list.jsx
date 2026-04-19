@@ -150,8 +150,10 @@ export function ProductCardList({ products, border = false }) {
                   <div className="overflow-y-auto flex-1">
                     <div className="grid sm:grid-cols-2 gap-6 p-6">
                       <ProductGallery
-                        variants={product.variants}
-                        selectedVariantIndex={selectedVariantIndex}
+                        // variants={product.variants}
+                        // selectedVariantIndex={selectedVariantIndex}
+
+                        variant={selectedVariant}
                       />
 
                       <div className="space-y-6">

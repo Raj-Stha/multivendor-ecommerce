@@ -82,8 +82,9 @@ export default function ProductDetails({ product }) {
           </h1>
           {/* Left Column - Gallery */}
           <ProductGallery
-            variants={firstProduct.variants}
-            selectedVariantIndex={selectedVariantIndex}
+            // variants={firstProduct.variants}
+            // selectedVariantIndex={selectedVariantIndex}
+            variant={selectedVariant}
           />
 
           {/* Right Column - Product Info */}
@@ -249,13 +250,13 @@ export default function ProductDetails({ product }) {
                 Object.entries(firstProduct.product_details)
                   .filter(
                     ([key, value]) =>
-                      value !== null && key !== "product_description"
+                      value !== null && key !== "product_description",
                   )
                   .map(([key, value]) => {
                     const label = key
                       .split("_")
                       .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1),
                       )
                       .join(" ");
 
