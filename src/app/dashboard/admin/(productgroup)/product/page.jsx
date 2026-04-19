@@ -36,6 +36,7 @@ export default async function ProductAdmin({ searchParams }) {
     ]);
 
   const data = productRes?.details || [];
+
   const meta = productRes?.hint || { page_number: page, total_pages: 1 };
   const allProduct = allProductRes?.details || [];
   const productNotes = notesRes?.details || [];

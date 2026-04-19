@@ -190,7 +190,7 @@ export default function Hero({ banners = [] }) {
             activeSlide === 0 ? formattedBanners.length - 1 : activeSlide - 1,
           )
         }
-        className="absolute left-5 xl:left-15 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
+        className="absolute cursor-pointer left-5 xl:left-15 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary hover:text-white transition-all p-3 rounded-full shadow-lg z-[3]"
       >
         <ChevronLeft className="h-6 w-6" />
       </button>

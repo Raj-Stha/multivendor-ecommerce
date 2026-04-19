@@ -1,11 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { PenTool } from "lucide-react";
+import { PenTool, X, Star } from "lucide-react";
 
 import {
   Dialog,
@@ -19,298 +16,316 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
 import { toast } from "react-toastify";
 
-const formSchema = z.object({
-  new_variant_description: z.string().min(1, "Variant Description is required"),
-});
-
 export default function EditVariantsForm({ data, productID, images }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [openBox, setOpenBox] = useState(false);
-
-  const [imagePreview, setImagePreview] = useState(data?.featured_image);
-
-  const [selectedImageId, setSelectedImageId] = useState(null);
-
-  const [uploadMode, setUploadMode] = useState("existing"); // existing | upload
-
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "https://45.117.153.186/api";
-
   const router = useRouter();
+  const [openBox, setOpenBox] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      new_variant_description: data.variant_description ?? "",
-    },
-  });
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState([]);
 
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  // ✅ Load existing images (FIXED — direct image_id use)
   useEffect(() => {
     if (data) {
-      form.reset({
-        new_variant_description: data.variant_description ?? "",
+      const existing =
+        data.product_image?.map((img) => ({
+          image_url: img.image,
+          image_id: Number(img.image_id), // ✅ direct usage
+          featured: img.featured,
+        })) || [];
+
+      setSelectedImages(existing);
+      setUploadedImages([]);
+    }
+  }, [data]);
+
+  // Featured logic
+  const setFeatured = (index, type) => {
+    if (type === "existing") {
+      setSelectedImages((prev) =>
+        prev.map((img, i) => ({
+          ...img,
+          featured: i === index,
+        })),
+      );
+
+      setUploadedImages((prev) =>
+        prev.map((img) => ({
+          ...img,
+          featured: false,
+        })),
+      );
+    }
+
+    if (type === "uploaded") {
+      setUploadedImages((prev) =>
+        prev.map((img, i) => ({
+          ...img,
+          featured: i === index,
+        })),
+      );
+
+      setSelectedImages((prev) =>
+        prev.map((img) => ({
+          ...img,
+          featured: false,
+        })),
+      );
+    }
+  };
+
+  // Remove existing
+  const removeExisting = (index) => {
+    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Remove uploaded
+  const removeUploaded = (index) => {
+    setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Upload new image
+  const uploadImage = async (image64) => {
+    try {
+      const res = await fetch(`${baseUrl}/updateimages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          image64,
+          active: true,
+        }),
       });
 
-      setImagePreview(data?.featured_image);
-      setSelectedImageId(null);
-      setUploadMode("existing");
+      if (!res.ok) throw new Error("Upload failed");
+
+      return await res.json();
+    } catch (err) {
+      toast.error(err.message || "Upload failed");
+      return null;
     }
-  }, [data, form]);
+  };
 
-  /* Upload image handler */
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
+  // Bulk update
+  const updateVariantImagesBulk = async (payload) => {
+    const res = await fetch(`${baseUrl}/updateproductimage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-    if (file) {
+    if (!res.ok) {
+      throw new Error("Update failed");
+    }
+
+    return await res.json();
+  };
+
+  // Upload file handler
+  const handleUploadChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    files.forEach((file) => {
       if (file.size > 200 * 1024) {
-        toast.error("Image too large. Max 200KB allowed.");
-        return;
-      }
-
-      if (!file.type.startsWith("image/")) {
-        toast.error("Only image files are allowed!");
+        toast.error(`${file.name} too large`);
         return;
       }
 
       const reader = new FileReader();
 
       reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setUploadMode("upload");
-        setSelectedImageId(null);
+        setUploadedImages((prev) => [
+          ...prev,
+          {
+            preview: reader.result,
+            featured: false,
+          },
+        ]);
       };
 
       reader.readAsDataURL(file);
-    }
+    });
   };
 
-  /* Select existing image */
-  const handleExistingSelect = (img) => {
-    setImagePreview(img.image_url);
-    setSelectedImageId(img.image_id);
-    setUploadMode("existing");
+  // Add from library
+  const addFromLibrary = (img) => {
+    const id = Number(img.image_id);
+
+    if (selectedImages.some((i) => i.image_id === id)) return;
+
+    setSelectedImages((prev) => [
+      ...prev,
+      {
+        image_id: id,
+        image_url: img.image_url || img.thumbnail_url || img.image,
+        featured: false,
+      },
+    ]);
   };
 
-  /* Update text data */
-  const updateData = async (values) => {
+  // Final Submit
+  const onSubmit = async () => {
+    setIsLoading(true);
+
     try {
-      const response = await fetch(`${baseUrl}/updatevariants`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      const uploadedFinal = [];
 
-      const result = await response.json();
+      // Upload new images
+      for (const img of uploadedImages) {
+        const result = await uploadImage(img.preview.split(",")[1]);
 
-      if (!response.ok)
-        throw new Error(result.error || "Something went wrong!");
+        const newId = result?.details?.[0]?.image_id;
+
+        if (!newId) continue;
+
+        uploadedFinal.push({
+          image_id: Number(newId),
+          featured: img.featured,
+        });
+      }
+
+      // ✅ Remaining list
+      const remainingImages = [
+        ...selectedImages.map((img) => ({
+          image_id: Number(img.image_id),
+          featured: img.featured,
+        })),
+        ...uploadedFinal,
+      ];
+
+      if (remainingImages.length === 0) {
+        toast.error("You must have at least one image!");
+        setIsLoading(false);
+        return;
+      }
+
+      // Build payload
+      const payload = remainingImages.map((img) => ({
+        variant_id: data.variant_id,
+        image_id: img.image_id,
+        featured: img.featured ? "true" : "false",
+      }));
+
+      await updateVariantImagesBulk(payload);
+
+      toast.success("Images Updated Successfully!");
 
       router.refresh();
       setOpenBox(false);
-      form.reset();
-
-      toast.success("Updated Successfully !!!");
-    } catch (error) {
-      toast.error(error.message || "Something went wrong!");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /* Upload new image */
-  const uploadImage = async (values) => {
-    try {
-      const response = await fetch(`${baseUrl}/updateimages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) throw new Error("Something went wrong!");
-
-      return await response.json();
-    } catch (error) {
-      toast.error(error.message || "Something went wrong!");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /* Attach image to variant */
-  const updateVariantImage = async (values) => {
-    try {
-      const response = await fetch(`${baseUrl}/updateproductimage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) throw new Error("Something went wrong!");
-
-      return await response.json();
-    } catch (error) {
-      toast.error(error.message || "Something went wrong!");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /* Submit */
-  const onSubmit = async (values) => {
-    setIsLoading(true);
-
-    values.variant_description = data?.variant_description;
-
-    values.product_id = productID;
-
-    /* Image Logic */
-
-    if (uploadMode === "upload" && imagePreview) {
-      let uploadImageData = {
-        image64: imagePreview.split(",")[1],
-        active: true,
-      };
-
-      const result = await uploadImage(uploadImageData);
-
-      if (result) {
-        let updateVariantImageData = {
-          image_id: result?.details[0]?.image_id,
-          variant_id: data?.variant_id,
-          featured: true,
-        };
-
-        await updateVariantImage(updateVariantImageData);
-      }
-    } else if (uploadMode === "existing" && selectedImageId) {
-      let updateVariantImageData = {
-        image_id: selectedImageId,
-        variant_id: data?.variant_id,
-        featured: true,
-      };
-
-      await updateVariantImage(updateVariantImageData);
+    } catch (err) {
+      console.error(err);
+      toast.error("Update failed");
     }
 
-    await updateData(values);
+    setIsLoading(false);
   };
 
   return (
     <Dialog open={openBox} onOpenChange={setOpenBox}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="bg-gray-100 hover:bg-gray-200 px-3 py-3"
-        >
-          <PenTool /> Edit
+        <Button variant="outline">
+          <PenTool size={16} />
         </Button>
       </DialogTrigger>
 
-      <DialogContent
-        className="sm:max-w-[500px] max-h-[80%] overflow-y-auto"
-        onInteractOutside={(event) => event.preventDefault()}
-      >
+      <DialogContent className="sm:max-w-[620px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Variant</DialogTitle>
+          <DialogTitle>Edit Variant Images</DialogTitle>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Existing Images */}
-            <div className="space-y-2">
-              <Label>Select Existing Image</Label>
+        <Label>Selected / Uploaded Images</Label>
 
-              <div className="grid cursor-pointer grid-cols-4 gap-2 max-h-48 overflow-y-auto border p-2 rounded-md">
-                {images
-                  ?.sort((a, b) => b.image_id - a.image_id)
-                  ?.map((img) => (
-                    <img
-                      key={img.image_id}
-                      src={img.thumbnail_url}
-                      alt="variant"
-                      loading="lazy"
-                      onClick={() => handleExistingSelect(img)}
-                      className={`cursor-pointer w-full h-20 object-cover rounded border-2 
-                        ${
-                          selectedImageId === img.image_id
-                            ? "border-blue-500 border-3"
-                            : "border-gray-200"
-                        }`}
-                    />
-                  ))}
-              </div>
-            </div>
+        <div className="grid grid-cols-4 gap-3 mt-2">
+          {selectedImages.map((img, index) => (
+            <div
+              key={index}
+              className="relative border rounded-lg overflow-hidden cursor-pointer"
+              onClick={() => setFeatured(index, "existing")}
+            >
+              <img src={img.image_url} className="w-full h-24 object-cover" />
 
-            {/* Upload New */}
-            <div className="space-y-2 mt-4">
-              <Label htmlFor="image-input">Or Upload New Image</Label>
-
-              <Input
-                id="image-input"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="cursor-pointer"
-              />
-            </div>
-
-            {/* Preview */}
-            {imagePreview && (
-              <div className="mt-4 space-y-2">
-                <Label className="text-sm text-gray-600">Preview</Label>
-
-                <img
-                  src={imagePreview || "/placeholder.svg"}
-                  alt="Preview"
-                  className="w-full h-40 object-cover rounded-md border border-gray-200"
+              {img.featured && (
+                <Star
+                  className="absolute top-1 left-1 bg-primary rounded-2xl p-1 text-white shadow-5xl "
+                  size={32}
                 />
-              </div>
-            )}
+              )}
 
-            {/* Description */}
-            <div className="grid space-y-4 py-4">
-              <FormField
-                control={form.control}
-                name="new_variant_description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Variant Description</FormLabel>
-
-                    <FormControl>
-                      <Input placeholder="Variant Description" {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeExisting(index);
+                }}
+                className="absolute top-1 right-1 bg-white rounded-full p-1 shadow"
+              >
+                <X size={14} />
+              </button>
             </div>
+          ))}
 
-            <DialogFooter>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Submitting..." : "Submit"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+          {uploadedImages.map((img, index) => (
+            <div
+              key={index}
+              className="relative border rounded-lg overflow-hidden cursor-pointer"
+              onClick={() => setFeatured(index, "uploaded")}
+            >
+              <img src={img.preview} className="w-full h-24 object-cover" />
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeUploaded(index);
+                }}
+                className="absolute top-1 right-1 bg-white rounded-full p-1 shadow"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Upload */}
+        <div className="mt-4">
+          <Label>Upload New Images</Label>
+
+          <Input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleUploadChange}
+          />
+        </div>
+
+        {/* Library */}
+        <div className="mt-4">
+          <Label>Select From Library</Label>
+
+          <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto border p-2 rounded-md">
+            {images?.map((img) => (
+              <img
+                key={img.image_id}
+                src={img.thumbnail_url || img.image_url}
+                onClick={() => addFromLibrary(img)}
+                className="w-full h-20 object-cover rounded cursor-pointer hover:scale-105 transition"
+              />
+            ))}
+          </div>
+        </div>
+
+        <DialogFooter className="mt-4">
+          <Button onClick={onSubmit} disabled={isLoading}>
+            {isLoading ? "Saving..." : "Save"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

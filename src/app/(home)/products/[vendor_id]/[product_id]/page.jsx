@@ -15,13 +15,15 @@ export async function generateMetadata({ params }) {
           product_id: Number(product_id),
         }),
         cache: "no-store",
-      }
+      },
     );
 
     if (!res.ok) throw new Error("Failed to fetch product details");
 
     const data = await res.json();
     const product = data.details[0];
+
+    console.log(product);
 
     // Pick the SEO image: featured_image first, else first variant image
     const seoImage =
@@ -60,7 +62,7 @@ export default async function ProductPage({ params }) {
           product_id: Number(product_id),
           vendor_id: Number(vendor_id),
         }),
-      }
+      },
     );
 
     if (!res.ok) {
