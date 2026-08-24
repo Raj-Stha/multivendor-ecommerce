@@ -21,9 +21,13 @@ export default function MobileNav() {
                 alt="KinMel Mandu Logo"
                 className="h-10 w-auto"
               /> */}
-              <h1 className="text-primary font-semibold shadow-2xl text-2xl">
-                E-COM
-              </h1>
+              <img
+                src="/logo/logo.png "
+                alt="Logo"
+                className="h-18 w-auto"
+                width="100px"
+                height="10px"
+              />
             </div>
           </Link>
         </div>

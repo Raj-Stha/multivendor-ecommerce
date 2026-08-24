@@ -47,14 +47,13 @@ export default function Footer() {
         {/* Company Info */}
         <div>
           <div className="flex-shrink-0 pb-2">
-            {/* <Link href="/" className="transition-opacity hover:opacity-80">
+            <Link href="/" className="transition-opacity hover:opacity-80">
               <img
                 src="/logo/logo.png"
-                alt="KinMel Mandu Logo"
-                className="h-12 w-auto"
+                alt="Fiidus Logo"
+                className="h-22 w-auto"
               />
-            </Link> */}
-            <h3 className="text-3xl font-semibold">E-COM</h3>
+            </Link>
           </div>
           <p className=" mb-4">
             Your one-stop multivendor marketplace for cosmetics, accessories,
@@ -156,7 +155,7 @@ export default function Footer() {
 
       {/* Footer Bottom */}
       <div className=" shadow-xl border-t-2 border-gray-200  py-6 text-center  text-sm">
-        &copy; {new Date().getFullYear()} E-COM. All rights reserved.
+        &copy; {new Date().getFullYear()} FiidUS. All rights reserved.
       </div>
     </footer>
   );

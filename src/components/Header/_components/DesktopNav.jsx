@@ -20,9 +20,13 @@ export default function DesktopNav({ user, locationName }) {
         {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/" className="transition-opacity hover:opacity-80">
-            <h1 className="text-black font-semibold shadow-2xl text-2xl">
-              E-COM
-            </h1>
+            <img
+              src="/logo/logo.png "
+              alt="Logo"
+              className="h-18 w-auto"
+              width="100px"
+              height="10px"
+            />
           </Link>
         </div>
 
