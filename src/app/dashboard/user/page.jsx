@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Menu, User, Package, LogOut } from "lucide-react";
+import { Menu, User, Package, LogOut, CreditCard } from "lucide-react";
 import Header from "@/components/Header/Header";
 import MobileBottomNav from "@/components/Header/mobile-bottom-nav";
 import Footer from "@/components/Footer";
@@ -11,6 +11,7 @@ import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import UserDetails from "@/components/user/UserDetails";
+import Membership from "@/components/user/membership";
 import UserOrders from "@/components/user/UserOrders";
 
 function UserDashboard() {
@@ -20,13 +21,13 @@ function UserDashboard() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Check URL query for tab on mount
   useEffect(() => {
     const tabFromQuery = searchParams.get("tab");
-    if (tabFromQuery === "orders") {
-      setActiveTab("orders");
+
+    if (tabFromQuery === "orders" || tabFromQuery === "membership") {
+      setActiveTab(tabFromQuery);
     } else {
-      setActiveTab("details"); // default
+      setActiveTab("details");
     }
   }, [searchParams]);
 
@@ -49,6 +50,7 @@ function UserDashboard() {
   const tabs = [
     { id: "details", label: "Details", icon: User },
     { id: "orders", label: "Orders", icon: Package },
+    { id: "membership", label: "Membership", icon: CreditCard },
   ];
 
   const SidebarContent = () => (
@@ -150,6 +152,9 @@ function UserDashboard() {
                   />
                 )}
                 {activeTab === "orders" && <UserOrders />}
+                {activeTab === "membership" && (
+                  <Membership membershipStatus={userInfo.membership_status} />
+                )}
               </>
             ) : (
               <LoadingSkeleton />
