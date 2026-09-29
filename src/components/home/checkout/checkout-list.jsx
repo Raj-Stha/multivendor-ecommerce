@@ -133,6 +133,7 @@ export function CheckoutList() {
 
       toast.success("Order completed successfully 🎉");
 
+      await getCart();
       router.push("/products");
     } catch (err) {
       console.error(err);
