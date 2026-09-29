@@ -1,5 +1,6 @@
 import { generatePageMetadata } from "@/components/page-seo";
 import ProductDetails from "@/components/home/products/single/ProductDetails";
+import ProductSliderSection from "../../_components/products-slider-section";
 
 export async function generateMetadata({ params }) {
   const { vendor_id, product_id } = await params;
@@ -23,8 +24,6 @@ export async function generateMetadata({ params }) {
     const data = await res.json();
     const product = data.details[0];
 
-    console.log(product);
-
     // Pick the SEO image: featured_image first, else first variant image
     const seoImage =
       product.featured_image ||
@@ -46,6 +45,30 @@ export async function generateMetadata({ params }) {
       title: "Product Not Found",
       description: "We couldn't find this product.",
     });
+  }
+}
+
+async function getRelatedProduct({ category_id }) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/getproducts`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          limit: 5,
+          page_number: 1,
+          category_id: category_id || null,
+        }),
+      },
+    );
+    const relatedProducts = await response.json();
+    return relatedProducts;
+  } catch (error) {
+    console.error("Error fetching related products:", error);
+    return { details: [] };
   }
 }
 
@@ -81,7 +104,21 @@ export default async function ProductPage({ params }) {
     }
 
     const data = await res.json();
-    return <ProductDetails product={data.details} />;
+
+    let relatedProducts = [];
+    if (data?.details.length > 0) {
+      relatedProducts = await getRelatedProduct({
+        category_id: data?.details[0]?.category_id || null,
+      });
+    }
+    return (
+      <>
+        <ProductDetails product={data.details} />
+        {relatedProducts.details.length > 0 && (
+          <ProductSliderSection products={relatedProducts.details} />
+        )}
+      </>
+    );
   } catch (error) {
     console.error("Error fetching product details:", error);
     return (
