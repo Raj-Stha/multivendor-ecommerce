@@ -6,51 +6,67 @@ import CartIcon from "./CartIcon";
 import NotificationIcon from "./NotificationIcon";
 import AccountMenu from "./AccountMenu";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LocationPopup from "../../LocationPopup";
 import { MapPin } from "lucide-react";
 import { parseLatLon } from "@/lib/getLocationAddress";
 
-export default function DesktopNav({ user, locationName }) {
+export default function DesktopNav({ user, locationName, popupReady }) {
   const [showPopup, setShowPopup] = useState(false);
 
+  const currentUser = Array.isArray(user) && user.length > 0 ? user[0] : null;
+
+  const hasDeliveryLocation = !!currentUser?.delivery_location;
+
+  const handleLocationClick = () => {
+    if (!popupReady) return;
+
+    setShowPopup(true);
+  };
+
   return (
-    <nav className="bg-white shadow-sm w-full sticky-nav ">
+    <nav className="bg-white shadow-sm w-full sticky-nav jost-text">
       <div className="container max-w-7xl mx-auto py-3 px-4 md:px-6 flex items-center justify-between gap-4">
         {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/" className="transition-opacity hover:opacity-80">
             <img
-              src="/logo/logo.png "
+              src="/logo/logo.png"
               alt="Logo"
               className="h-18 w-auto"
-              width="100px"
-              height="10px"
+              width="100"
+              height="10"
             />
           </Link>
         </div>
 
         {/* Location Popup */}
-        {showPopup && user[0]?.delivery_location && (
+        {showPopup && hasDeliveryLocation && (
           <LocationPopup
             status={showPopup}
             initialLocation={
-              locationName && user?.[0]?.delivery_location
+              locationName
                 ? {
                     name: locationName,
-                    ...parseLatLon(user[0].delivery_location),
+                    ...parseLatLon(currentUser.delivery_location),
                   }
                 : null
             }
-            user={user?.[0]}
+            user={currentUser}
             onClose={() => setShowPopup(false)}
           />
         )}
 
         {/* Location Button */}
         <button
-          onClick={() => setShowPopup(true)}
-          className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-lg bg-primary/5 hover:bg-primary/20 transition-colors text-black flex-shrink-0"
+          type="button"
+          onClick={handleLocationClick}
+          disabled={!popupReady}
+          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-black flex-shrink-0 transition-colors ${
+            popupReady
+              ? "cursor-pointer bg-primary/5 hover:bg-primary/20"
+              : "cursor-not-allowed bg-gray-100 opacity-60"
+          }`}
         >
           <MapPin className="w-4 h-4" />
 
