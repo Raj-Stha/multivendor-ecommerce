@@ -97,7 +97,7 @@ export default function AddManufacturerForm() {
         <DialogTrigger asChild>
           <Button className="flex items-center gap-2 bg-primary cursor-pointer text-white px-4 py-4 hover:bg-primary hover:opacity-90">
             <PlusIcon className="w-5 h-5" />
-            <span className="hidden md:inline">Add Manufacturer</span>
+            <span className="hidden md:inline">Add Country of Origin</span>
           </Button>
         </DialogTrigger>
         <DialogContent
@@ -105,7 +105,7 @@ export default function AddManufacturerForm() {
           onInteractOutside={(event) => event.preventDefault()}
         >
           <DialogHeader>
-            <DialogTitle>Add New Manufacturer</DialogTitle>
+            <DialogTitle>Add New Country of Origin</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -115,9 +115,14 @@ export default function AddManufacturerForm() {
                   name="manufacturer_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="pb-2">Manufacturer Name</FormLabel>
+                      <FormLabel className="pb-2">
+                        Country of Origin Name
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="Manufacturer Name" {...field} />
+                        <Input
+                          placeholder="Country of Origin Name"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -87,15 +87,15 @@ const SIDEBAR_ITEMS = [
 
   {
     type: "collapsible",
-    label: "Manufacturer Management",
+    label: "Country of Origin Management",
     items: [
       {
-        label: "Manufacturer",
+        label: "Country of Origin",
         href: "/dashboard/admin/manufacturer",
         icon: Package,
       },
       {
-        label: "Manufacturer Notes",
+        label: "Country of Origin Notes",
         href: "/dashboard/admin/manufacturer-notes",
         icon: Box,
       },

@@ -45,7 +45,7 @@ export default async function Manufacturer({ searchParams }) {
           <div className="flex space-x-2 items-center">
             <SidebarTrigger />
             <h2 className="lg:text-2xl md:text-xl text-base font-semibold text-gray-800">
-              Manage Manufacturer
+              Manage Country of Origin
             </h2>
           </div>
           <div className="flex gap-2">

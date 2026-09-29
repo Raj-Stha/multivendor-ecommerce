@@ -96,7 +96,7 @@ export default function EditManufacturerForm({ data }) {
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Edit Manufacturer</DialogTitle>
+          <DialogTitle>Edit Country of Origin</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -106,9 +106,11 @@ export default function EditManufacturerForm({ data }) {
                 name="new_manufacturer_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="pb-2">Manufacturer Name</FormLabel>
+                    <FormLabel className="pb-2">
+                      Country of Origin Name
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Manufacturer Name" {...field} />
+                      <Input placeholder="Country of Origin Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

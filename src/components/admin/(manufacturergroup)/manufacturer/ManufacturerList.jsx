@@ -42,7 +42,7 @@ export default function ManufacturerList({ data, categoryNotes, meta, page }) {
                 <AccordionContent>
                   <div className="p-4 border-t bg-gray-50">
                     <h4 className="font-semibold text-md mb-3 text-gray-700">
-                      Manufacturer Specifics:
+                      Country of Origin Specifics:
                     </h4>
 
                     {d.manufacturer_details &&

@@ -162,7 +162,7 @@ export default function EditManufacturerDetailsForm({
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Edit Manufacturer</DialogTitle>
+          <DialogTitle>Edit Country of Origin Notes</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -172,7 +172,7 @@ export default function EditManufacturerDetailsForm({
             {/* Notes Section */}
             {selectedManuId && (
               <div className="space-y-4 py-4">
-                <Label>Select manufacturer Notes</Label>
+                <Label>Select Country of Origin Notes</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {categoryNotes.map((note, index) => {
                     const isSelected = noteKeyValues.some(
