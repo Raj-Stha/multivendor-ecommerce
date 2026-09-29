@@ -66,7 +66,7 @@ export default function MobileNavSheet() {
 
       <SheetContent
         side="right"
-        className="p-0 w-full max-w-[70%] sm:max-w-md flex flex-col h-full overflow-hidden jost-text"
+        className="p-0 w-full max-w-[70%] sm:max-w-md flex flex-col h-full overflow-hidden "
       >
         {/* Header */}
         <SheetHeader className="bg-white border-b p-4 flex flex-row items-center justify-between shrink-0">

@@ -58,7 +58,7 @@ export default function AccountMenu() {
 
   return (
     <div
-      className="flex items-center group cursor-pointer relative nunito-text"
+      className="flex items-center group cursor-pointer relative "
       onMouseEnter={() => setAccountMenuOpen(true)}
       onMouseLeave={() => setAccountMenuOpen(false)}
     >

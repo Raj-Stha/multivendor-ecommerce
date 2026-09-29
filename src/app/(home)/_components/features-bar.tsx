@@ -52,7 +52,7 @@ export function FeaturesBar() {
               </div>
 
               {/* Feature Title */}
-              <h3 className="relative z-10 text-xs sm:text-sm font-semibold text-primary leading-tight px-2 nunito-text">
+              <h3 className="relative z-10 text-xs sm:text-sm font-semibold text-primary leading-tight px-2 ">
                 {feature.title}
               </h3>
 

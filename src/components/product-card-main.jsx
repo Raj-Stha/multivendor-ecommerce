@@ -40,7 +40,7 @@ function ProductCard() {
   const OPTIONS = { loop: true };
 
   return (
-    <div className="w-[300px] mx-auto rubik-text">
+    <div className="w-[300px] mx-auto">
       <div className="bg-white dark:bg-gray-900 rounded-none  shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-300 hover:shadow-xl">
         <div className="w-full h-60 relative group">
           <motion.button

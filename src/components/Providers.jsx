@@ -21,7 +21,7 @@ export function Providers({ children }) {
         draggable
         pauseOnHover
         theme="light"
-        toastClassName="!bg-white !text-gray-900 !rounded-lg !shadow-lg !jost-text"
+        toastClassName="!bg-white !text-gray-900 !rounded-lg !shadow-lg !"
         progressClassName="!bg-blue-600"
       />
 

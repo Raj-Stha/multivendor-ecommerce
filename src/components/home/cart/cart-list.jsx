@@ -21,7 +21,7 @@ export function CartList({ cart }) {
   }, {});
 
   return (
-    <div className="grid lg:grid-cols-3 gap-6 jost-text">
+    <div className="grid lg:grid-cols-3 gap-6 ">
       <div className="lg:col-span-2 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">

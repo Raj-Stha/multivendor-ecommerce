@@ -46,14 +46,14 @@ export default function ProductDetails({ product }) {
   const isWishlisted = wishlist.some(
     (item) =>
       item.product_id === firstProduct.product_id &&
-      item.variant_id === selectedVariant.variant_id
+      item.variant_id === selectedVariant.variant_id,
   );
 
   const handleWishlistToggle = () => {
     toggleWishlistItem(
       firstProduct.product_id,
       selectedVariant.variant_id,
-      firstProduct.vendor_id
+      firstProduct.vendor_id,
     );
   };
 
@@ -68,7 +68,7 @@ export default function ProductDetails({ product }) {
   };
 
   return (
-    <div className="min-h-screen bg-background jost-text">
+    <div className="min-h-screen bg-background ">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="text-sm text-muted-foreground mb-6">

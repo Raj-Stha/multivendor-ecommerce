@@ -54,7 +54,7 @@ function UserDashboard() {
   ];
 
   const SidebarContent = () => (
-    <div className="h-full flex flex-col jost-text">
+    <div className="h-full flex flex-col ">
       <div className="p-4 border-b">
         <h2 className="text-lg font-semibold text-gray-900">Account</h2>
         <p className="text-sm text-gray-600">Manage your profile</p>
@@ -116,7 +116,7 @@ function UserDashboard() {
     <>
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 py-6 md:py-8 jost-text">
+      <div className="max-w-7xl mx-auto px-4 py-6 md:py-8 ">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Mobile Header with Menu Button */}
           <div className="md:hidden flex items-center justify-between mb-4">

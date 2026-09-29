@@ -42,7 +42,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-white  border-t-2 border-gray-200  text-black jost-text">
+    <footer className="bg-white  border-t-2 border-gray-200  text-black ">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Company Info */}
         <div>

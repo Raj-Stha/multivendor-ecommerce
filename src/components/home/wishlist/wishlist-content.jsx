@@ -11,7 +11,7 @@ export function WishlistContent() {
 
   if (wishlistCount === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background jost-text">
+      <div className="flex items-center justify-center min-h-screen bg-background ">
         <div className="text-center px-4">
           <Heart className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -33,7 +33,7 @@ export function WishlistContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background jost-text py-8">
+    <div className="min-h-screen bg-background  py-8">
       <div className="container max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8 text-center md:text-left">

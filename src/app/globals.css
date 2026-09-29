@@ -6,8 +6,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-site);
+  --font-mono: var(--font-site);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -117,23 +117,21 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html,
+  body {
+    font-family: var(--font-site), sans-serif;
+  }
+
   body {
     @apply bg-background text-foreground;
   }
-}
 
-@layer utilities {
-  .nunito-text {
-    font-family: var(--font-nunito), sans-serif;
-  }
-  .rubik-text {
-    font-family: var(--font-rubik), sans-serif;
-  }
-  .jost-text {
-    font-family: var(--font-jost), sans-serif;
-  }
-  .noto-sans-text {
-    font-family: var(--font-noto-sans), sans-serif;
+  button,
+  input,
+  textarea,
+  select {
+    font-family: var(--font-site), sans-serif;
   }
 }
 

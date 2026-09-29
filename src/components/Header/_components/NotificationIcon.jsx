@@ -15,7 +15,7 @@ export default function NotificationIcon() {
       <div className="relative">
         <Heart className="h-6 w-6 text-gray-800 sm:text-primary hover:text-primary group-hover:text-secondary md:hover:text-secondary transition-colors" />
         {wishlistCount > 0 && (
-          <span className="absolute -top-3 -right-2 bg-primary border-primary  text-white text-xs group-hover:bg-secondary  group-hover:text-white  rounded-full h-5 w-5 flex items-center justify-center nunito-text font-medium">
+          <span className="absolute -top-3 -right-2 bg-primary border-primary  text-white text-xs group-hover:bg-secondary  group-hover:text-white  rounded-full h-5 w-5 flex items-center justify-center  font-medium">
             {wishlistCount}
           </span>
         )}

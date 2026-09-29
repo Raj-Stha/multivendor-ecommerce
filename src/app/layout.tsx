@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, Rubik, Jost, Noto_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -9,30 +9,35 @@ import { CartProvider } from "@/app/(home)/_context/CartContext";
 import { WishlistProvider } from "@/app/(home)/_context/WishlistContext";
 import { UserProvider } from "@/app/(home)/_context/UserContext";
 
+const siteFont = localFont({
+  src: "../../public/fonts/site-font.woff2",
+  variable: "--font-site",
+});
+
 // Load fonts
-const nunito = Nunito({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  variable: "--font-nunito",
-});
+// const nunito = Nunito({
+//   subsets: ["latin"],
+//   weight: ["400", "600", "700", "800"],
+//   variable: "--font-nunito",
+// });
 
-const rubik = Rubik({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-rubik",
-});
+// const rubik = Rubik({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-rubik",
+// });
 
-const jost = Jost({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-jost",
-});
+// const jost = Jost({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-jost",
+// });
 
-const notoSans = Noto_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-noto-sans",
-});
+// const notoSans = Noto_Sans({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-noto-sans",
+// });
 
 // Base URLs from environment variables
 const siteUrl =
@@ -118,7 +123,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${nunito.variable} ${rubik.variable} ${jost.variable} ${notoSans.variable} antialiased h-full`}
+        // className={`${nunito.variable} ${rubik.variable} ${jost.variable} ${notoSans.variable} antialiased h-full`}
+        className={`${siteFont.variable} antialiased h-full`}
       >
         <Providers>
           <UserProvider>

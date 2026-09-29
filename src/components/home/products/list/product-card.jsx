@@ -72,7 +72,7 @@ export function ProductCard({ product, border = false }) {
     >
       {/* Product Card */}
       <div
-        className={`w-full jost-text cursor-pointer flex flex-col h-full rounded-sm md:hover:scale-105 transition-all duration-300 hover:shadow-xl bg-white group overflow-hidden relative ${
+        className={`w-full  cursor-pointer flex flex-col h-full rounded-sm md:hover:scale-105 transition-all duration-300 hover:shadow-xl bg-white group overflow-hidden relative ${
           border ? "border border-gray-300 rounded-none" : ""
         }`}
       >
@@ -131,7 +131,7 @@ export function ProductCard({ product, border = false }) {
       <DialogContainer className="flex items-center justify-center rounded-none">
         <DialogContent
           style={{ borderRadius: "0px" }}
-          className="relative jost-text flex flex-col border dark:bg-black bg-white lg:w-[900px] w-[95%] max-h-[80vh] mx-auto overflow-hidden"
+          className="relative  flex flex-col border dark:bg-black bg-white lg:w-[900px] w-[95%] max-h-[80vh] mx-auto overflow-hidden"
         >
           {/* Sticky Header */}
           <div className="sticky top-0 z-50 p-4 border-b bg-white dark:bg-black backdrop-blur-sm">

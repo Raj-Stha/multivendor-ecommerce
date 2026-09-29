@@ -77,8 +77,8 @@ async function fetchProducts(params, limit) {
         params.sort === "asc"
           ? "price_asc"
           : params.sort === "desc"
-          ? "price_desc"
-          : "latest",
+            ? "price_desc"
+            : "latest",
     };
 
     if (params.search) requestBody.search_word = params.search;
@@ -168,7 +168,7 @@ export default async function ProductPage({ searchParams }) {
     priceRange: {
       min: Number.parseInt(params.minPrice || filterData.priceRange.min || "0"),
       max: Number.parseInt(
-        params.maxPrice || filterData.priceRange.max || "1000"
+        params.maxPrice || filterData.priceRange.max || "1000",
       ),
     },
   };
@@ -187,7 +187,7 @@ export default async function ProductPage({ searchParams }) {
     selectedFilters.priceRange.max !== (filterData?.priceRange?.max || 1000);
 
   return (
-    <div className="bg-gray-50 min-h-screen nunito-text">
+    <div className="bg-gray-50 min-h-screen ">
       <div className="container max-w-7xl mx-auto py-3 sm:py-6 px-1 sm:px-2 lg:px-3">
         {products && (
           <ProductFilterClient

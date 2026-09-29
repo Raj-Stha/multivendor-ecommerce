@@ -31,7 +31,7 @@ export function CartItem({ item }) {
   };
 
   return (
-    <div className="p-3 jost-text border border-gray-200">
+    <div className="p-3  border border-gray-200">
       <div className="flex gap-4">
         <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg border">
           <Image

@@ -68,7 +68,7 @@
 //   };
 
 //   return (
-//     <section className="my-2 noto-sans-text">
+//     <section className="my-2 ">
 //       <div className="container max-w-7xl mx-auto px-4 py-4 relative">
 //         <div className="bg-white">
 //           {/* Header */}
@@ -214,7 +214,7 @@ export default function ProductSlider({ products }) {
   // If number of products is less than maxSlides, render static grid instead of slider
   if (products.length <= maxSlides) {
     return (
-      <section className="my-2 noto-sans-text">
+      <section className="my-2 ">
         <div className="container max-w-7xl mx-auto px-4 py-4">
           <div className="bg-white">
             <div className="flex justify-between p-3 items-baseline">
@@ -254,7 +254,7 @@ export default function ProductSlider({ products }) {
   }
 
   return (
-    <section className="noto-sans-text">
+    <section className="">
       <div className="container max-w-7xl mx-auto px-4 py-4 relative">
         <div className="bg-white">
           {/* Header */}

@@ -9,7 +9,7 @@
 //   if (!initialProducts || initialProducts.length === 0) return null;
 
 //   return (
-//     <section className=" noto-sans-text">
+//     <section className=" ">
 //       <div className="container max-w-7xl mx-auto px-4">
 //         <div className="bg-white  shadow-sm p-4 sm:p-6">
 //           {/* Header */}
@@ -112,7 +112,7 @@ export default function ProductCarousel({ initialProducts }) {
   };
 
   return (
-    <section className="noto-sans-text relative">
+    <section className=" relative">
       <div className="container max-w-7xl mx-auto px-4">
         <div className="bg-white shadow-sm p-4 sm:p-6 relative">
           {/* Header */}

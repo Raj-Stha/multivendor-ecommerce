@@ -91,7 +91,7 @@ export default function ImprovedSearchBar({
         setIsLoading(false);
       }
     },
-    [apiBaseUrl, limit]
+    [apiBaseUrl, limit],
   );
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export default function ImprovedSearchBar({
 
   return (
     <div ref={searchRef} className={`relative w-full ${className}`}>
-      <div className="relative flex w-full sm:min-w-[350px] sm:max-w-[5500px] sm:mx-auto  overflow-hidden   rounded-sm  bg-primary/5 text-black noto-sans-text">
+      <div className="relative flex w-full sm:min-w-[350px] sm:max-w-[5500px] sm:mx-auto  overflow-hidden   rounded-sm  bg-primary/5 text-black ">
         <input
           ref={inputRef}
           type="text"

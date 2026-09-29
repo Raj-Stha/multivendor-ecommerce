@@ -22,7 +22,7 @@ export default function Cart() {
   }, [getCart]);
 
   return (
-    <div className="min-h-screen bg-background jost-text">
+    <div className="min-h-screen bg-background ">
       <main className="container mx-auto w-[90%] px-4 py-8">
         {isLoading ? (
           <CartSkeleton />

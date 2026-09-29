@@ -18,7 +18,7 @@ export function ProductCard({ product, border = false }) {
 
   return (
     <div
-      className={`group w-full jost-text cursor-pointer items-center flex flex-row h-full transition-all duration-300 hover:shadow-md hover:scale-105 bg-primary/10 overflow-hidden relative ${
+      className={`group w-full  cursor-pointer items-center flex flex-row h-full transition-all duration-300 hover:shadow-md hover:scale-105 bg-primary/10 overflow-hidden relative ${
         border ? "border border-gray-300 rounded-sm" : ""
       }`}
     >

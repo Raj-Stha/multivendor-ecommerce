@@ -92,9 +92,9 @@ function SignUp() {
             <div className="backdrop-blur-sm shadow-2xl overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
                 <div className="hidden md:flex flex-col justify-center items-center text-center p-8 xl:p-12 bg-transparent text-white">
-                  <div className="space-y-4 max-w-md nunito-text">
+                  <div className="space-y-4 max-w-md ">
                     <div className="space-y-4">
-                      <h1 className="md:text-3xl xl:text-4xl nunito-text font-bold leading-tight">
+                      <h1 className="md:text-3xl xl:text-4xl  font-bold leading-tight">
                         Join Our Community
                       </h1>
                       <p className="text-sm md:text-lg text-slate-300 leading-relaxed">
@@ -104,7 +104,7 @@ function SignUp() {
                   </div>
                 </div>
 
-                <div className="p-6 flex flex-col justify-center bg-white/95 nunito-text">
+                <div className="p-6 flex flex-col justify-center bg-white/95 ">
                   <div className="md:hidden text-center ">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                       Create Account

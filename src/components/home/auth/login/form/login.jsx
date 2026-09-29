@@ -90,7 +90,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 jost-text">
+    <div className="min-h-screen bg-gray-50 ">
       {/* Main Content */}
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-5xl">
@@ -185,14 +185,13 @@ function Login() {
                       {/* Forgot Password Link */}
                       <div className="text-right ">
                         <Link
-                          href="/auth/reset"  // Replace with your route
+                          href="/auth/reset" // Replace with your route
                           className="text-sm text-primary hover:underline"
                         >
                           Forgot your password?
                         </Link>
                       </div>
                     </div>
-
 
                     <Button
                       type="submit"

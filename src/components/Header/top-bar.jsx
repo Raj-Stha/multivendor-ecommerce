@@ -5,7 +5,7 @@
 
 // export function TopBar() {
 //   return (
-//     <div className="hidden md:block bg-primary uppercase py-1 text-white w-full  text-xs noto-sans-text ">
+//     <div className="hidden md:block bg-primary uppercase py-1 text-white w-full  text-xs  ">
 //       <div className="container max-w-7xl mx-auto flex justify-end items-center xl:px-3 sm:px-4 px-[3px] space-x-4">
 //         {/* Right: Contact info */}
 //         <Link href="/auth/login">Login</Link>
@@ -29,7 +29,7 @@ export function TopBar() {
   const getCookie = (name) => {
     if (typeof document === "undefined") return null;
     const match = document.cookie.match(
-      new RegExp("(^| )" + name + "=([^;]+)")
+      new RegExp("(^| )" + name + "=([^;]+)"),
     );
     return match ? match[2] : null;
   };
@@ -53,7 +53,7 @@ export function TopBar() {
   };
 
   return (
-    <div className="hidden md:block bg-primary uppercase py-1 text-white w-full text-xs noto-sans-text">
+    <div className="hidden md:block bg-primary uppercase py-1 text-white w-full text-xs ">
       <div className="container max-w-7xl mx-auto flex justify-end items-center xl:px-3 sm:px-4 px-[3px] space-x-4">
         {isLogged ? (
           <>

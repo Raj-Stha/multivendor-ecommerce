@@ -103,7 +103,7 @@ export default function ResetPassword() {
 
     if (!isPasswordStrong(password))
       return setError(
-        "Weak password. Include uppercase, lowercase, number & special character."
+        "Weak password. Include uppercase, lowercase, number & special character.",
       );
 
     setIsLoading(true);
@@ -142,7 +142,7 @@ export default function ResetPassword() {
     👉 RENDER (CONDITIONAL UI)
   --------------------------------------------------------- */
   return (
-    <div className="min-h-screen bg-gray-50 jost-text">
+    <div className="min-h-screen bg-gray-50 ">
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-5xl">
           <div className="backdrop-blur-sm shadow-2xl overflow-hidden">
@@ -163,7 +163,6 @@ export default function ResetPassword() {
 
               <div className="p-8 flex flex-col justify-center bg-white">
                 <div className="mb-8">
-
                   <h3 className="text-3xl pb-1 text-primary">Reset Password</h3>
                   <p className="text-sm text-gray-600">
                     Enter your email address and we'll send you a reset token.

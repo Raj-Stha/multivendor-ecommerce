@@ -62,10 +62,9 @@ function Reset() {
 
     if (!isPasswordStrong(password)) {
       return setError(
-        "Weak password. Must be at least 8 characters and include uppercase, lowercase, number, and special character."
+        "Weak password. Must be at least 8 characters and include uppercase, lowercase, number, and special character.",
       );
     }
-
 
     // 2️⃣ If validation success → NOW start loading
     setIsLoading(true);
@@ -102,9 +101,8 @@ function Reset() {
     }
   };
 
-
   return (
-    <div className="min-h-screen bg-gray-50 jost-text">
+    <div className="min-h-screen bg-gray-50 ">
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-5xl">
           <div className="backdrop-blur-sm shadow-2xl overflow-hidden">
@@ -117,7 +115,8 @@ function Reset() {
                     Almost There!
                   </h1>
                   <p className="text-lg text-white/90 leading-relaxed">
-                    Enter the token from your email and create a new secure password
+                    Enter the token from your email and create a new secure
+                    password
                   </p>
                 </div>
               </div>
@@ -138,7 +137,9 @@ function Reset() {
                   )}
 
                   <div>
-                    <h3 className="text-3xl pb-1 text-primary">Reset Password</h3>
+                    <h3 className="text-3xl pb-1 text-primary">
+                      Reset Password
+                    </h3>
                     <p className="text-sm text-gray-600 mt-2">
                       Check your email for the reset token
                     </p>
@@ -186,13 +187,15 @@ function Reset() {
                         maxLength={6}
                         readOnly
                       />
-
                     </div>
 
                     {/* Password */}
                     {/* New Password */}
                     <div className="space-y-2">
-                      <Label htmlFor="password" className="text-gray-700 font-medium">
+                      <Label
+                        htmlFor="password"
+                        className="text-gray-700 font-medium"
+                      >
                         New Password
                       </Label>
 
@@ -228,7 +231,10 @@ function Reset() {
 
                     {/* Confirm Password */}
                     <div className="space-y-2">
-                      <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">
+                      <Label
+                        htmlFor="confirmPassword"
+                        className="text-gray-700 font-medium"
+                      >
                         Confirm Password
                       </Label>
 
@@ -243,7 +249,6 @@ function Reset() {
                         className="h-11"
                       />
                     </div>
-
 
                     {/* Submit */}
                     <Button
@@ -261,8 +266,6 @@ function Reset() {
                       )}
                     </Button>
                   </form>
-
-
                 </div>
               </div>
               {/* End form */}

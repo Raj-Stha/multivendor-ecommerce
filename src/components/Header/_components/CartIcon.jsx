@@ -12,7 +12,7 @@ export default function CartIcon() {
     >
       <ShoppingCart className="h-6 w-6 text-primary  group-hover:text-secondary  transition-colors" />
       {cartCount > 0 && (
-        <span className="absolute -top-3 -right-2 bg-primary border-primary text-white  group-hover:bg-secondary   text-xs rounded-full h-5 w-5 flex items-center justify-center nunito-text font-medium">
+        <span className="absolute -top-3 -right-2 bg-primary border-primary text-white  group-hover:bg-secondary   text-xs rounded-full h-5 w-5 flex items-center justify-center  font-medium">
           {cartCount}
         </span>
       )}

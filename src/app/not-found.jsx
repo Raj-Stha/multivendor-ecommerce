@@ -15,7 +15,7 @@ export default function NotFound() {
         <Header />
       </div>
 
-      <main className="flex flex-col items-center justify-center min-h-screen px-6 text-center bg-gradient-to-b from-primary/5 via-secondary/10 to-background relative overflow-hidden jost-text">
+      <main className="flex flex-col items-center justify-center min-h-screen px-6 text-center bg-gradient-to-b from-primary/5 via-secondary/10 to-background relative overflow-hidden ">
         {/* Animated Background Circles */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}

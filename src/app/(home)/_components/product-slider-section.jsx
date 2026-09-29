@@ -11,7 +11,7 @@ export default function ProductSliderSection({ products }) {
   }
 
   return (
-    <section className="my-2 noto-sans-text">
+    <section className="my-2 ">
       <div className="container max-w-7xl mx-auto px-4 xl:pt-10 sm:pt-4 pt-5 relative">
         {/* Header */}
         <div className="text-left w-full">

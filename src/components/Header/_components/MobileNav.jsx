@@ -10,7 +10,7 @@ import NotificationIcon from "./NotificationIcon";
 
 export default function MobileNav() {
   return (
-    <div className="px-4 py-4 flex flex-col gap-2 jost-text bg-white">
+    <div className="px-4 py-4 flex flex-col gap-2  bg-white">
       <div className="flex justify-between items-center">
         <MobileNavSheet />
         <div className="flex gap-4">

@@ -15,7 +15,7 @@ export default function DesktopNav({ user, locationName }) {
   const [showPopup, setShowPopup] = useState(false);
 
   return (
-    <nav className="bg-white shadow-sm w-full sticky-nav jost-text">
+    <nav className="bg-white shadow-sm w-full sticky-nav ">
       <div className="container max-w-7xl mx-auto py-3 px-4 md:px-6 flex items-center justify-between gap-4">
         {/* Logo */}
         <div className="flex-shrink-0">

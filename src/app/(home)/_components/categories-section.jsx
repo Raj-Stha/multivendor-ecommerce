@@ -16,7 +16,7 @@ export default function CategoriesSection({ categories }) {
   return (
     <section className="w-full container max-w-7xl mx-auto px-4 py-2 sm:py-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 noto-sans-text">
+      <div className="flex items-center justify-between mb-6 ">
         <div className="text-left w-full">
           <h2 className="relative inline-block   text-2xl font-semibold text-primary pb-3">
             Categories
@@ -78,7 +78,7 @@ function CategoryCard({ category, size = "medium" }) {
     // <Link
     //   href={`/products?category=${category.id}`}
     //   key={category.category_id}
-    //   className="flex flex-col items-center jost-text group cursor-pointer bg-white hover:bg-primary/5 space-y-4 p-3 sm:hover:scale-105 duration-200 transition ease-in-out border-1 hover:shadow-lg"
+    //   className="flex flex-col items-center group cursor-pointer bg-white hover:bg-primary/5 space-y-4 p-3 sm:hover:scale-105 duration-200 transition ease-in-out border-1 hover:shadow-lg"
     // >
     //   {/* Category Circle */}
 

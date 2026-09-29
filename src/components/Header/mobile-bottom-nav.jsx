@@ -44,7 +44,7 @@
 //   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
 
 //   return (
-//     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg sm:hidden jost-text">
+//     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg sm:hidden ">
 //       <nav className="flex h-16 items-center justify-around px-2 relative">
 //         {mobileNavItems.map((item) => {
 //           const isActive = pathname === item.href;
@@ -165,7 +165,7 @@ export default function MobileBottomNav() {
   const getCookie = (name) => {
     if (typeof document === "undefined") return null;
     const match = document.cookie.match(
-      new RegExp("(^| )" + name + "=([^;]+)")
+      new RegExp("(^| )" + name + "=([^;]+)"),
     );
     return match ? match[2] : null;
   };
@@ -188,7 +188,7 @@ export default function MobileBottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg sm:hidden jost-text">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg sm:hidden ">
       <nav className="flex h-16 items-center justify-around px-2 relative">
         {mobileNavItems.map((item) => {
           const isActive = pathname === item.href;
@@ -254,7 +254,7 @@ export default function MobileBottomNav() {
                     "flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-colors",
                     isActive
                       ? "text-primary"
-                      : "text-gray-800 hover:text-primary"
+                      : "text-gray-800 hover:text-primary",
                   )}
                 >
                   {item.icon && <item.icon className="h-5 w-5" />}

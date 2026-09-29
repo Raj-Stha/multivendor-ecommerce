@@ -25,7 +25,7 @@ export default function UserPage() {
           </div>
         </div>
       </header>
-      <div className=" w-full px-4 py-6  jost-text">
+      <div className=" w-full px-4 py-6  ">
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1 bg-white shadow-sm rounded-sm border p-6  min-h-[600px]">
             {user ? (

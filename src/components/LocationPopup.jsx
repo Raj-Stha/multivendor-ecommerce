@@ -279,7 +279,7 @@ export default function LocationPopup({
       )}
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent
-          className="max-w-lg z-50 bg-white text-gray-900 border border-gray-200 shadow-xl jost-text"
+          className="max-w-lg z-50 bg-white text-gray-900 border border-gray-200 shadow-xl "
           onInteractOutside={(event) => event.preventDefault()}
         >
           <DialogHeader className="pb-4">

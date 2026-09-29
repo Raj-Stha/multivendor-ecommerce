@@ -32,7 +32,7 @@ export function InfoLinks() {
   ];
 
   return (
-    <div className="py-6 px-3 sm:px-6 md:px-8 bg-gray-50 jost-text">
+    <div className="py-6 px-3 sm:px-6 md:px-8 bg-gray-50 ">
       <div className="max-w-5xl mx-auto">
         {/* 2 columns on mobile, up to 4 on large */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">

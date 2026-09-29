@@ -26,7 +26,7 @@ export function OrderSummary({ items }) {
   const total = subtotal + tax + shipping;
 
   return (
-    <Card className="sticky top-24 jost-text">
+    <Card className="sticky top-24 ">
       <CardHeader>
         <CardTitle>Order Summary</CardTitle>
       </CardHeader>

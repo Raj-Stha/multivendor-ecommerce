@@ -42,7 +42,7 @@ export default function ProductGrid({ initialProducts, baseurl }) {
   if (!products || products.length === 0) return null;
 
   return (
-    <section className="my-2 noto-sans-text">
+    <section className="my-2 ">
       <div className="container max-w-7xl mx-auto px-4 py-4 relative">
         <div className="flex justify-between items-center mb-3">
           <div className="text-2xl text-black">Just For You</div>
