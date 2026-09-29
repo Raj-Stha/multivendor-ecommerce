@@ -35,7 +35,7 @@ export function FilterSidebar({
 
   const filterBySearch = (items, search, key) =>
     items.filter((item) =>
-      item[key].toLowerCase().includes(search.toLowerCase())
+      item[key].toLowerCase().includes(search.toLowerCase()),
     );
 
   const handlePriceChange = (key, value) => {
@@ -108,7 +108,7 @@ export function FilterSidebar({
           {filterBySearch(
             filters?.categories || [],
             categorySearch,
-            "category_name"
+            "category_name",
           ).map((cat) => {
             const isSelected =
               selectedFilters.category === cat.category_id.toString();
@@ -125,7 +125,7 @@ export function FilterSidebar({
                   onChange={() =>
                     onFilterChange(
                       "category",
-                      isSelected ? "" : cat.category_id.toString()
+                      isSelected ? "" : cat.category_id.toString(),
                     )
                   }
                   disabled={isLoading}
@@ -138,7 +138,7 @@ export function FilterSidebar({
       </div>
 
       {/* Vendors */}
-      <div className="border p-4 rounded-lg mb-6">
+      {/* <div className="border p-4 rounded-lg mb-6">
         <Label className="block mb-2">Vendors</Label>
         <Input
           placeholder="Search..."
@@ -177,7 +177,7 @@ export function FilterSidebar({
             );
           })}
         </div>
-      </div>
+      </div> */}
 
       {/* Manufacturers */}
       <div className="border p-4 rounded-lg">
@@ -192,7 +192,7 @@ export function FilterSidebar({
           {filterBySearch(
             filters?.manufacturer || [],
             manufacturerSearch,
-            "manufacturer_name"
+            "manufacturer_name",
           ).map((m) => {
             const isSelected =
               selectedFilters.manufacturer === m.manufacturer_id.toString();
@@ -209,7 +209,7 @@ export function FilterSidebar({
                   onChange={() =>
                     onFilterChange(
                       "manufacturer",
-                      isSelected ? "" : m.manufacturer_id.toString()
+                      isSelected ? "" : m.manufacturer_id.toString(),
                     )
                   }
                   disabled={isLoading}

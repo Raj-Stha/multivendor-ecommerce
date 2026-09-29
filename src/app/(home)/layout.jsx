@@ -13,7 +13,7 @@ export default function HomeLayout({ children }) {
       </div>
 
       {/* Push content below fixed header */}
-      <main className="min-h-screen pt-[56px]  md:pt-[50px] lg:pt-[70px] ">
+      <main className="min-h-screen pt-[56px]  md:pt-[50px] lg:pt-[70px] mt-[10%] sm:mt-[5%] lg:mt-[3%] xl:mt-[2%] ">
         {children}
       </main>
       {/* <InfoLinks /> */}

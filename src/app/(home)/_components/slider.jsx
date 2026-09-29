@@ -87,7 +87,7 @@ export default function Hero({ banners = [] }) {
 
   return (
     <div
-      className="relative max-w-7xl mt-[15%] sm:mt-[9%] lg:mt-[5%] xl:mt-[4%] mx-auto "
+      className="relative max-w-7xl mt-[5%] sm:mt-[5%] lg:mt-[2%] xl:mt-[2%] mx-auto "
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
