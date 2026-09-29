@@ -181,7 +181,7 @@ export function FilterSidebar({
 
       {/* Manufacturers */}
       <div className="border p-4 rounded-lg">
-        <Label className="block mb-2">Manufacturers</Label>
+        <Label className="block mb-2">Country of Origin</Label>
         <Input
           placeholder="Search..."
           value={manufacturerSearch}
