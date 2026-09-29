@@ -170,7 +170,7 @@ export default function Hero({ banners = [] }) {
             items-center
             justify-center
             text-center
-            px-8
+            px-11
             sm:px-6
           "
         >
@@ -317,12 +317,12 @@ export default function Hero({ banners = [] }) {
             ORIGINAL NAVIGATION DOTS
             ⚠️ KEPT EXACTLY AS YOUR ORIGINAL CODE
         ========================================================= */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-[3]">
+        <div className="hidden sm:flex absolute bottom-4 left-1/2 -translate-x-1/2  gap-3 z-[3]">
           {formattedBanners.map((_, index) => (
             <button
               key={index}
               onClick={() => handleSlideChange(index)}
-              className={`w-3 h-3 cursor-pointer rounded-full transition-all duration-300 ${
+              className={`w-2 h-2 cursor-pointer rounded-full transition-all duration-300 ${
                 activeSlide === index
                   ? "bg-primary scale-125"
                   : "bg-white/70 hover:bg-white/90"
@@ -344,7 +344,7 @@ export default function Hero({ banners = [] }) {
           className="
             absolute
             cursor-pointer
-            left-1
+            left-[0.5]
             sm:left-5
             top-1/2
             -translate-y-1/2
@@ -355,12 +355,13 @@ export default function Hero({ banners = [] }) {
             w-9
             h-9
             rounded-full
-            bg-black
-            text-white
+              backdrop-blur-[10px]
+              bg-white/60
+              text-black
             shadow-lg
             transition-all
             duration-300
-            hover:bg-black/80
+            hover:bg-white/80
           "
         >
           <ChevronLeft className="h-5 w-5" />
@@ -377,7 +378,7 @@ export default function Hero({ banners = [] }) {
           className="
             absolute
             cursor-pointer
-            right-1
+            right-[0.5]
             sm:right-5
             top-1/2
             -translate-y-1/2
@@ -388,12 +389,13 @@ export default function Hero({ banners = [] }) {
             w-9
             h-9
             rounded-full
-            bg-black
-            text-white
+            backdrop-blur-[10px]
+            bg-white/60
+            text-black
             shadow-lg
             transition-all
             duration-300
-            hover:bg-black/80
+                    hover:bg-white/80
           "
         >
           <ChevronRight className="h-5 w-5" />
